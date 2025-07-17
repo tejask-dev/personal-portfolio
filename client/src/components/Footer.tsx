@@ -90,14 +90,6 @@ export default function Footer() {
                 </a>
               </li>
               <li>
-                <a
-                  href="tel:15195663902"
-                  className="inline-block px-4 py-2 rounded-full bg-slate-800 hover:bg-blue-600 hover:text-white transition-colors duration-200"
-                >
-                  +1 (519) 566-3902
-                </a>
-              </li>
-              <li>
                 <span className="inline-block px-4 py-2 rounded-full bg-slate-800">
                   Windsor, ON
                 </span>
