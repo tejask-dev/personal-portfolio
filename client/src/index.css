@@ -1,0 +1,253 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: hsl(210, 40%, 98%);
+  --foreground: hsl(222.2, 84%, 4.9%);
+  --muted: hsl(210, 40%, 96%);
+  --muted-foreground: hsl(215.4, 16.3%, 46.9%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(222.2, 84%, 4.9%);
+  --card: hsl(0, 0%, 100%);
+  --card-foreground: hsl(222.2, 84%, 4.9%);
+  --border: hsl(214.3, 31.8%, 91.4%);
+  --input: hsl(214.3, 31.8%, 91.4%);
+  --primary: hsl(221.2, 83.2%, 53.3%);
+  --primary-foreground: hsl(210, 40%, 98%);
+  --secondary: hsl(210, 40%, 96%);
+  --secondary-foreground: hsl(222.2, 84%, 4.9%);
+  --accent: hsl(210, 40%, 96%);
+  --accent-foreground: hsl(222.2, 84%, 4.9%);
+  --destructive: hsl(0, 84.2%, 60.2%);
+  --destructive-foreground: hsl(210, 40%, 98%);
+  --ring: hsl(222.2, 84%, 4.9%);
+  --radius: 0.5rem;
+  
+  /* Custom colors matching the design */
+  --primary-blue: hsl(221.2, 83.2%, 53.3%);
+  --secondary-slate: hsl(215.3, 25%, 26.7%);
+  --accent-amber: hsl(35, 91.1%, 49.8%);
+  --slate-50: hsl(210, 40%, 98%);
+  --slate-100: hsl(210, 40%, 96%);
+  --slate-200: hsl(214.3, 31.8%, 91.4%);
+  --slate-300: hsl(212.7, 26.8%, 83.9%);
+  --slate-600: hsl(215.4, 16.3%, 46.9%);
+  --slate-700: hsl(215.3, 19.3%, 34.5%);
+  --slate-800: hsl(215.3, 25%, 26.7%);
+}
+
+.dark {
+  --background: hsl(222.2, 84%, 4.9%);
+  --foreground: hsl(210, 40%, 98%);
+  --muted: hsl(217.2, 32.6%, 17.5%);
+  --muted-foreground: hsl(215, 20.2%, 65.1%);
+  --popover: hsl(222.2, 84%, 4.9%);
+  --popover-foreground: hsl(210, 40%, 98%);
+  --card: hsl(222.2, 84%, 4.9%);
+  --card-foreground: hsl(210, 40%, 98%);
+  --border: hsl(217.2, 32.6%, 17.5%);
+  --input: hsl(217.2, 32.6%, 17.5%);
+  --primary: hsl(221.2, 83.2%, 53.3%);
+  --primary-foreground: hsl(210, 40%, 98%);
+  --secondary: hsl(217.2, 32.6%, 17.5%);
+  --secondary-foreground: hsl(210, 40%, 98%);
+  --accent: hsl(217.2, 32.6%, 17.5%);
+  --accent-foreground: hsl(210, 40%, 98%);
+  --destructive: hsl(0, 62.8%, 30.6%);
+  --destructive-foreground: hsl(210, 40%, 98%);
+  --ring: hsl(212.7, 26.8%, 83.9%);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--muted));
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground));
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--foreground));
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Professional focus styles */
+.focus-visible {
+  @apply focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2;
+}
+
+/* Custom gradient backgrounds */
+.gradient-bg {
+  background: linear-gradient(135deg, hsl(var(--slate-50)) 0%, hsl(var(--slate-100)) 100%);
+}
+
+/* Animation utilities */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* Professional button styles */
+.btn-primary {
+  @apply bg-primary text-primary-foreground hover:bg-blue-700 transition-colors duration-200 font-medium rounded-lg px-8 py-3 cursor-pointer;
+}
+
+.btn-secondary {
+  @apply border border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-colors duration-200 font-medium rounded-lg px-8 py-3 cursor-pointer;
+}
+
+/* Card hover effects */
+.card-hover {
+  @apply hover:shadow-xl transition-shadow duration-300;
+}
+
+/* Professional nav styles */
+.nav-link {
+  @apply text-slate-600 hover:text-primary transition-colors duration-200 relative;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: hsl(var(--primary-blue));
+  transition: width 0.3s ease;
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+/* Mobile menu styles */
+.mobile-menu {
+  @apply md:hidden bg-white border-t border-slate-200 shadow-lg;
+}
+
+/* Professional form styles */
+.form-input {
+  @apply w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200;
+}
+
+.form-textarea {
+  @apply w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent resize-none transition-all duration-200;
+}
+
+/* Professional tag styles */
+.tag {
+  @apply px-3 py-1 rounded-full text-sm font-medium;
+}
+
+.tag-blue {
+  @apply bg-blue-100 text-blue-800;
+}
+
+.tag-green {
+  @apply bg-green-100 text-green-800;
+}
+
+.tag-purple {
+  @apply bg-purple-100 text-purple-800;
+}
+
+.tag-yellow {
+  @apply bg-yellow-100 text-yellow-800;
+}
+
+.tag-red {
+  @apply bg-red-100 text-red-800;
+}
+
+.tag-indigo {
+  @apply bg-indigo-100 text-indigo-800;
+}
+
+.tag-pink {
+  @apply bg-pink-100 text-pink-800;
+}
+
+.tag-teal {
+  @apply bg-teal-100 text-teal-800;
+}
+
+.tag-orange {
+  @apply bg-orange-100 text-orange-800;
+}
+
+.tag-cyan {
+  @apply bg-cyan-100 text-cyan-800;
+}
+
+.tag-gray {
+  @apply bg-gray-100 text-gray-800;
+}
+
+/* Professional section spacing */
+.section-padding {
+  @apply py-20;
+}
+
+/* Professional container */
+.container-custom {
+  @apply max-w-6xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+/* Professional heading styles */
+.heading-primary {
+  @apply text-4xl font-bold text-secondary mb-4;
+}
+
+.heading-secondary {
+  @apply text-2xl font-bold text-secondary mb-8;
+}
+
+/* Professional text styles */
+.text-lead {
+  @apply text-xl text-slate-600 leading-relaxed;
+}
+
+/* Professional backdrop blur */
+.backdrop-blur-custom {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
