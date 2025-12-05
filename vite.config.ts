@@ -10,6 +10,7 @@ export default defineConfig({
     react(),
     runtimeErrorOverlay(),
   ],
+  assetsInclude: ["**/*.JPEG", "**/*.JPG", "**/*.jpeg", "**/*.jpg", "**/*.pdf", "**/*.PDF"],
   resolve: {
     alias: {
       "@": path.resolve(import.meta.dirname, "client", "src"),

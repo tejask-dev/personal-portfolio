@@ -1,93 +1,229 @@
-import { useState } from "react";
-import { Menu, X } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+'use client';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Menu, X, Home, User, Briefcase, Code, Mail, Sparkles, Star } from 'lucide-react';
 
 export default function Navigation() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
+    const [scrolled, setScrolled] = useState(false);
+    const [activeSection, setActiveSection] = useState('home');
+
+    useEffect(() => {
+        const handleScroll = () => {
+            setScrolled(window.scrollY > 50);
+            
+            // Update active section based on scroll position
+            const sections = ['home', 'about', 'experience', 'portfolio', 'contact'];
+            const scrollPosition = window.scrollY + 100;
+            
+            for (let i = sections.length - 1; i >= 0; i--) {
+                const element = document.getElementById(sections[i]);
+                if (element && element.offsetTop <= scrollPosition) {
+                    setActiveSection(sections[i]);
+                    break;
+                }
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
 
   const navItems = [
-    { href: "#about", label: "About" },
-    { href: "#resume", label: "Resume" },
-    { href: "#portfolio", label: "Portfolio" },
-    { href: "#awards", label: "Awards" },
-    { href: "#contact", label: "Contact" },
-  ];
+        { name: 'Home', href: '#home', icon: Home, id: 'home' },
+        { name: 'About', href: '#about', icon: User, id: 'about' },
+        { name: 'Experience', href: '#experience', icon: Briefcase, id: 'experience' },
+        { name: 'Projects', href: '#portfolio', icon: Code, id: 'portfolio' }
+    ];
+
+    const scrollToSection = (href: string) => {
+        const element = document.querySelector(href);
+        if (element) {
+            element.scrollIntoView({ behavior: 'smooth' });
+        }
+        setIsOpen(false);
+    };
+
+    return (
+        <motion.nav
+            initial={{ y: -100 }}
+            animate={{ y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-transparent"
+        >
+            <div className="container mx-auto px-4 relative z-10">
+                <div className="flex items-center justify-center h-16 mt-4">
+                    {/* Centered Navigation with Icons and Words */}
+                    <motion.div
+                        className="hidden lg:flex items-center space-x-1 bg-black/40 rounded-full px-6 py-3 border border-purple-500/50"
+                        whileHover={{
+                            scale: 1.05,
+                        }}
+                        transition={{ duration: 0.3 }}
+                    >
+                        {navItems.map((item, index) => {
+                            const Icon = item.icon;
+                            const isActive = activeSection === item.id;
 
   return (
-    <nav className="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-lg z-50 border-b border-blue-100 shadow-sm transition-all duration-300">
-      <div className="container-custom">
-        <div className="flex justify-between items-center h-16">
-          {/* Logo / Name */}
-          <motion.a
-            href="#hero"
-            className="flex items-center gap-2"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <span className="text-2xl font-extrabold text-blue-700 tracking-tight hover:text-blue-900 transition-colors duration-200">
-              Tejas Kaushik
-            </span>
-          </motion.a>
+                                <motion.div
+                                    key={item.name}
+                                    className="relative group"
+                                    initial={{ opacity: 0, y: -20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: index * 0.1 }}
+                                >
+                                    <motion.button
+                                        onClick={() => scrollToSection(item.href)}
+                                        whileHover={{ 
+                                            y: -3,
+                                            scale: 1.1,
+                                        }}
+                                        whileTap={{ scale: 0.95 }}
+                                        className={`relative px-3 py-2 rounded-full transition-all duration-300 flex items-center gap-2 ${
+                                            isActive 
+                                                ? 'bg-gradient-to-r from-purple-500/40 to-pink-500/40' 
+                                                : 'hover:bg-white/20'
+                                        }`}
+                                    >
+                                        <Icon className={`w-4 h-4 transition-colors ${
+                                            isActive 
+                                                ? 'text-purple-400' 
+                                                : 'text-gray-300 group-hover:text-purple-400'
+                                        }`} />
+                                        <span className={`text-sm font-medium transition-colors ${
+                                            isActive 
+                                                ? 'text-white' 
+                                                : 'text-gray-300 group-hover:text-white'
+                                        }`}>
+                                            {item.name}
+                                        </span>
+                                        
+                                        {/* Active indicator */}
+                                        {isActive && (
+                                            <motion.div
+                                                className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full"
+                                                layoutId="activeTab"
+                                                transition={{ duration: 0.3 }}
+                                            />
+                                        )}
+                                    </motion.button>
+                                    
+                                </motion.div>
+                            );
+                        })}
+                    </motion.div>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:block">
-            <div className="ml-10 flex items-center space-x-2">
-              {navItems.map((item, index) => (
-                <motion.a
-                  key={item.href}
-                  href={item.href}
-                  className="relative inline-block px-4 py-1.5 rounded-full font-medium text-slate-700 hover:text-white hover:bg-blue-600 focus:bg-blue-700 focus:text-white focus:outline-none transition-all duration-200 group"
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: index * 0.07 }}
+                    {/* Logo for mobile/tablet */}
+                    <motion.div
+                        className="lg:hidden text-lg font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent"
+                        whileHover={{ scale: 1.05 }}
+                    >
+              Tejas Kaushik
+                    </motion.div>
+
+                    {/* Tablet Navigation */}
+                    <div className="hidden md:flex lg:hidden items-center space-x-1 ml-auto">
+                        {navItems.slice(0, 4).map((item, index) => {
+                            const Icon = item.icon;
+                            const isActive = activeSection === item.id;
+                            
+                            return (
+                                <motion.button
+                                    key={item.name}
+                                    onClick={() => scrollToSection(item.href)}
+                                    whileHover={{ y: -2, scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    className={`flex items-center gap-1 px-3 py-2 rounded-lg transition-all duration-300 group ${
+                                        isActive ? 'bg-purple-500/20 text-purple-400' : 'text-gray-300 hover:text-white hover:bg-white/10'
+                                    }`}
                 >
-                  <span className="relative z-10">{item.label}</span>
-                  {/* Animated Underline (on hover) */}
-                  <span className="absolute left-2 right-2 -bottom-1 h-0.5 bg-blue-500 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200"></span>
-                </motion.a>
-              ))}
-            </div>
+                                    <Icon className="w-4 h-4" />
+                                    <span className="text-xs font-medium">{item.name}</span>
+                                </motion.button>
+                            );
+                        })}
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="md:hidden">
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-blue-700 hover:text-blue-900 bg-white rounded-full p-2 shadow-sm border border-blue-100 transition-colors duration-200"
-              aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+                    <motion.button
+                        whileTap={{ scale: 0.95 }}
+                        whileHover={{ scale: 1.05 }}
+                        onClick={() => setIsOpen(!isOpen)}
+                        className="md:hidden ml-auto p-2 text-gray-300 hover:text-white transition-colors relative"
+                    >
+                        <motion.div
+                            animate={{ rotate: isOpen ? 180 : 0 }}
+                            transition={{ duration: 0.3 }}
             >
-              {isMenuOpen ? <X size={26} /> : <Menu size={26} />}
-            </button>
+                            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                        </motion.div>
+                    </motion.button>
           </div>
         </div>
 
-        {/* Mobile Navigation */}
+            {/* Enhanced Mobile Menu */}
         <AnimatePresence>
-          {isMenuOpen && (
+                {isOpen && (
             <motion.div
-              className="mobile-menu md:hidden bg-white border-t border-blue-200 overflow-hidden shadow-lg rounded-b-2xl"
               initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
+                        animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.28 }}
+                        transition={{ duration: 0.3 }}
+                        className="md:hidden bg-slate-900/98 backdrop-blur-xl border-t border-purple-500/30"
             >
-              <div className="px-4 pt-4 pb-6 flex flex-col gap-2">
-                {navItems.map((item) => (
-                  <a
-                    key={item.href}
-                    href={item.href}
-                    className="block px-4 py-3 rounded-xl text-blue-700 font-medium bg-blue-50 hover:bg-blue-600 hover:text-white transition-all duration-200 text-lg"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    {item.label}
-                  </a>
-                ))}
+                        <div className="container mx-auto px-4 py-6">
+                            <div className="space-y-2">
+                                {navItems.map((item, index) => {
+                                    const Icon = item.icon;
+                                    const isActive = activeSection === item.id;
+                                    
+                                    return (
+                                        <motion.button
+                                            key={item.name}
+                                            initial={{ opacity: 0, x: -20 }}
+                                            animate={{ opacity: 1, x: 0 }}
+                                            transition={{ delay: index * 0.1 }}
+                                            onClick={() => scrollToSection(item.href)}
+                                            className={`w-full flex items-center gap-3 p-4 rounded-xl transition-all duration-300 group ${
+                                                isActive 
+                                                    ? 'bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-purple-400/50' 
+                                                    : 'text-gray-300 hover:text-white hover:bg-white/10'
+                                            }`}
+                                        >
+                                            <motion.div
+                                                animate={isActive ? { rotate: [0, 10, -10, 0] } : {}}
+                                                transition={{ duration: 0.5 }}
+                                            >
+                                                <Icon className={`w-5 h-5 transition-colors ${
+                                                    isActive 
+                                                        ? 'text-purple-400' 
+                                                        : 'group-hover:text-purple-400'
+                                                }`} />
+                                            </motion.div>
+                                            <span className={`font-medium transition-colors ${
+                                                isActive ? 'text-white' : ''
+                                            }`}>
+                                                {item.name}
+                                            </span>
+                                            
+                                            {/* Active indicator */}
+                                            {isActive && (
+                                                <motion.div
+                                                    className="ml-auto w-2 h-2 bg-purple-400 rounded-full"
+                                                    initial={{ scale: 0 }}
+                                                    animate={{ scale: 1 }}
+                                                    transition={{ delay: 0.2 }}
+                                                />
+                                            )}
+                                        </motion.button>
+                                    );
+                                })}
+                            </div>
               </div>
             </motion.div>
           )}
         </AnimatePresence>
-      </div>
-    </nav>
+        </motion.nav>
   );
 }
