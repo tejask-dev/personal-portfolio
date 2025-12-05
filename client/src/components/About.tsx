@@ -85,7 +85,7 @@ export default function About() {
           className="text-center mb-16"
                 >
                     <motion.h2 
-                        className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent mb-6"
+                        className="text-3xl sm:text-5xl md:text-6xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent mb-4 sm:mb-6"
                         initial={{ opacity: 0, y: 50, scale: 0.8 }}
                         animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
                         transition={{ 
@@ -102,7 +102,7 @@ export default function About() {
             About Me
                     </motion.h2>
                     <motion.p 
-                        className="text-xl text-gray-300 max-w-3xl mx-auto"
+                        className="text-base sm:text-xl text-gray-300 max-w-3xl mx-auto px-2"
                         initial={{ opacity: 0, y: 30 }}
                         animate={isInView ? { opacity: 1, y: 0 } : {}}
                         transition={{ 
@@ -116,13 +116,13 @@ export default function About() {
                     </motion.p>
         </motion.div>
         
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
                     {/* Left Side - Image and Stats */}
         <motion.div 
                         initial={{ opacity: 0, x: -50 }}
                         whileInView={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.8 }}
-                        className="space-y-8"
+                        className="space-y-8 flex justify-center lg:justify-start"
                     >
                         {/* Photo Carousel */}
                         <PhotoCarousel />
@@ -136,7 +136,7 @@ export default function About() {
                         className="space-y-8"
                     >
                         {/* Tab Navigation */}
-                        <div className="flex flex-wrap gap-2 mb-8">
+                        <div className="flex flex-wrap gap-2 mb-6 sm:mb-8 justify-center lg:justify-start">
                             {tabs.map((tab, index) => (
                                 <motion.button
                                     key={tab.id}
@@ -154,7 +154,7 @@ export default function About() {
                                         transition: { duration: 0.2 }
                                     }}
                                     whileTap={{ scale: 0.95 }}
-                                    className={`px-6 py-3 rounded-full font-semibold transition-all duration-300 ${
+                                    className={`px-4 sm:px-6 py-2 sm:py-3 rounded-full font-semibold text-sm sm:text-base transition-all duration-300 ${
                                         activeTab === tab.id
                                             ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg shadow-purple-500/25'
                                             : 'bg-white/10 text-gray-300 hover:bg-white/20 hover:text-white'
@@ -176,9 +176,9 @@ export default function About() {
                                 type: "spring",
                                 stiffness: 100
                             }}
-                            className="space-y-6"
+                            className="space-y-4 sm:space-y-6"
                         >
-                            <h3 className="text-3xl font-bold text-white mb-6">
+                            <h3 className="text-2xl sm:text-3xl font-bold text-white mb-4 sm:mb-6 text-center lg:text-left">
                                 {content[activeTab as keyof typeof content].title}
                             </h3>
                             
@@ -194,7 +194,7 @@ export default function About() {
                                         type: "spring",
                                         stiffness: 100
                                     }}
-                                    className="text-gray-300 text-lg leading-relaxed"
+                                    className="text-gray-300 text-sm sm:text-base lg:text-lg leading-relaxed"
                                 >
                                     {paragraph}
                                 </motion.p>

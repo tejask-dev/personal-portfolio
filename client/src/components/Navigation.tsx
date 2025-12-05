@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Home, User, Briefcase, Code, Mail, Sparkles, Star } from 'lucide-react';
+import { Menu, X, Home, User, Briefcase, Code, Mail, Sparkles, Star, Award } from 'lucide-react';
 
 export default function Navigation() {
     const [isOpen, setIsOpen] = useState(false);
@@ -13,7 +13,7 @@ export default function Navigation() {
             setScrolled(window.scrollY > 50);
             
             // Update active section based on scroll position
-            const sections = ['home', 'about', 'experience', 'portfolio', 'contact'];
+            const sections = ['home', 'about', 'experience', 'portfolio', 'awards'];
             const scrollPosition = window.scrollY + 100;
             
             for (let i = sections.length - 1; i >= 0; i--) {
@@ -33,7 +33,8 @@ export default function Navigation() {
         { name: 'Home', href: '#home', icon: Home, id: 'home' },
         { name: 'About', href: '#about', icon: User, id: 'about' },
         { name: 'Experience', href: '#experience', icon: Briefcase, id: 'experience' },
-        { name: 'Projects', href: '#portfolio', icon: Code, id: 'portfolio' }
+        { name: 'Projects', href: '#portfolio', icon: Code, id: 'portfolio' },
+        { name: 'Awards', href: '#awards', icon: Award, id: 'awards' }
     ];
 
     const scrollToSection = (href: string) => {
@@ -124,7 +125,7 @@ export default function Navigation() {
 
                     {/* Tablet Navigation */}
                     <div className="hidden md:flex lg:hidden items-center space-x-1 ml-auto">
-                        {navItems.slice(0, 4).map((item, index) => {
+                        {navItems.map((item, index) => {
                             const Icon = item.icon;
                             const isActive = activeSection === item.id;
                             
@@ -134,12 +135,12 @@ export default function Navigation() {
                                     onClick={() => scrollToSection(item.href)}
                                     whileHover={{ y: -2, scale: 1.05 }}
                                     whileTap={{ scale: 0.95 }}
-                                    className={`flex items-center gap-1 px-3 py-2 rounded-lg transition-all duration-300 group ${
+                                    className={`flex items-center gap-1 px-2 py-2 rounded-lg transition-all duration-300 group ${
                                         isActive ? 'bg-purple-500/20 text-purple-400' : 'text-gray-300 hover:text-white hover:bg-white/10'
                                     }`}
                 >
                                     <Icon className="w-4 h-4" />
-                                    <span className="text-xs font-medium">{item.name}</span>
+                                    <span className="text-xs font-medium hidden lg:inline">{item.name}</span>
                                 </motion.button>
                             );
                         })}

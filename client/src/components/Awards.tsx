@@ -111,12 +111,12 @@ export default function Awards() {
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    className="text-center mb-16"
+                    className="text-center mb-8 sm:mb-16"
                 >
-                    <h2 className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 mb-4">
+                    <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 mb-3 sm:mb-4">
                         Awards & Recognition
                     </h2>
-                    <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+                    <p className="text-gray-400 text-sm sm:text-lg max-w-2xl mx-auto px-2">
                         Celebrating excellence in research, competition, and innovation.
                     </p>
                 </motion.div>
@@ -155,7 +155,7 @@ export default function Awards() {
                             </div>
 
                             {/* Content Side */}
-                            <div className="relative p-8 md:p-12 flex flex-col justify-center bg-gradient-to-br from-gray-900/50 to-gray-800/50">
+                            <div className="relative p-4 sm:p-8 md:p-12 flex flex-col justify-center bg-gradient-to-br from-gray-900/50 to-gray-800/50">
                                 <AnimatePresence mode="wait">
                                     <motion.div
                                         key={currentAward.id}
@@ -174,11 +174,11 @@ export default function Awards() {
                                             </span>
                                         </div>
 
-                                        <h3 className="text-2xl md:text-4xl font-bold text-white mb-6 leading-tight">
+                                        <h3 className="text-xl sm:text-2xl md:text-4xl font-bold text-white mb-3 sm:mb-6 leading-tight">
                                             {currentAward.title}
                                         </h3>
 
-                                        <p className="text-gray-300 text-lg leading-relaxed mb-8">
+                                        <p className="text-gray-300 text-sm sm:text-base lg:text-lg leading-relaxed mb-4 sm:mb-8">
                                             {currentAward.description}
                                         </p>
 
@@ -231,12 +231,12 @@ export default function Awards() {
                     </div>
 
                     {/* Thumbnails */}
-                    <div className="flex justify-center mt-8 gap-3 overflow-x-auto pb-4 px-4 scrollbar-hide">
+                    <div className="flex justify-center mt-4 sm:mt-8 gap-2 sm:gap-3 overflow-x-auto pb-4 px-2 sm:px-4 scrollbar-hide">
                         {awards.map((award, index) => (
                             <button
                                 key={award.id}
                                 onClick={() => setCurrentIndex(index)}
-                                className={`relative flex-shrink-0 w-16 h-16 md:w-20 md:h-20 rounded-xl overflow-hidden transition-all duration-300 border-2 ${
+                                className={`relative flex-shrink-0 w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-lg sm:rounded-xl overflow-hidden transition-all duration-300 border-2 ${
                                     index === currentIndex 
                                         ? "border-purple-500 scale-110 shadow-lg shadow-purple-500/25" 
                                         : "border-transparent opacity-50 hover:opacity-100 hover:scale-105"

@@ -168,16 +168,16 @@ export default function Portfolio() {
         <section id="portfolio" className="min-h-screen py-20 bg-transparent relative">
             <div className="container mx-auto px-4">
                 {/* Header */}
-                <div ref={ref} className="text-center mb-16">
-                    <div className="mb-6">
+                <div ref={ref} className="text-center mb-8 sm:mb-16">
+                    <div className="mb-4 sm:mb-6">
                         <AnimatedText
                             text="Projects & Creations"
                             type="fadeIn"
-                            className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent"
+                            className="text-3xl sm:text-5xl md:text-6xl font-bold bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent"
                         />
                     </div>
                     <motion.p
-                        className="text-xl text-gray-300 max-w-3xl mx-auto"
+                        className="text-base sm:text-xl text-gray-300 max-w-3xl mx-auto px-2"
                         initial={{ opacity: 0, y: 20 }}
                         animate={isInView ? { opacity: 1, y: 0 } : {}}
                         transition={{ duration: 0.8, delay: 0.2 }}
@@ -189,7 +189,7 @@ export default function Portfolio() {
 
                 {/* Filter Buttons */}
         <motion.div
-                    className="flex flex-wrap justify-center gap-4 mb-16"
+                    className="flex flex-wrap justify-center gap-2 sm:gap-4 mb-8 sm:mb-16 px-2"
                     initial={{ opacity: 0, y: 20 }}
                     animate={isInView ? { opacity: 1, y: 0 } : {}}
                     transition={{ duration: 0.8, delay: 0.4 }}
@@ -201,7 +201,7 @@ export default function Portfolio() {
                                 setActiveFilter(category.id);
                                 setVisibleProjects(3); // Reset visible count when filter changes
                             }}
-                            className={`filter-button flex items-center gap-2 px-6 py-3 rounded-full font-semibold transition-all duration-300 ${
+                            className={`filter-button flex items-center gap-1 sm:gap-2 px-3 sm:px-6 py-2 sm:py-3 rounded-full font-semibold text-xs sm:text-base transition-all duration-300 ${
                                 activeFilter === category.id
                                     ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg shadow-purple-500/25'
                                     : 'bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white'
@@ -212,15 +212,16 @@ export default function Portfolio() {
                             animate={isInView ? { opacity: 1, y: 0 } : {}}
                             transition={{ duration: 0.5, delay: 0.6 + index * 0.1 }}
             >
-                            <category.icon className="w-4 h-4" />
-                            {category.name}
+                            <category.icon className="w-3 h-3 sm:w-4 sm:h-4" />
+                            <span className="hidden sm:inline">{category.name}</span>
+                            <span className="sm:hidden">{category.name.split(' ')[0]}</span>
                         </motion.button>
           ))}
         </motion.div>
 
         {/* Projects Grid */}
           <motion.div
-                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8"
                     initial={{ opacity: 0 }}
                     animate={isInView ? { opacity: 1 } : {}}
                     transition={{ duration: 0.8, delay: 0.8 }}
@@ -231,9 +232,9 @@ export default function Portfolio() {
                             hoverEffect="tilt"
                             delay={index * 0.1}
                         >
-                            <div className="project-card bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/50 hover:border-purple-500/50 transition-all duration-300 group h-full flex flex-col">
+                            <div className="project-card bg-gray-800/50 backdrop-blur-sm rounded-2xl p-4 sm:p-6 border border-gray-700/50 hover:border-purple-500/50 transition-all duration-300 group h-full flex flex-col">
                                 {/* Project Image or Game Preview */}
-                                <div className="relative mb-6 overflow-hidden rounded-xl aspect-video group-hover:shadow-lg transition-all duration-300">
+                                <div className="relative mb-4 sm:mb-6 overflow-hidden rounded-xl aspect-video group-hover:shadow-lg transition-all duration-300">
                                     {project.category === 'games' ? (
                                         <div className={`w-full h-full bg-gradient-to-br ${
                                             project.gameId === 'tetris' ? 'from-purple-900 to-indigo-900' :
@@ -263,11 +264,11 @@ export default function Portfolio() {
                                 </div>
 
                                 {/* Project Info */}
-                                <div className="space-y-4 flex-grow flex flex-col">
+                                <div className="space-y-3 sm:space-y-4 flex-grow flex flex-col">
                                     <div>
-                                        <h3 className="text-xl font-semibold text-white mb-2">{project.title}</h3>
-                                        <p className="text-gray-300 text-sm leading-relaxed">{project.description}</p>
-                </div>
+                                        <h3 className="text-lg sm:text-xl font-semibold text-white mb-1 sm:mb-2">{project.title}</h3>
+                                        <p className="text-gray-300 text-xs sm:text-sm leading-relaxed">{project.description}</p>
+                                </div>
 
                                     {/* Tech Stack */}
                                     <div className="flex flex-wrap gap-2">

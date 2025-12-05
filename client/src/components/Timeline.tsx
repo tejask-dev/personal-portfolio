@@ -30,11 +30,11 @@ export const Timeline = ({ data }: { data: any[] }) => {
     const opacityTransform = useTransform(scrollYProgress, [0, 0.1], [0, 1]);
 
     return (
-        <div className="w-full font-sans sm:px-10 px-6" ref={containerRef}>
+        <div className="w-full font-sans sm:px-10 px-4" ref={containerRef}>
             <div className="w-full flex items-center justify-start">
-                <div className="sm:w-2/3 w-full sm:px-16 px-6 flex flex-col items-start justify-center md:mt-26 mt-18">
+                <div className="sm:w-2/3 w-full sm:px-16 px-2 flex flex-col items-start justify-center md:mt-26 mt-12">
                     <motion.h2 
-                        className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-white via-purple-200 to-white bg-clip-text text-transparent"
+                        className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3 sm:mb-4 bg-gradient-to-r from-white via-purple-200 to-white bg-clip-text text-transparent"
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
@@ -42,7 +42,7 @@ export const Timeline = ({ data }: { data: any[] }) => {
                         Experience
                     </motion.h2>
                     <motion.p 
-                        className="sm:text-lg text-sm text-gray-300 mb-8"
+                        className="text-sm sm:text-base lg:text-lg text-gray-300 mb-6 sm:mb-8"
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}

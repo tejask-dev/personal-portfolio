@@ -34,7 +34,7 @@ export default function PhotoCarousel() {
     };
 
     return (
-        <div className="relative w-80 h-96 mx-auto group">
+        <div className="relative w-full max-w-[280px] sm:max-w-[320px] h-[350px] sm:h-96 mx-auto group">
             {/* Main Photo Container */}
             <div className="relative w-full h-full overflow-hidden rounded-2xl shadow-2xl border-4 border-white/10">
                 <AnimatePresence mode="wait">

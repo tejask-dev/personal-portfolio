@@ -1,7 +1,7 @@
 'use client';
 import { useState, useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { ArrowDown, Sparkles, Code, Brain, Rocket, Star, ChevronDown } from 'lucide-react';
+import { ArrowDown, Sparkles, Code, Brain, Rocket, Star, ChevronDown, Github, Linkedin, Instagram, Mail } from 'lucide-react';
 import VirtualMacBook from './VirtualMacBook';
 import SmoothTypingAnimation from './SmoothTypingAnimation';
 
@@ -71,7 +71,7 @@ export default function Hero() {
             >
                 {/* Name Title with Animated Gradient */}
             <motion.h1
-                    className="text-6xl md:text-8xl lg:text-9xl font-bold mb-6 tracking-tight"
+                    className="text-4xl sm:text-6xl md:text-8xl lg:text-9xl font-bold mb-4 sm:mb-6 tracking-tight"
                     initial={{ opacity: 0, y: 20, filter: 'blur(10px)' }}
                     animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
                     transition={{ duration: 0.8, ease: "easeOut" }}
@@ -83,14 +83,14 @@ export default function Hero() {
 
                 {/* Typing Animation */}
                 <motion.div
-                    className="h-12 md:h-16 flex items-center justify-center mb-8"
+                    className="h-10 sm:h-12 md:h-16 flex items-center justify-center mb-6 sm:mb-8"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.5, duration: 0.8 }}
             >
                     <SmoothTypingAnimation 
                         words={descriptiveWords}
-                        className="text-2xl md:text-4xl"
+                        className="text-lg sm:text-2xl md:text-4xl"
                         speed={50}
                         pauseTime={2000}
                     />
@@ -98,7 +98,7 @@ export default function Hero() {
 
                 {/* Description */}
             <motion.p
-                    className="text-lg md:text-xl text-gray-300 mb-12 max-w-2xl mx-auto leading-relaxed"
+                    className="text-base sm:text-lg md:text-xl text-gray-300 mb-8 sm:mb-12 max-w-2xl mx-auto leading-relaxed px-2"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.8, duration: 0.8 }}
@@ -109,19 +109,19 @@ export default function Hero() {
 
                 {/* Buttons */}
             <motion.div
-                    className="flex flex-col sm:flex-row gap-6 justify-center items-center"
+                    className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 1, duration: 0.8 }}
             >
                     <motion.button
                         onClick={handleClickMe}
-                        className="group relative px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full text-white font-semibold text-lg shadow-lg shadow-purple-500/30 overflow-hidden"
+                        className="group relative px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full text-white font-semibold text-base sm:text-lg shadow-lg shadow-purple-500/30 overflow-hidden"
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                     >
                         <span className="relative z-10 flex items-center gap-2">
-                            <Sparkles className="w-5 h-5" />
+                            <Sparkles className="w-4 h-4 sm:w-5 sm:h-5" />
                             Click me!
                         </span>
                         <div className="absolute inset-0 bg-gradient-to-r from-pink-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -130,15 +130,45 @@ export default function Hero() {
 
                     <motion.button
                         onClick={handleExploreWork}
-                        className="group px-8 py-4 border border-purple-500/50 rounded-full text-purple-300 font-semibold text-lg hover:bg-purple-500/10 hover:border-purple-500 transition-all duration-300 backdrop-blur-sm"
+                        className="group px-6 sm:px-8 py-3 sm:py-4 border border-purple-500/50 rounded-full text-purple-300 font-semibold text-base sm:text-lg hover:bg-purple-500/10 hover:border-purple-500 transition-all duration-300 backdrop-blur-sm"
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                     >
                         <span className="flex items-center gap-2">
                 Explore My Work
-                            <ArrowDown className="w-5 h-5 group-hover:translate-y-1 transition-transform" />
+                            <ArrowDown className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-y-1 transition-transform" />
                         </span>
                     </motion.button>
+                </motion.div>
+
+                {/* Social Links */}
+                <motion.div
+                    className="flex gap-4 justify-center items-center mt-8"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 1.2, duration: 0.8 }}
+                >
+                    {[
+                        { href: "https://www.linkedin.com/in/tejasskaushik/", icon: Linkedin, label: "LinkedIn", color: "hover:text-blue-400 hover:border-blue-400/50 hover:bg-blue-500/10" },
+                        { href: "https://www.instagram.com/tejas_kaushik007/", icon: Instagram, label: "Instagram", color: "hover:text-pink-400 hover:border-pink-400/50 hover:bg-pink-500/10" },
+                        { href: "https://github.com/tejask-dev", icon: Github, label: "GitHub", color: "hover:text-gray-300 hover:border-gray-400/50 hover:bg-gray-500/10" },
+                        { href: "mailto:tejas.kaushik@outlook.com", icon: Mail, label: "Email", color: "hover:text-purple-400 hover:border-purple-400/50 hover:bg-purple-500/10" }
+                    ].map((social, index) => (
+                        <motion.a
+                            key={social.label}
+                            href={social.href}
+                            target={social.href.startsWith('mailto') ? undefined : "_blank"}
+                            rel={social.href.startsWith('mailto') ? undefined : "noopener noreferrer"}
+                            className={`p-3 sm:p-4 rounded-full border border-white/20 text-white/70 backdrop-blur-sm transition-all duration-300 ${social.color}`}
+                            initial={{ opacity: 0, scale: 0 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ delay: 1.3 + index * 0.1, type: "spring", stiffness: 200 }}
+                            whileHover={{ scale: 1.15, y: -3 }}
+                            whileTap={{ scale: 0.95 }}
+                        >
+                            <social.icon className="w-5 h-5 sm:w-6 sm:h-6" />
+                        </motion.a>
+                    ))}
                 </motion.div>
             </motion.div>
 

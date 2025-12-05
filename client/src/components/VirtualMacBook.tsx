@@ -29,19 +29,19 @@ const CameraApp = () => {
 
     return (
         <div className="w-full h-full flex flex-col bg-[#1c1c1e] text-white">
-            <div className="p-4 border-b border-gray-700 flex justify-between items-center bg-[#2c2c2e]">
-                <h2 className="text-lg font-semibold">Photos</h2>
-                <span className="text-sm text-gray-400">{allPhotos.length} Items</span>
+            <div className="p-3 sm:p-4 border-b border-gray-700 flex justify-between items-center bg-[#2c2c2e]">
+                <h2 className="text-base sm:text-lg font-semibold">Photos</h2>
+                <span className="text-xs sm:text-sm text-gray-400">{allPhotos.length} Items</span>
             </div>
             
-            <div className="flex-1 overflow-y-auto p-4">
+            <div className="flex-1 overflow-y-auto p-2 sm:p-4">
                 {selectedPhoto ? (
                     <div className="h-full flex flex-col items-center justify-center relative">
                         <button 
                             onClick={() => setSelectedPhoto(null)}
-                            className="absolute top-0 left-0 p-2 bg-gray-800 rounded-full hover:bg-gray-700 transition-colors"
+                            className="absolute top-0 left-0 p-2 bg-gray-800 rounded-full hover:bg-gray-700 transition-colors z-10"
                         >
-                            <X className="w-6 h-6" />
+                            <X className="w-5 h-5 sm:w-6 sm:h-6" />
                         </button>
                         <img 
                             src={selectedPhoto} 
@@ -50,13 +50,13 @@ const CameraApp = () => {
                         />
                     </div>
                 ) : (
-                    <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-4">
                         {allPhotos.map((photo, index) => (
                             <motion.div
                                 key={index}
                                 initial={{ opacity: 0, scale: 0.8 }}
                                 animate={{ opacity: 1, scale: 1 }}
-                                transition={{ delay: index * 0.05 }}
+                                transition={{ delay: index * 0.03 }}
                                 onClick={() => setSelectedPhoto(photo)}
                                 className="aspect-square overflow-hidden rounded-lg cursor-pointer hover:opacity-80 transition-opacity relative group"
                             >
@@ -376,7 +376,7 @@ export default function VirtualMacBook({ isOpen, onClose }: VirtualMacBookProps)
                             initial={{ y: 100 }}
                             animate={{ y: 0 }}
                             transition={{ delay: 0.2, type: "spring", stiffness: 200, damping: 20 }}
-                            className="m-2 px-3 py-2 h-auto bg-[#171f2b80] backdrop-blur-md border border-gray-500/30 rounded-2xl flex flex-row gap-3 z-[999] shadow-2xl mb-4"
+                            className="m-2 px-2 sm:px-3 py-2 h-auto bg-[#171f2b80] backdrop-blur-md border border-gray-500/30 rounded-2xl flex flex-row gap-2 sm:gap-3 z-[999] shadow-2xl mb-4 overflow-x-auto max-w-[95vw] scrollbar-hide"
                         >
                             {appData
                                 .filter((app) => app.id !== 'home')
@@ -384,16 +384,16 @@ export default function VirtualMacBook({ isOpen, onClose }: VirtualMacBookProps)
                                     <motion.div
                                         key={app.id}
                                         onClick={() => setCurrentApp(app.id)}
-                                        className="relative group"
+                                        className="relative group flex-shrink-0"
                                         whileHover={{ scale: 1.2, y: -10 }}
                                         transition={{ type: "spring", stiffness: 300 }}
                                     >
                                         <div
-                                            className="bg-cover rounded-xl w-[50px] h-[50px] cursor-pointer shadow-lg"
+                                            className="bg-cover rounded-xl w-[40px] h-[40px] sm:w-[50px] sm:h-[50px] cursor-pointer shadow-lg"
                                             style={{ backgroundImage: `url(${app.image})` }}
                                         />
-                                        {/* Tooltip */}
-                                        <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-gray-800/90 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap border border-gray-600">
+                                        {/* Tooltip - hidden on mobile */}
+                                        <div className="hidden sm:block absolute -top-10 left-1/2 -translate-x-1/2 bg-gray-800/90 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap border border-gray-600">
                                             {app.name}
                                         </div>
                                         {/* Active Dot */}
@@ -402,14 +402,15 @@ export default function VirtualMacBook({ isOpen, onClose }: VirtualMacBookProps)
                                         )}
                                     </motion.div>
                                 ))}
-                            <div className="h-[50px] w-0 border-0 border-r-1 border-r-gray-400/50 mx-1"></div>
+                            <div className="h-[40px] sm:h-[50px] w-0 border-0 border-r-1 border-r-gray-400/50 mx-1 flex-shrink-0"></div>
                             <motion.div 
                                 onClick={onClose}
+                                className="flex-shrink-0"
                                 whileHover={{ scale: 1.2, y: -10 }}
                                 transition={{ type: "spring", stiffness: 300 }}
                             >
                                 <div
-                                    className="bg-cover rounded-xl w-[50px] h-[50px] cursor-pointer shadow-lg"
+                                    className="bg-cover rounded-xl w-[40px] h-[40px] sm:w-[50px] sm:h-[50px] cursor-pointer shadow-lg"
                                     style={{ backgroundImage: `url(/images/home.png)` }}
                                 />
                             </motion.div>
@@ -418,19 +419,19 @@ export default function VirtualMacBook({ isOpen, onClose }: VirtualMacBookProps)
                         {/* App Window */}
                         <AnimatePresence>
                             {currentApp && (
-                                <div className="w-full absolute left-0 flex justify-center h-[calc(100vh-35px)] top-[35px] pointer-events-none">
+                                <div className="w-full absolute left-0 flex justify-center h-[calc(100vh-35px)] top-[35px] pointer-events-none px-2 sm:px-0">
                                     <motion.div
                                         initial={{ opacity: 0, scale: 0.8, y: 20 }}
                                         animate={{ 
                                             opacity: 1, 
                                             scale: isMaximized ? 1 : 1, 
                                             y: 0,
-                                            width: isMaximized ? "100%" : "80%",
-                                            height: isMaximized ? "100%" : "83%"
+                                            width: isMaximized ? "100%" : "95%",
+                                            height: isMaximized ? "100%" : "75%"
                                         }}
                                         exit={{ opacity: 0, scale: 0.8, y: 20 }}
                                         transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                                        className={`flex flex-col relative mt-8 rounded-xl bg-white overflow-hidden shadow-2xl pointer-events-auto border border-gray-500/20`}
+                                        className={`flex flex-col relative mt-4 sm:mt-8 rounded-xl bg-white overflow-hidden shadow-2xl pointer-events-auto border border-gray-500/20 max-w-5xl`}
                                     >
                                         {/* Window Controls */}
                                         <div className="absolute top-0 left-0 right-0 h-8 bg-gray-200/50 backdrop-blur-md z-[1000] flex items-center px-4 border-b border-gray-300/20">
