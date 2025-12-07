@@ -30,7 +30,11 @@ import {
   createPlaylist,
   getTrackImage,
   SpotifyTrack,
-  SpotifyPlaylist
+  SpotifyPlaylist,
+  isAuthenticated,
+  redirectToSpotifyAuth,
+  handleAuthCallback,
+  clearToken
 } from '../lib/spotify';
 
 export default function SpotifyApp() {
@@ -39,20 +43,45 @@ export default function SpotifyApp() {
   const [user, setUser] = useState<any>(null);
   const [recentlyPlayed, setRecentlyPlayed] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isAuthed, setIsAuthed] = useState(false);
+  const [authChecked, setAuthChecked] = useState(false);
   const [activeTab, setActiveTab] = useState<'home' | 'artists' | 'recent' | 'library'>('home');
   const [currentTrack, setCurrentTrack] = useState<SpotifyTrack | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(0.7);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
+  // Check for auth callback and existing token
   useEffect(() => {
-    loadSpotifyData();
+    const checkAuth = async () => {
+      // Check if we're coming back from Spotify auth
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.has('code')) {
+        const success = await handleAuthCallback();
+        if (success) {
+          setIsAuthed(true);
+        }
+      } else {
+        // Check for existing valid token
+        setIsAuthed(isAuthenticated());
+      }
+      setAuthChecked(true);
+    };
+    
+    checkAuth();
+  }, []);
+
+  // Load data when authenticated
+  useEffect(() => {
+    if (authChecked) {
+      loadSpotifyData();
+    }
     return () => {
       if (audioRef.current) {
         audioRef.current.pause();
       }
     };
-  }, []);
+  }, [authChecked, isAuthed]);
 
   useEffect(() => {
     if (audioRef.current) {
@@ -119,6 +148,67 @@ export default function SpotifyApp() {
     const secs = Math.floor(seconds % 60);
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
+
+  // Show connect screen if not authenticated (optional - for real Spotify data)
+  // Currently showing mock data by default, uncomment below to require auth
+  /*
+  if (authChecked && !isAuthed) {
+    return (
+      <div className="w-full h-full flex flex-col justify-center items-center bg-gradient-to-b from-[#1DB954]/20 to-black text-white p-8">
+        <motion.div
+          initial={{ scale: 0, rotate: -180 }}
+          animate={{ scale: 1, rotate: 0 }}
+          transition={{ type: "spring", stiffness: 200, damping: 15 }}
+          className="mb-8"
+        >
+          <div className="w-24 h-24 bg-[#1DB954] rounded-full flex items-center justify-center shadow-[0_0_50px_rgba(29,185,84,0.5)]">
+            <Music className="w-12 h-12 text-black" />
+          </div>
+        </motion.div>
+        
+        <motion.h2 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="text-3xl font-bold mb-3 text-center"
+        >
+          Connect to Spotify
+        </motion.h2>
+        
+        <motion.p 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="text-gray-400 text-center mb-8 max-w-sm"
+        >
+          See Tejas's top tracks, favorite artists, and recently played music!
+        </motion.p>
+        
+        <motion.button
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          onClick={() => redirectToSpotifyAuth()}
+          className="flex items-center gap-3 px-8 py-4 bg-[#1DB954] hover:bg-[#1ed760] text-black font-bold rounded-full text-lg transition-all hover:scale-105 shadow-lg shadow-[#1DB954]/30"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <Music className="w-6 h-6" />
+          Connect with Spotify
+        </motion.button>
+        
+        <motion.p 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6 }}
+          className="text-gray-500 text-sm mt-6 text-center"
+        >
+          You'll be redirected to Spotify to authorize
+        </motion.p>
+      </div>
+    );
+  }
+  */
 
   if (loading) {
     return (
