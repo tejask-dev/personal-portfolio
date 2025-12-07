@@ -1,6 +1,5 @@
 // Spotify API Service with OAuth PKCE Flow
-// Replace this with your actual Client ID from Spotify Developer Dashboard
-const CLIENT_ID = 'YOUR_CLIENT_ID_HERE'; // <-- YOU'LL PASTE YOUR CLIENT ID HERE
+const CLIENT_ID = '6b0b9a8520304597bd6b975a7839fdc9';
 const REDIRECT_URI = typeof window !== 'undefined' 
   ? window.location.origin 
   : 'https://tejass-kaushik.vercel.app';
