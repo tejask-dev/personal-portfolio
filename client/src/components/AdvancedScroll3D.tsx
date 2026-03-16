@@ -10,40 +10,32 @@ interface AdvancedScroll3DProps {
 export default function AdvancedScroll3D({ children }: AdvancedScroll3DProps) {
     const containerRef = useRef<HTMLDivElement>(null);
     const [currentSection, setCurrentSection] = useState(0);
-    
-    const { scrollYProgress } = useScroll(); // Track window scroll
 
-    // Smooth background transitions
-    const aboutOpacity = useTransform(scrollYProgress, [0.1, 0.25], [0, 1]);
-    // Experience is 2nd section (index 2)
-    const experienceOpacity = useTransform(scrollYProgress, [0.4, 0.55], [0, 1]);
-    // Projects is 3rd section (index 3)
-    const projectsOpacity = useTransform(scrollYProgress, [0.7, 0.85], [0, 1]);
+    const { scrollYProgress } = useScroll();
 
-    // Intersection Observer for precise section tracking
+    // Smooth background transitions per section
+    const aboutOpacity     = useTransform(scrollYProgress, [0.08, 0.22], [0, 1]);
+    const experienceOpacity = useTransform(scrollYProgress, [0.38, 0.52], [0, 1]);
+    const projectsOpacity  = useTransform(scrollYProgress, [0.64, 0.78], [0, 1]);
+    const awardsOpacity    = useTransform(scrollYProgress, [0.82, 0.92], [0, 1]);
+
     useEffect(() => {
-        // Correct order based on Home.tsx: Home -> About -> Experience -> Portfolio -> Awards
         const sections = ['home', 'about', 'experience', 'portfolio', 'awards'];
-        const observerOptions = {
-            root: null,
-            rootMargin: '-50% 0px', // Trigger when section is 50% visible
-            threshold: 0
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const index = sections.indexOf(entry.target.id);
-                    if (index !== -1) {
-                        setCurrentSection(index);
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        const index = sections.indexOf(entry.target.id);
+                        if (index !== -1) setCurrentSection(index);
                     }
-                }
-            });
-        }, observerOptions);
+                });
+            },
+            { root: null, rootMargin: '-50% 0px', threshold: 0 }
+        );
 
-        sections.forEach(id => {
-            const element = document.getElementById(id);
-            if (element) observer.observe(element);
+        sections.forEach((id) => {
+            const el = document.getElementById(id);
+            if (el) observer.observe(el);
         });
 
         return () => observer.disconnect();
@@ -51,77 +43,118 @@ export default function AdvancedScroll3D({ children }: AdvancedScroll3DProps) {
 
     const scrollToSection = (index: number) => {
         const sections = ['home', 'about', 'experience', 'portfolio', 'awards'];
-        const element = document.getElementById(sections[index]);
-        if (element) {
-            element.scrollIntoView({ behavior: 'smooth' });
-        }
+        document.getElementById(sections[index])?.scrollIntoView({ behavior: 'smooth' });
     };
+
+    const sectionLabels = ['Hero', 'About', 'Experience', 'Projects', 'Awards'];
 
     return (
         <div ref={containerRef} className="relative min-h-screen bg-[#04020e]">
-            {/* Starry Background - Base Layer */}
-            <div className="fixed inset-0 z-[1]">
+
+            {/* ── Starry canvas — base layer ── */}
+            <div className="fixed inset-0 z-[1] pointer-events-none">
                 <StarryBackground />
             </div>
-            
-            {/* Background Gradients - Layered for Depth */}
+
+            {/* ── Background gradient layers ── */}
             <div className="fixed inset-0 z-0 pointer-events-none">
-                {/* Default/Hero Background - Deep Space */}
-                <div className="absolute inset-0 bg-gradient-to-b from-[#04020e] via-[#0a051e] to-[#04020e]" />
+                {/* Hero — deep space */}
+                <div className="absolute inset-0 bg-gradient-to-b from-[#04020e] via-[#080420] to-[#04020e]" />
 
-                {/* About Section - Pure Black/Void */}
+                {/* About — clean void with faint purple */}
                 <motion.div
-                    className="absolute inset-0 bg-black"
-                    style={{ opacity: aboutOpacity }}
-                />
-                
-                {/* Experience Section - Deep Nebula */}
-                <motion.div
-                    className="absolute inset-0 bg-gradient-to-tl from-[#0a0a2e] to-black"
-                    style={{ opacity: experienceOpacity }}
+                    className="absolute inset-0"
+                    style={{
+                        opacity: aboutOpacity,
+                        background: 'radial-gradient(ellipse 80% 60% at 50% 40%, rgba(30,10,60,0.8) 0%, transparent 70%)',
+                    }}
                 />
 
-                {/* Projects Section - Cosmic Purple/Blue Tint */}
+                {/* Experience — deep nebula */}
                 <motion.div
-                    className="absolute inset-0 bg-gradient-to-br from-[#0f0529] via-[#04020e] to-[#1a0b38]"
-                    style={{ opacity: projectsOpacity }}
+                    className="absolute inset-0"
+                    style={{
+                        opacity: experienceOpacity,
+                        background: 'linear-gradient(135deg, rgba(8,4,30,0.9) 0%, rgba(20,6,50,0.7) 50%, rgba(4,2,14,0.9) 100%)',
+                    }}
+                />
+
+                {/* Projects — cosmic purple */}
+                <motion.div
+                    className="absolute inset-0"
+                    style={{
+                        opacity: projectsOpacity,
+                        background: 'radial-gradient(ellipse 100% 80% at 30% 50%, rgba(50,10,100,0.5) 0%, transparent 70%)',
+                    }}
+                />
+
+                {/* Awards — golden-purple tint */}
+                <motion.div
+                    className="absolute inset-0"
+                    style={{
+                        opacity: awardsOpacity,
+                        background: 'radial-gradient(ellipse 80% 60% at 70% 60%, rgba(60,20,80,0.5) 0%, transparent 70%)',
+                    }}
+                />
+
+                {/* Persistent subtle vignette */}
+                <div
+                    className="absolute inset-0"
+                    style={{
+                        background: 'radial-gradient(ellipse 100% 100% at 50% 50%, transparent 50%, rgba(4,2,14,0.6) 100%)',
+                    }}
                 />
             </div>
 
-            {/* Main Content */}
+            {/* ── Main content ── */}
             <div className="relative z-10">
                 {children}
             </div>
 
-            {/* Right Side Navigation Dots */}
-            <div className="fixed right-4 md:right-8 top-1/2 transform -translate-y-1/2 z-50 hidden md:block">
-                <div className="flex flex-col gap-4">
-                    {['Hero', 'About', 'Experience', 'Projects', 'Awards'].map((section, index) => (
+            {/* ── Right-side section nav dots ── */}
+            <div className="fixed right-4 md:right-6 top-1/2 -translate-y-1/2 z-50 hidden md:flex flex-col gap-4 items-center">
+                {sectionLabels.map((label, index) => {
+                    const isActive = currentSection === index;
+                    return (
                         <motion.button
-                            key={section}
+                            key={label}
                             onClick={() => scrollToSection(index)}
                             className="group relative flex items-center justify-end"
-                            whileHover={{ scale: 1.2 }}
-                            whileTap={{ scale: 0.9 }}
+                            whileHover={{ scale: 1.3 }}
+                            whileTap={{ scale: 0.88 }}
+                            aria-label={`Go to ${label}`}
                         >
-                            {/* Label on Hover */}
-                            <motion.span 
-                                className="absolute right-6 px-2 py-1 bg-white/10 backdrop-blur-md rounded text-xs text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap"
-                                initial={{ x: 10 }}
-                                whileHover={{ x: 0 }}
+                            {/* Tooltip */}
+                            <motion.span
+                                className="absolute right-7 px-2.5 py-1 bg-black/70 backdrop-blur-md rounded-lg text-xs text-white border border-white/10 opacity-0 group-hover:opacity-100 whitespace-nowrap pointer-events-none"
+                                initial={{ x: 6, opacity: 0 }}
+                                whileHover={{ x: 0, opacity: 1 }}
+                                transition={{ duration: 0.15 }}
                             >
-                                {section}
+                                {label}
                             </motion.span>
-                            
+
                             {/* Dot */}
-                            <div className={`w-2 h-2 md:w-3 md:h-3 rounded-full transition-all duration-500 border border-white/30 ${
-                                currentSection === index 
-                                    ? 'bg-white scale-125 shadow-[0_0_10px_rgba(255,255,255,0.8)]' 
-                                    : 'bg-transparent hover:bg-white/50'
-                            }`} />
+                            <div className="relative flex items-center justify-center w-5 h-5">
+                                {/* Outer ring when active */}
+                                {isActive && (
+                                    <motion.div
+                                        layoutId="navDotRing"
+                                        className="absolute inset-0 rounded-full border border-purple-400/60"
+                                        transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                                    />
+                                )}
+                                <div
+                                    className={`rounded-full transition-all duration-400 ${
+                                        isActive
+                                            ? 'w-2.5 h-2.5 bg-purple-400 shadow-[0_0_10px_rgba(139,92,246,0.9)]'
+                                            : 'w-1.5 h-1.5 bg-white/25 group-hover:bg-white/60'
+                                    }`}
+                                />
+                            </div>
                         </motion.button>
-                    ))}
-                </div>
+                    );
+                })}
             </div>
         </div>
     );
