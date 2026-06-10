@@ -1,260 +1,169 @@
 'use client';
-import { Timeline } from './Timeline';
-import { ExperienceCard } from './ExperienceCard';
+import { useMemo, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import ScrollTextReveal from './ScrollTextReveal';
 
-// Import images
-import personalWebsite from '../assets/Personal Website.png';
-import scienceOlympiad1 from '../assets/Science Olympiad/Hydroecology.jpg';
-import scienceOlympiad2 from '../assets/Science Olympiad/Chemisty.jpg';
-import targetAlpha from '../assets/Target Alpha/TargetAlpha.jpg';
-import huvtsp from '../assets/HUVTSP/HUVTSP-1.png';
-import youreka1 from '../assets/Youreka/YourekaSymposium.jpg';
-import youreka2 from '../assets/Youreka/Research Paper.png';
-import docubridge from '../assets/Docubridge.png';
-import somaAI from '../assets/SomaAI.png';
-import debateMedal from '../assets/DebateMedal.jpg';
-import oslc1 from '../assets/20241103_160449072.jpeg';
-import oslc2 from '../assets/20241103_160456418.jpeg';
-import waterlooCatalystImage from '../assets/WaterlooCatalyst/image.png';
-import stellarImage from '../assets/Stellar/image.png';
+const filters = ['All', 'Startups', 'AI/Tech', 'Research', 'Leadership', 'Finance', 'Education'] as const;
+type Filter = (typeof filters)[number];
+
+const experiences = [
+  {
+    role: 'CTO',
+    org: 'Stellar Learning',
+    dates: '2025 to Present',
+    description: 'Leading technical development for an AI-powered learning platform focused on personalized student experiences, product engineering, and scale.',
+    impact: '10K+ signups, 5K+ active users',
+    tags: ['AI/Tech', 'Education', 'Leadership', 'Startups'],
+  },
+  {
+    role: 'Founder & Developer',
+    org: 'Soma AI',
+    dates: '2024 to Present',
+    description: 'Built and launched an AI-powered mental health companion offering private, personalized conversations for emotional wellbeing.',
+    impact: '300+ users',
+    tags: ['Startups', 'AI/Tech'],
+  },
+  {
+    role: 'Founder',
+    org: 'Top Score Tutoring',
+    dates: '2021 to Present',
+    description: 'Founded and scaled a tutoring initiative supporting students through academic coaching, curriculum support, and confidence-building.',
+    impact: '40+ students supported',
+    tags: ['Education', 'Leadership', 'Startups'],
+  },
+  {
+    role: 'Software Engineering Intern',
+    org: 'DocuBridge',
+    dates: 'Summer 2025',
+    description: 'Worked on AI document processing and financial analysis workflows using modern web technologies and product-minded engineering.',
+    impact: 'AI document workflows',
+    tags: ['AI/Tech', 'Finance'],
+  },
+  {
+    role: 'Researcher',
+    org: 'Youreka Global Health',
+    dates: '2025',
+    description: 'Presented national award-winning research exploring pediatric ART access and adolescent fertility outcomes in Sub-Saharan Africa.',
+    impact: 'National 1st place',
+    tags: ['Research', 'Leadership'],
+  },
+  {
+    role: 'Vice President',
+    org: 'Target Alpha Windsor-Essex',
+    dates: '2023 to 2025',
+    description: 'Led finance education and investment analysis initiatives while competing nationally in case-based financial strategy.',
+    impact: 'Top 7 nationally at FPC 2025',
+    tags: ['Finance', 'Leadership'],
+  },
+  {
+    role: 'Selected Participant',
+    org: 'Harvard Ventures-TECH Summer Program',
+    dates: '2025',
+    description: 'Completed a startup and venture-focused program covering entrepreneurship, business development, and investor pitch frameworks.',
+    impact: 'Harvard venture program',
+    tags: ['Startups', 'Leadership'],
+  },
+  {
+    role: 'Early Entrepreneurs Stream',
+    org: 'Waterloo Catalyst',
+    dates: '2025',
+    description: 'Selected for a competitive entrepreneurship and innovation stream focused on validating ideas and building early-stage ventures.',
+    impact: 'Selective admission',
+    tags: ['Startups', 'Education'],
+  },
+  {
+    role: 'Competitor',
+    org: 'Ethics Bowl Canada',
+    dates: '2023 to 2024',
+    description: 'Competed in regional Ethics Bowl competitions, earning 2nd place in the first competition and developing structured ethical argumentation skills.',
+    impact: '2nd place regional',
+    tags: ['Research', 'Leadership', 'Education'],
+  },
+  {
+    role: 'Competitor',
+    org: 'Science Olympiad Battle STEM',
+    dates: '2022',
+    description: 'Placed 1st in both Chemistry and Hydroecology at the University of Guelph Battle STEM event.',
+    impact: '1st place Chemistry + Hydroecology',
+    tags: ['Research', 'Education'],
+  },
+];
 
 export default function Experience() {
-    const data = [
-        {
-            title: '2021',
-            subtitle: 'Founded',
-            content: (
-                <ExperienceCard
-                    company="Top Score Tutoring"
-                    role="Founder & CEO"
-                    location="Canada"
-                    description={
-                        <>
-                            Founded and scaled a tutoring business that has helped{' '}
-                            <span className="font-serif font-bold italic">40+ students</span> improve their academic performance. Developed curriculum and managed a team of tutors across{' '}
-                            <span className="font-serif font-bold italic">multiple subjects</span>.
-                        </>
-                    }
-                />
-            )
-        },
-        {
-            title: '2022',
-            subtitle: 'Competition',
-            content: (
-                <ExperienceCard
-                    company="Science Olympiad"
-                    role="Competitor"
-                    location="Regional"
-                    description={
-                        <>
-                            Competed in various scientific events, demonstrating expertise in{' '}
-                            <span className="font-serif font-bold italic">Hydroecology and Chemistry</span>. Applied scientific principles to solve complex problems and{' '}
-                            <span className="font-serif font-bold italic">conduct experiments</span>.
-                        </>
-                    }
-                    images={[
-                        { src: scienceOlympiad1, alt: 'Hydroecology' },
-                        { src: scienceOlympiad2, alt: 'Chemistry' }
-                    ]}
-                />
-            )
-        },
-        {
-            title: '2023',
-            subtitle: 'Finance',
-            content: (
-                <ExperienceCard
-                    company="Target Alpha Windsor Essex County Chapter"
-                    role="Vice-President"
-                    location="National"
-                    description={
-                        <>
-                            Participated in Target Alpha, a premier{' '}
-                            <span className="font-serif font-bold italic">financial case competition</span>. Analyzed market trends and developed{' '}
-                            <span className="font-serif font-bold italic">strategic investment recommendations</span>.
-                        </>
-                    }
-                    images={[
-                        { src: targetAlpha, alt: 'Target Alpha Competition' }
-                    ]}
-                />
-            )
-        },
-        {
-            title: '2024',
-            subtitle: 'Leadership',
-            content: (
-                <ExperienceCard
-                    company="Ontario Senior Leadership Conference"
-                    role="Spirit Leader"
-                    location="Ontario"
-                    description={
-                        <>
-                            Selected as{' '}
-                            <span className="font-serif font-bold italic">Spirit Leader</span> for the Ontario Senior Leadership Conference. Led activities and inspired 2500+{' '}
-                            <span className="font-serif font-bold italic">student leaders</span> across the province.
-                        </>
-                    }
-                    images={[
-                        { src: oslc1, alt: 'OSLC Spirit Leader' },
-                        { src: oslc2, alt: 'OSLC Team' },
-                    ]}
-                />
-            )
-        },
-        {
-            title: '2025',
-            subtitle: 'Waterloo',
-            content: (
-                <ExperienceCard
-                    company="Waterloo Catalyst"
-                    role="Participant"
-                    location="University of Waterloo"
-                    description={
-                        <>
-                            Participated in Waterloo Catalyst program, focusing on{' '}
-                            <span className="font-serif font-bold italic">innovation and entrepreneurship</span>. Gained insights into{' '}
-                            <span className="font-serif font-bold italic">startup development and technology commercialization</span>.
-                        </>
-                    }
-                    images={[
-                        { src: waterlooCatalystImage, alt: 'Waterloo Catalyst Certificate' }
-                    ]}
-                />
-            )
-        },
-        {
-            title: '2025',
-            subtitle: 'Harvard',
-            content: (
-                <ExperienceCard
-                    company="Harvard Ventures"
-                    role="Alumni"
-                    location="Harvard University"
-                    description={
-                        <>
-                            Selected for Harvard Ventures program, gaining insights into{' '}
-                            <span className="font-serif font-bold italic">entrepreneurship and venture capital</span>. Worked on business development and{' '}
-                            <span className="font-serif font-bold italic">pitch presentations</span> for innovative startups.
-                        </>
-                    }
-                    images={[
-                        { src: huvtsp, alt: 'Harvard Ventures' }
-                    ]}
-                />
-            )
-        },
-        {
-            title: '2025',
-            subtitle: 'Harvard',
-            content: (
-                <ExperienceCard
-                    company="CS50x"
-                    role="Student"
-                    location="Harvard University"
-                    description={
-                        <>
-                            Enrolled in Harvard's CS50x course, gaining comprehensive knowledge in{' '}
-                            <span className="font-serif font-bold italic">computer science fundamentals</span>. Learning{' '}
-                            <span className="font-serif font-bold italic">C, Python, SQL, HTML, CSS, JavaScript</span> and web development.
-                        </>
-                    }
-                    images={[
-                        { src: personalWebsite, alt: 'CS50x Course' }
-                    ]}
-                />
-            )
-        },
-        {
-            title: '2025',
-            subtitle: 'National',
-            content: (
-                <ExperienceCard
-                    company="Youreka Global Health"
-                    role="National Winner"
-                    location="National"
-                    description={
-                        <>
-                            Won <span className="font-serif font-bold italic">1st place nationally</span> for research on HIV treatment in Sub-Saharan Africa. Research paper{' '}
-                            <span className="font-serif font-bold italic">soon to be published</span> and contributed to advancing pediatric ART research.
-                        </>
-                    }
-                    images={[
-                        { src: youreka2, alt: 'Research Paper' },
-                        { src: youreka1, alt: 'Youreka Symposium' }
-                    ]}
-                />
-            )
-        },
-        {
-            title: '2025',
-            subtitle: 'Summer',
-            content: (
-                <ExperienceCard
-                    company="Docubridge"
-                    role="Software Engineering Intern"
-                    location="Remote"
-                    description={
-                        <>
-                            Worked as a software engineering intern, contributing to{' '}
-                            <span className="font-serif font-bold italic">AI document processing and Financial Analysis platform</span>. Gained experience in{' '}
-                            <span className="font-serif font-bold italic">React, TypeScript, and Node.js</span> while working on real-world projects. Worked on the financial analysis platform, which is a web application that allows users to upload financial documents and analyze them using AI.
-                        </>
-                    }
-                    images={[
-                        { src: docubridge, alt: 'Docubridge Platform' }
-                    ]}
-                />
-            )
-        },
-        {
-            title: '2025',
-            subtitle: 'Present',
-            content: (
-                <ExperienceCard
-                    company="SomaAI"
-                    role="Founder & Developer"
-                    location="Remote"
-                    description={
-                        <>
-                            Developed an AI-powered platform that enables users to talk to a AI private chatbot where you can pose any questions related to Mental Health and get personalized answers. {' '}
-                            <span className="font-serif font-bold italic">300+ active users</span>. Exploring next-generation AI systems and{' '}
-                            <span className="font-serif font-bold italic">intelligent automation</span> for real-world problem solving.
-                        </>
-                    }
-                    images={[
-                        { src: somaAI, alt: 'SomaAI Platform' }
-                    ]}
-                />
-            )
-        },
-        {
-            title: '2025',
-            subtitle: 'Present',
-            content: (
-                <ExperienceCard
-                    company="Stellar Learning"
-                    role="Deputy CTO"
-                    location="Remote"
-                    description={
-                        <>
-                            Leading the technical development of an AI-powered learning platform that enables students to learn at their own pace and get personalized recommendations. {' '}
-                            <span className="font-serif font-bold italic">10,000+ students</span>. Built scalable architecture and implemented machine learning algorithms for{' '}
-                            <span className="font-serif font-bold italic">personalized learning experiences</span>.
-                        </>
-                    }
-                    images={[
-                        { src: stellarImage, alt: 'Stellar Learning Platform' }
-                    ]}
-                />
-            )
-        }
-    ];
+  const [activeFilter, setActiveFilter] = useState<Filter>('All');
+  const visible = useMemo(
+    () => (activeFilter === 'All' ? experiences : experiences.filter((entry) => entry.tags.includes(activeFilter))),
+    [activeFilter],
+  );
 
-    return (
-        <div className="relative w-full overflow-clip bg-linear-to-b from-[#1c192a99] to-[#04020e]" id="experience">
-            <Timeline data={data} />
+  return (
+    <section id="experience" className="section-shell">
+      <div className="mx-auto max-w-7xl">
+        <div className="flex flex-col gap-7 md:flex-row md:items-end md:justify-between">
+          <div>
+            <p className="eyebrow">Experience</p>
+            <ScrollTextReveal
+              text="A strategic record across startups, AI, research, finance, and leadership."
+              className="section-title max-w-4xl"
+            />
+          </div>
+          <div className="flex flex-wrap gap-2" role="tablist" aria-label="Experience filters">
+            {filters.map((filter) => (
+              <button
+                key={filter}
+                type="button"
+                onClick={() => setActiveFilter(filter)}
+                className={`rounded-full border px-4 py-2 text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-[#c084fc] ${
+                  activeFilter === filter
+                    ? 'border-[#c084fc] bg-[#a855f7] text-white'
+                    : 'border-[#f8fbff]/12 bg-[#f8fbff]/[0.06] text-[#f8fbff] hover:border-[#c084fc]/60'
+                }`}
+                role="tab"
+                aria-selected={activeFilter === filter}
+              >
+                {filter}
+              </button>
+            ))}
+          </div>
         </div>
-    );
+
+        <motion.div layout className="mt-12 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+          <AnimatePresence mode="popLayout">
+            {visible.map((entry) => (
+              <motion.article
+                layout
+                key={`${entry.org}-${entry.role}`}
+                initial={{ opacity: 0, y: 20, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 12, scale: 0.98 }}
+                transition={{ duration: 0.35 }}
+                className="rounded-[1.5rem] border border-[#f8fbff]/10 bg-[#16091f]/76 p-5 backdrop-blur transition hover:-translate-y-1 hover:border-[#c084fc]/55"
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#c084fc]">{entry.role}</p>
+                    <h3 className="mt-1.5 text-xl font-semibold leading-tight text-[#f8fbff]">{entry.org}</h3>
+                  </div>
+                  <span className="shrink-0 rounded-full border border-[#f8fbff]/10 px-3 py-1 text-xs font-semibold text-[#ddd6fe]">
+                    {entry.dates}
+                  </span>
+                </div>
+                <p className="mt-4 text-sm leading-7 text-[#ede9fe]">{entry.description}</p>
+                <div className="mt-4 rounded-2xl border border-[#c084fc]/25 bg-[#a855f7]/10 px-4 py-2.5 text-sm font-bold text-[#e9d5ff]">
+                  {entry.impact}
+                </div>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {entry.tags.map((tag) => (
+                    <span key={tag} className="rounded-full bg-[#f8fbff]/[0.07] px-3 py-1 text-xs font-semibold text-[#ddd6fe]">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </motion.article>
+            ))}
+          </AnimatePresence>
+        </motion.div>
+      </div>
+    </section>
+  );
 }

@@ -37,13 +37,12 @@
 
 /* ===================== VARIABLES ===================== */
 :root {
-    --color-primary: #eae5df;
-    --color-primary-content: #171717;
-    --color-secondary: #d1c8ff;
-    --font-sans: 'textreg', sans-serif;
-    --purple-glow: rgba(139, 92, 246, 0.6);
-    --pink-glow: rgba(236, 72, 153, 0.4);
-    --cyan-glow: rgba(6, 182, 212, 0.3);
+    --color-primary: #f8fbff;
+    --color-primary-content: #070312;
+    --color-secondary: #ddd6fe;
+    --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --blue-glow: rgba(59, 130, 246, 0.28);
+    --cyan-glow: rgba(56, 189, 248, 0.18);
 }
 
 /* ===================== BASE STYLES ===================== */
@@ -53,11 +52,12 @@
     }
 
     body {
-        @apply text-[#eae5dfff];
-        background-color: #04020e;
-        font-family: 'textreg', sans-serif;
+        @apply text-[#f8fbff];
+        background-color: #070312;
+        font-family: var(--font-sans);
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
     }
 
     /* Custom Scrollbar */
@@ -66,30 +66,30 @@
     }
 
     ::-webkit-scrollbar-track {
-        background: #04020e;
+        background: #070312;
     }
 
     ::-webkit-scrollbar-thumb {
-        background: linear-gradient(to bottom, #7c3aed, #ec4899);
+        background: #a855f7;
         border-radius: 9999px;
     }
 
     ::-webkit-scrollbar-thumb:hover {
-        background: linear-gradient(to bottom, #8b5cf6, #f472b6);
+        background: #c084fc;
     }
 
     h1 {
-        @apply text-3xl font-bold tracking-tight sm:text-5xl;
+        @apply font-semibold tracking-normal;
     }
 
     h2 {
-        @apply sm:text-3xl font-bold text-lg italic text-[#d1c8ffff] font-serif;
+        @apply font-semibold tracking-normal text-[#f8fbff];
     }
 
     /* Selection color */
     ::selection {
-        background: rgba(139, 92, 246, 0.3);
-        color: #fff;
+        background: rgba(59, 130, 246, 0.36);
+        color: #f8fbff;
     }
 }
 
@@ -361,6 +361,77 @@
         background: rgba(255, 255, 255, 0.07);
         border-color: rgba(139, 92, 246, 0.3);
         box-shadow: 0 0 30px rgba(139, 92, 246, 0.1);
+    }
+
+    .section-shell {
+        position: relative;
+        padding: 7rem 1.25rem;
+    }
+
+    @media (min-width: 768px) {
+        .section-shell {
+            padding-top: 8.5rem;
+            padding-bottom: 8.5rem;
+        }
+    }
+
+    .section-title {
+        font-size: clamp(2.4rem, 5vw, 4.6rem);
+        line-height: 1.04;
+        font-weight: 650;
+        letter-spacing: 0;
+    }
+
+    .eyebrow {
+        margin-bottom: 1rem;
+        font-size: 0.78rem;
+        line-height: 1.2;
+        font-weight: 800;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: #ddd6fe;
+    }
+
+    .icon-button {
+        display: inline-flex;
+        min-width: 2.75rem;
+        min-height: 2.75rem;
+        align-items: center;
+        justify-content: center;
+        border-radius: 9999px;
+        border: 1px solid rgba(244, 239, 229, 0.12);
+        background: rgba(244, 239, 229, 0.06);
+        color: #f8fbff;
+        transition: border-color 180ms ease, color 180ms ease, background 180ms ease, transform 180ms ease;
+    }
+
+    .icon-button:hover {
+        transform: translateY(-1px);
+        border-color: rgba(96, 165, 250, 0.65);
+        color: #ddd6fe;
+        background: rgba(244, 239, 229, 0.1);
+    }
+
+    /* ── Skill keycap ── */
+    .skill-key {
+        background: linear-gradient(145deg, rgba(248, 251, 255, 0.07) 0%, rgba(7, 22, 47, 0.8) 100%);
+        border: 1px solid rgba(248, 251, 255, 0.1);
+        border-bottom: 3px solid rgba(59, 130, 246, 0.28);
+        box-shadow:
+            0 4px 14px rgba(0, 0, 0, 0.38),
+            inset 0 1px 0 rgba(248, 251, 255, 0.08);
+    }
+
+    .skill-key:hover {
+        background: linear-gradient(145deg, rgba(59, 130, 246, 0.1) 0%, rgba(7, 22, 47, 0.8) 100%);
+        border-top-color: rgba(248, 251, 255, 0.16);
+        border-left-color: rgba(248, 251, 255, 0.16);
+        border-right-color: rgba(248, 251, 255, 0.16);
+        border-bottom-color: rgba(59, 130, 246, 0.5);
+        box-shadow:
+            0 8px 24px rgba(0, 0, 0, 0.35),
+            0 0 18px rgba(59, 130, 246, 0.15),
+            inset 0 1px 0 rgba(248, 251, 255, 0.12);
     }
 
     /* Gradient border wrapper */

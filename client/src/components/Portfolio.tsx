@@ -1,419 +1,240 @@
 'use client';
-import { useState, useRef } from 'react';
-import { motion, useInView, AnimatePresence } from 'framer-motion';
-import { ExternalLink, Code, Brain, Rocket, Star, Gamepad2, Play, CheckCircle, ChevronDown } from 'lucide-react';
-import { FaGithub } from 'react-icons/fa';
-import AnimatedCard from './AnimatedCard';
-import AnimatedText from './AnimatedText';
-
-// Game Components
-import TetrisGame from './games/TetrisGame';
-import StarshipGame from './games/StarshipGame';
-import FighterGame from './games/FighterGame';
-
-// Import images
+import { useMemo, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { ArrowUpRight, Github } from 'lucide-react';
+import ScrollTextReveal from './ScrollTextReveal';
 import somaAI from '../assets/SomaAI.png';
-import mortgageWebsite from '../assets/MortgageWebsite.png';
 import docubridge from '../assets/Docubridge.png';
 import researchPaper from '../assets/Youreka/Research Paper.png';
-import personalWebsite from '../assets/Personal Website.png';
+import stellarImage from '../assets/Stellar/image.png';
+
+const filters = ['All', 'AI/ML', 'Web', 'Research', 'Client Work'] as const;
+type Filter = (typeof filters)[number];
+
+const projects = [
+  {
+    title: 'Soma AI',
+    category: 'AI/ML' as Filter,
+    image: somaAI,
+    description: 'An AI-powered mental health companion offering private, personalized conversations — built end to end as a real product, not a demo.',
+    problem: 'Students and young people need accessible, judgment-free mental health support that meets them where they are.',
+    solution: 'Designed and shipped an LLM-driven companion with careful conversation design, privacy-first handling, and a calm product experience.',
+    tech: ['Python', 'OpenAI API', 'React', 'Node.js'],
+    impact: '300+ users',
+    live: 'https://somaai-5qe3.onrender.com/',
+    caseStudy: '/case-studies/soma-ai',
+    github: 'https://github.com/tejask-dev',
+    role: 'Founder & Developer',
+  },
+  {
+    title: 'Stellar Learning',
+    category: 'AI/ML' as Filter,
+    image: stellarImage,
+    description: 'An AI-powered personalized learning platform helping students practice, adapt, and build academic confidence at meaningful scale.',
+    problem: 'Students need adaptive learning support that responds faster than static practice tools.',
+    solution: 'Led product engineering for AI-personalized learning, progress tracking, and student growth loops.',
+    tech: ['React', 'Firebase', 'Node.js', 'AI/ML', 'Tailwind CSS'],
+    impact: '10K+ signups, 5K+ active users',
+    live: 'https://stellarlearning.app/',
+    caseStudy: 'https://stellarlearning.app/',
+    github: 'https://github.com/tejask-dev',
+    role: 'CTO',
+  },
+  {
+    title: 'DocuBridge',
+    category: 'AI/ML' as Filter,
+    image: docubridge,
+    description: 'AI document processing and financial analysis platform for uploading, extracting, and analyzing complex financial documents.',
+    problem: 'Financial review is slowed by scattered documents and manual extraction workflows.',
+    solution: 'Contributed to upload, extraction, and AI-supported analysis workflows for financial document review.',
+    tech: ['React', 'TypeScript', 'Node.js', 'AI/ML'],
+    impact: 'Internship engineering work',
+    live: null,
+    caseStudy: '/case-studies/docubridge',
+    github: 'https://github.com/tejask-dev/Docubridge-Intership',
+    role: 'Software Engineering Intern',
+  },
+  {
+    title: 'HIV Treatment Research',
+    category: 'Research' as Filter,
+    image: researchPaper,
+    description: 'Data-driven global health research analyzing the relationship between adolescent fertility rates and pediatric ART access in Sub-Saharan Africa.',
+    problem: 'Global health access gaps require rigorous data storytelling and careful research interpretation.',
+    solution: 'Analyzed public health indicators across countries, presenting findings at a national symposium.',
+    tech: ['Python', 'Data Analysis', 'Statistics', 'Research Methods'],
+    impact: '1st place national',
+    live: null,
+    caseStudy: 'https://github.com/tejask-dev/hiv-child-treatment-graphs',
+    github: 'https://github.com/tejask-dev/hiv-child-treatment-graphs',
+    role: 'Researcher',
+  },
+  {
+    title: 'Web Solutions Venture',
+    category: 'Client Work' as Filter,
+    image: null,
+    visual: 'clients',
+    description: 'A client-services venture built through the Summer Company Program, delivering strategy-led web design for business owners.',
+    problem: 'Local businesses need credible digital presences that communicate trust and convert attention into revenue.',
+    solution: 'Packaging web design, brand positioning, and product thinking for real estate, landscaping, and international business clients.',
+    tech: ['React', 'TypeScript', 'Tailwind CSS', 'Strategy'],
+    impact: '3 clients, one $10K USD project',
+    live: null,
+    caseStudy: '#contact',
+    github: 'https://github.com/tejask-dev',
+    role: 'Founder',
+  },
+];
 
 export default function Portfolio() {
-    const [activeFilter, setActiveFilter] = useState('all');
-    const [activeGame, setActiveGame] = useState<string | null>(null);
-    const [visibleProjects, setVisibleProjects] = useState(6);
-    const ref = useRef(null);
-    const isInView = useInView(ref, { once: true, margin: '-80px' });
+  const [activeFilter, setActiveFilter] = useState<Filter>('All');
+  const visibleProjects = useMemo(
+    () => (activeFilter === 'All' ? projects : projects.filter((project) => project.category === activeFilter)),
+    [activeFilter],
+  );
 
-    const categories = [
-        { id: 'all', name: 'All', icon: Star },
-        { id: 'ai', name: 'AI & ML', icon: Brain },
-        { id: 'web', name: 'Web Dev', icon: Code },
-        { id: 'research', name: 'Research', icon: Rocket },
-        { id: 'games', name: 'Games', icon: Gamepad2 },
-    ];
+  return (
+    <section id="portfolio" className="section-shell">
+      <div className="mx-auto max-w-7xl">
+        <div className="flex flex-col gap-7 md:flex-row md:items-end md:justify-between">
+          <div>
+            <p className="eyebrow">Portfolio</p>
+            <ScrollTextReveal
+              text="Selected projects with a clear problem, product thesis, and path to impact."
+              className="section-title max-w-4xl"
+            />
+          </div>
 
-    const projects = [
-        {
-            id: 1,
-            title: 'SomaAI',
-            description: 'AI-powered mental health chatbot with 1,000+ active users. Personalized, private conversations for emotional wellbeing.',
-            image: somaAI,
-            category: 'ai',
-            tech: ['Python', 'OpenAI API', 'React', 'Node.js'],
-            links: { live: 'https://somaai-5qe3.onrender.com/', github: 'https://github.com/tejask-dev' },
-            linkLabels: { live: 'Working Product' },
-            achievements: ['1,000+ active users', 'Next-gen AI systems', 'Intelligent automation'],
-            accent: 'from-violet-500/20 to-purple-600/10',
-            borderAccent: 'hover:border-violet-500/40',
-            glowColor: 'hover:shadow-[0_0_40px_rgba(139,92,246,0.2)]',
-        },
-        {
-            id: 2,
-            title: 'Stellar Learning',
-            description: 'EdTech platform revolutionizing how students learn with AI-driven personalization. 10,000+ signups.',
-            image: personalWebsite,
-            category: 'web',
-            tech: ['React', 'Node.js', 'Firebase', 'Tailwind CSS'],
-            links: { live: 'https://stellarlearning.app/', github: 'https://github.com/tejask-dev' },
-            linkLabels: { live: 'Live Website' },
-            achievements: ['10,000+ signups', '5,000+ active users', 'Revolutionary EdTech'],
-            accent: 'from-cyan-500/20 to-blue-600/10',
-            borderAccent: 'hover:border-cyan-500/40',
-            glowColor: 'hover:shadow-[0_0_40px_rgba(6,182,212,0.2)]',
-        },
-        {
-            id: 3,
-            title: 'MainSt.AI',
-            description: 'AI-powered financial analysis and grant advisor for small businesses with particle backgrounds and interactive charts.',
-            image: null,
-            category: 'ai',
-            tech: ['Next.js 14', 'DeepSeek AI', 'Supabase', 'Three.js'],
-            links: { live: '#', github: 'https://github.com/ShubhamDoshi126/Hackathon_Mainst_AI' },
-            linkLabels: { live: 'Under Construction' },
-            achievements: ['Hackathon Project', 'Financial Analysis', 'Grant Advisor'],
-            accent: 'from-amber-500/20 to-orange-600/10',
-            borderAccent: 'hover:border-amber-500/40',
-            glowColor: 'hover:shadow-[0_0_40px_rgba(245,158,11,0.15)]',
-        },
-        {
-            id: 4,
-            title: 'DocuBridge',
-            description: 'Document processing platform using AI to extract, analyze, and organize information from complex documents at scale.',
-            image: docubridge,
-            category: 'ai',
-            tech: ['Python', 'AI/ML', 'React', 'Node.js'],
-            links: { live: '#', github: 'https://github.com/tejask-dev/Docubridge-Intership' },
-            linkLabels: { live: 'Deploying Soon' },
-            achievements: ['AI document processing', 'Advanced analysis', 'Automated extraction'],
-            accent: 'from-emerald-500/20 to-teal-600/10',
-            borderAccent: 'hover:border-emerald-500/40',
-            glowColor: 'hover:shadow-[0_0_40px_rgba(16,185,129,0.15)]',
-        },
-        {
-            id: 5,
-            title: 'Mortgage Website',
-            description: 'Professional mortgage platform built for a client with modern design, intuitive UX, and responsive layout.',
-            image: mortgageWebsite,
-            category: 'web',
-            tech: ['React', 'TypeScript', 'Tailwind CSS', 'Vite'],
-            links: { live: '#', github: 'https://github.com/tejask-dev' },
-            linkLabels: { live: 'Client Project' },
-            achievements: ['Client project', 'Modern design', 'User-friendly interface'],
-            accent: 'from-blue-500/20 to-indigo-600/10',
-            borderAccent: 'hover:border-blue-500/40',
-            glowColor: 'hover:shadow-[0_0_40px_rgba(59,130,246,0.15)]',
-        },
-        {
-            id: 6,
-            title: 'HIV Child Treatment Research',
-            description: 'National award-winning research analyzing HIV treatment data for children in Sub-Saharan Africa. Soon to be published.',
-            image: researchPaper,
-            category: 'research',
-            tech: ['Python', 'Data Analysis', 'Research', 'Statistics'],
-            links: { live: '#', github: 'https://github.com/tejask-dev/hiv-child-treatment-graphs' },
-            linkLabels: { live: '1st Place National' },
-            achievements: ['1st Place National', 'Global health research', 'Data analysis'],
-            accent: 'from-rose-500/20 to-red-600/10',
-            borderAccent: 'hover:border-rose-500/40',
-            glowColor: 'hover:shadow-[0_0_40px_rgba(244,63,94,0.15)]',
-        },
-        {
-            id: 7,
-            title: 'Neon Tetris',
-            description: 'Classic Tetris with a stunning neon aesthetic. Custom game engine with score tracking, levels, and smooth 60 FPS animations.',
-            image: 'game-tetris',
-            category: 'games',
-            tech: ['React', 'Canvas API', 'Game Loop', 'TypeScript'],
-            gameId: 'tetris',
-            achievements: ['Custom game engine', '60 FPS rendering', 'Responsive controls'],
-            accent: 'from-purple-500/20 to-indigo-600/10',
-            borderAccent: 'hover:border-purple-500/40',
-            glowColor: 'hover:shadow-[0_0_40px_rgba(139,92,246,0.2)]',
-        },
-        {
-            id: 8,
-            title: 'Starship Shooter',
-            description: 'Vertical scrolling space shooter. Defeat waves of enemies, dodge bullets, and survive in deep space.',
-            image: 'game-starship',
-            category: 'games',
-            tech: ['Canvas API', 'Collision Detection', 'Particle System'],
-            gameId: 'starship',
-            achievements: ['Particle effects', 'Enemy AI', 'Dynamic difficulty'],
-            accent: 'from-cyan-500/20 to-slate-600/10',
-            borderAccent: 'hover:border-cyan-500/40',
-            glowColor: 'hover:shadow-[0_0_40px_rgba(6,182,212,0.2)]',
-        },
-        {
-            id: 9,
-            title: 'Cyber Fighter',
-            description: '2D fighting game with character selection and AI opponent. Choose from 5 unique fighters and battle for supremacy.',
-            image: 'game-fighter',
-            category: 'games',
-            tech: ['Canvas API', 'State Machine', 'Physics Engine'],
-            gameId: 'fighter',
-            achievements: ['Combat system', 'AI opponent', 'Character selection'],
-            accent: 'from-red-500/20 to-orange-600/10',
-            borderAccent: 'hover:border-red-500/40',
-            glowColor: 'hover:shadow-[0_0_40px_rgba(239,68,68,0.2)]',
-        },
-    ];
+          <div className="flex flex-wrap gap-2" role="tablist" aria-label="Project filters">
+            {filters.map((filter) => (
+              <button
+                key={filter}
+                type="button"
+                onClick={() => setActiveFilter(filter)}
+                className={`rounded-full border px-4 py-2 text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-[#c084fc] ${
+                  activeFilter === filter
+                    ? 'border-[#c084fc] bg-[#a855f7] text-white'
+                    : 'border-[#f8fbff]/12 bg-[#f8fbff]/[0.06] text-[#f8fbff] hover:border-[#c084fc]/60'
+                }`}
+                aria-selected={activeFilter === filter}
+                role="tab"
+              >
+                {filter}
+              </button>
+            ))}
+          </div>
+        </div>
 
-    const filteredProjects = activeFilter === 'all'
-        ? projects
-        : projects.filter((p) => p.category === activeFilter);
-
-    const displayProjects = filteredProjects.slice(0, visibleProjects);
-    const hasMore = visibleProjects < filteredProjects.length;
-
-    const gameGradients: Record<string, string> = {
-        tetris: 'from-purple-900/80 via-indigo-900/60 to-purple-900/80',
-        starship: 'from-slate-900/80 via-cyan-900/60 to-slate-900/80',
-        fighter: 'from-red-900/80 via-orange-900/60 to-red-900/80',
-    };
-
-    return (
-        <section id="portfolio" className="min-h-screen py-20 bg-transparent relative">
-            <div className="container mx-auto px-4">
-                {/* Header */}
-                <div ref={ref} className="text-center mb-10 sm:mb-16">
-                    <div className="mb-4 sm:mb-5">
-                        <AnimatedText
-                            text="Projects & Creations"
-                            type="fadeIn"
-                            className="text-4xl sm:text-5xl md:text-6xl font-bold bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent"
-                        />
+        <motion.div layout className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+          <AnimatePresence mode="popLayout">
+            {visibleProjects.map((project) => (
+              <motion.article
+                layout
+                key={project.title}
+                initial={{ opacity: 0, y: 24, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 12, scale: 0.98 }}
+                transition={{ duration: 0.45 }}
+                className="group overflow-hidden rounded-[1.5rem] border border-[#f8fbff]/10 bg-[#16091f]/76 shadow-xl shadow-black/10 backdrop-blur transition hover:-translate-y-1 hover:border-[#c084fc]/55 hover:shadow-2xl"
+              >
+                <div className="relative h-52 overflow-hidden">
+                  {project.image ? (
+                    <img
+                      src={project.image}
+                      alt={`${project.title} preview`}
+                      className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div className="relative h-full w-full overflow-hidden bg-[radial-gradient(circle_at_20%_20%,rgba(216,180,254,0.42),transparent_32%),linear-gradient(135deg,#16091f_0%,#4c1d95_48%,#7c3aed_100%)] p-5 transition duration-700 group-hover:scale-105">
+                      <div className="absolute right-5 top-5 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-bold uppercase tracking-[0.2em] text-white/85 backdrop-blur">
+                        Client Work
+                      </div>
+                      <div className="absolute bottom-5 left-5 right-5 rounded-2xl border border-white/15 bg-[#070312]/70 p-4 shadow-2xl backdrop-blur">
+                        <p className="text-xs font-bold uppercase tracking-[0.2em] text-fuchsia-200">{project.title}</p>
+                        <div className="mt-3 grid grid-cols-3 gap-2">
+                          {['3 clients', '$10K', 'Strategy'].map((label) => (
+                            <span key={label} className="rounded-full bg-white/10 px-3 py-2 text-center text-xs font-bold text-white">
+                              {label}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
                     </div>
-                    <motion.p
-                        className="text-base sm:text-lg text-gray-400 max-w-2xl mx-auto px-2"
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={isInView ? { opacity: 1, y: 0 } : {}}
-                        transition={{ duration: 0.7, delay: 0.2 }}
-                    >
-                        AI-powered applications, cutting-edge web platforms, and interactive games —
-                        built with purpose and precision.
-                    </motion.p>
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#16091f] via-transparent to-transparent" />
+                  <span className="absolute left-4 top-4 rounded-full bg-[#070312]/70 px-3 py-1 text-xs font-bold uppercase tracking-[0.16em] text-[#e9d5ff] backdrop-blur">
+                    {project.category}
+                  </span>
                 </div>
 
-                {/* Filter buttons */}
-                <motion.div
-                    className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-10 sm:mb-14 px-2"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={isInView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.7, delay: 0.35 }}
-                >
-                    {categories.map((cat, i) => (
-                        <motion.button
-                            key={cat.id}
-                            onClick={() => { setActiveFilter(cat.id); setVisibleProjects(6); }}
-                            className={`flex items-center gap-1.5 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full font-semibold text-xs sm:text-sm transition-all duration-300 border ${
-                                activeFilter === cat.id
-                                    ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white border-transparent shadow-lg shadow-purple-500/25'
-                                    : 'bg-white/5 border-white/10 text-gray-400 hover:text-white hover:bg-white/10 hover:border-white/20'
-                            }`}
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            initial={{ opacity: 0, y: 16 }}
-                            animate={isInView ? { opacity: 1, y: 0 } : {}}
-                            transition={{ duration: 0.4, delay: 0.5 + i * 0.08 }}
-                        >
-                            <cat.icon className="w-3.5 h-3.5" />
-                            {cat.name}
-                        </motion.button>
+                <div className="p-5">
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <p className="text-xs font-bold uppercase tracking-[0.14em] text-[#c084fc]">{project.role}</p>
+                      <h3 className="mt-1 text-xl font-semibold text-[#f8fbff]">{project.title}</h3>
+                    </div>
+                    <span className="shrink-0 rounded-full border border-[#c084fc]/30 bg-[#a855f7]/10 px-3 py-1 text-xs font-semibold text-[#e9d5ff]">
+                      {project.impact}
+                    </span>
+                  </div>
+
+                  <p className="mt-4 text-sm leading-6 text-[#ede9fe]">{project.description}</p>
+
+                  <div className="mt-4 grid gap-3 text-sm">
+                    <div>
+                      <p className="text-xs font-bold uppercase tracking-[0.14em] text-[#e9d5ff]">Problem</p>
+                      <p className="mt-1 leading-6 text-[#ede9fe]">{project.problem}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs font-bold uppercase tracking-[0.14em] text-[#e9d5ff]">Solution</p>
+                      <p className="mt-1 leading-6 text-[#ede9fe]">{project.solution}</p>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {project.tech.map((tech) => (
+                      <span key={tech} className="rounded-full border border-[#f8fbff]/10 bg-[#f8fbff]/[0.06] px-3 py-1 text-xs text-[#ddd6fe]">
+                        {tech}
+                      </span>
                     ))}
-                </motion.div>
+                  </div>
 
-                {/* Projects Grid */}
-                <motion.div
-                    layout
-                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-7"
-                >
-                    <AnimatePresence mode="popLayout">
-                        {displayProjects.map((project, index) => (
-                            <motion.div
-                                key={project.id}
-                                layout
-                                initial={{ opacity: 0, y: 30, scale: 0.96 }}
-                                animate={{ opacity: 1, y: 0, scale: 1 }}
-                                exit={{ opacity: 0, scale: 0.94 }}
-                                transition={{ duration: 0.45, delay: index * 0.07, ease: [0.25, 0.1, 0.25, 1] }}
-                            >
-                                <AnimatedCard hoverEffect="tilt" delay={0}>
-                                    <div
-                                        className={`relative h-full rounded-2xl border border-white/8 bg-gradient-to-br ${project.accent} backdrop-blur-md overflow-hidden flex flex-col group transition-all duration-400 ${project.borderAccent} ${project.glowColor}`}
-                                        style={{ minHeight: '420px' }}
-                                    >
-                                        {/* Top gradient line */}
-                                        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-
-                                        {/* Image / game preview */}
-                                        <div className="relative h-44 overflow-hidden flex-shrink-0">
-                                            {project.category === 'games' ? (
-                                                <div className={`w-full h-full bg-gradient-to-br ${gameGradients[project.gameId!]} flex flex-col items-center justify-center gap-3 group-hover:scale-105 transition-transform duration-500`}>
-                                                    <motion.div
-                                                        animate={{ rotate: [0, 10, -10, 0], scale: [1, 1.1, 1] }}
-                                                        transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-                                                    >
-                                                        <Gamepad2 className="w-14 h-14 text-white/40" />
-                                                    </motion.div>
-                                                    <span className="text-white/50 text-xs font-medium tracking-widest uppercase">
-                                                        Interactive
-                                                    </span>
-                                                </div>
-                                            ) : !project.image ? (
-                                                <div className="w-full h-full bg-gradient-to-br from-amber-900/40 to-orange-900/30 flex flex-col items-center justify-center gap-2">
-                                                    <Code className="w-10 h-10 text-amber-400/60" />
-                                                    <span className="text-amber-300/70 text-xs font-medium">Under Construction</span>
-                                                </div>
-                                            ) : (
-                                                <img
-                                                    src={project.image}
-                                                    alt={project.title}
-                                                    className="w-full h-full object-cover transition-transform duration-600 group-hover:scale-108"
-                                                    loading="lazy"
-                                                />
-                                            )}
-
-                                            {/* Hover overlay */}
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-3">
-                                                <span className="text-white text-sm font-semibold flex items-center gap-1.5">
-                                                    {project.category === 'games' ? <><Play className="w-4 h-4" /> Play Demo</> : 'View Project'}
-                                                </span>
-                                            </div>
-                                        </div>
-
-                                        {/* Content */}
-                                        <div className="p-5 flex flex-col flex-grow space-y-3">
-                                            <div>
-                                                <h3 className="text-lg font-bold text-white mb-1 group-hover:text-purple-200 transition-colors duration-300">
-                                                    {project.title}
-                                                </h3>
-                                                <p className="text-gray-400 text-xs leading-relaxed line-clamp-3">
-                                                    {project.description}
-                                                </p>
-                                            </div>
-
-                                            {/* Tech badges */}
-                                            <div className="flex flex-wrap gap-1.5">
-                                                {project.tech.map((t) => (
-                                                    <span key={t} className="px-2.5 py-1 bg-white/6 border border-white/10 text-gray-300 text-[10px] rounded-full font-medium">
-                                                        {t}
-                                                    </span>
-                                                ))}
-                                            </div>
-
-                                            {/* Achievements */}
-                                            <div className="space-y-1 mt-auto">
-                                                {project.achievements.map((ach) => (
-                                                    <div key={ach} className="flex items-center gap-2 text-[11px] text-gray-400">
-                                                        <Star className="w-3 h-3 text-yellow-400/70 flex-shrink-0" />
-                                                        {ach}
-                                                    </div>
-                                                ))}
-                                            </div>
-
-                                            {/* Action buttons */}
-                                            <div className="flex gap-2.5 pt-3 mt-auto">
-                                                {project.category === 'games' ? (
-                                                    <button
-                                                        onClick={() => setActiveGame(project.gameId!)}
-                                                        className="flex items-center justify-center gap-2 flex-1 py-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white text-xs font-bold rounded-xl hover:shadow-lg hover:shadow-green-500/25 transition-all duration-300 hover:scale-105 active:scale-95"
-                                                    >
-                                                        <Play className="w-3.5 h-3.5" />
-                                                        Play Demo
-                                                    </button>
-                                                ) : (
-                                                    <>
-                                                        <motion.a
-                                                            href={project.links?.live}
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                            className={`flex items-center justify-center gap-1.5 flex-1 py-2 text-xs font-bold rounded-xl transition-all duration-300 ${
-                                                                project.links?.live === '#'
-                                                                    ? 'bg-white/6 border border-white/10 text-gray-500 cursor-not-allowed'
-                                                                    : 'bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:shadow-lg hover:shadow-purple-500/30 hover:scale-105 active:scale-95'
-                                                            }`}
-                                                            onClick={(e) => project.links?.live === '#' && e.preventDefault()}
-                                                            whileHover={project.links?.live !== '#' ? { scale: 1.04 } : {}}
-                                                        >
-                                                            {project.linkLabels?.live === 'Under Construction' ? (
-                                                                <><Code className="w-3 h-3" /> Under Construction</>
-                                                            ) : project.linkLabels?.live === 'Deploying Soon' ? (
-                                                                'Deploying Soon'
-                                                            ) : project.linkLabels?.live === 'Working Product' ? (
-                                                                <><ExternalLink className="w-3 h-3" /> Working Product</>
-                                                            ) : project.linkLabels?.live === 'Live Website' ? (
-                                                                <><CheckCircle className="w-3 h-3" /> Live Website</>
-                                                            ) : project.linkLabels?.live === '1st Place National' ? (
-                                                                <><Star className="w-3 h-3" /> 1st Place National</>
-                                                            ) : project.linkLabels?.live === 'Client Project' ? (
-                                                                <><CheckCircle className="w-3 h-3" /> Client Project</>
-                                                            ) : (
-                                                                <><ExternalLink className="w-3 h-3" /> Live Demo</>
-                                                            )}
-                                                        </motion.a>
-                                                        <motion.a
-                                                            href={project.links?.github}
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                            className="flex items-center justify-center gap-1.5 px-4 py-2 bg-white/6 border border-white/10 text-gray-300 text-xs font-bold rounded-xl hover:bg-white/12 hover:text-white hover:border-white/20 transition-all duration-300"
-                                                            whileHover={{ scale: 1.04 }}
-                                                        >
-                                                            <FaGithub className="w-3.5 h-3.5" />
-                                                            Code
-                                                        </motion.a>
-                                                    </>
-                                                )}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </AnimatedCard>
-                            </motion.div>
-                        ))}
-                    </AnimatePresence>
-                </motion.div>
-
-                {/* View More */}
-                {hasMore && (
-                    <motion.div
-                        className="flex justify-center mt-12"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.4 }}
+                  <div className="mt-5 flex gap-3">
+                    {project.live && (
+                      <a
+                        href={project.live}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center justify-center rounded-full border border-[#f8fbff]/14 px-4 py-2.5 text-sm font-bold text-[#f8fbff] transition hover:border-[#c084fc]/70 hover:text-[#f0abfc]"
+                      >
+                        Live
+                      </a>
+                    )}
+                    <a
+                      href={project.caseStudy}
+                      target={project.caseStudy.startsWith('http') ? '_blank' : undefined}
+                      rel={project.caseStudy.startsWith('http') ? 'noopener noreferrer' : undefined}
+                      className="inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-[#f8fbff] px-4 py-2.5 text-sm font-bold text-[#070312] transition hover:bg-[#e9d5ff]"
                     >
-                        <motion.button
-                            onClick={() => setVisibleProjects((p) => p + 3)}
-                            className="flex items-center gap-2.5 px-8 py-3.5 bg-white/5 border border-white/12 text-gray-300 rounded-full hover:bg-white/10 hover:border-purple-500/40 hover:text-white transition-all duration-300 text-sm font-medium group"
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.96 }}
-                        >
-                            View More Projects
-                            <motion.div
-                                animate={{ y: [0, 4, 0] }}
-                                transition={{ repeat: Infinity, duration: 1.4 }}
-                            >
-                                <ChevronDown className="w-4 h-4 text-purple-400" />
-                            </motion.div>
-                        </motion.button>
-                    </motion.div>
-                )}
-            </div>
-
-            {/* Game Modals */}
-            <AnimatePresence>
-                {activeGame && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="relative z-50"
+                      Case Study
+                      <ArrowUpRight className="h-4 w-4" />
+                    </a>
+                    <a
+                      href={project.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`${project.title} GitHub`}
+                      className="inline-flex items-center justify-center rounded-full border border-[#f8fbff]/14 px-4 py-2.5 text-[#f8fbff] transition hover:border-[#c084fc]/70 hover:text-[#f0abfc]"
                     >
-                        {activeGame === 'tetris' && <TetrisGame onClose={() => setActiveGame(null)} />}
-                        {activeGame === 'starship' && <StarshipGame onClose={() => setActiveGame(null)} />}
-                        {activeGame === 'fighter' && <FighterGame onClose={() => setActiveGame(null)} />}
-                    </motion.div>
-                )}
-            </AnimatePresence>
-        </section>
-    );
+                      <Github className="h-4 w-4" />
+                    </a>
+                  </div>
+                </div>
+              </motion.article>
+            ))}
+          </AnimatePresence>
+        </motion.div>
+      </div>
+    </section>
+  );
 }
