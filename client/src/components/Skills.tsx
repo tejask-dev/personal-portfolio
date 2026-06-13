@@ -216,16 +216,18 @@ export default function Skills() {
                   if (keyboard) {
                     // The scene camera has a fixed world-per-pixel ratio, so
                     // the keyboard must shrink with the viewport to stay in frame.
-                    targetScale.current = isMobile ? 0.12 : width < 1100 ? 0.24 : 0.36;
+                    // Scaled to leave margin on every edge so no corner of the
+                    // keyboard base clips the canvas at any viewport/scroll pos.
+                    targetScale.current = isMobile ? 0.12 : width < 1100 ? 0.22 : 0.33;
                     keyboardRef.current = keyboard;
                     // Start collapsed; the in-view effect springs it up.
                     keyboard.scale.x = 0.001;
                     keyboard.scale.y = 0.001;
                     keyboard.scale.z = 0.001;
                     keyboard.position.x = 0;
-                    // Push the keyboard lower in the canvas so the far (top) row
-                    // clears the upper edge as the section scrolls past the nav.
-                    keyboard.position.y = isMobile ? -30 : -130;
+                    // Center vertically with headroom so the far (top) row clears
+                    // the nav and the near (bottom) corner stays in frame.
+                    keyboard.position.y = isMobile ? -30 : -100;
                     keyboard.position.z = 0;
                     keyboard.rotation.x = 0;
                     keyboard.rotation.y = isMobile ? Math.PI / 6 : Math.PI / 12;
