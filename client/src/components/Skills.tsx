@@ -191,8 +191,11 @@ export default function Skills() {
           >
             <SceneErrorBoundary
               fallback={
-                <div className="flex h-full items-center justify-center px-6 text-center text-sm font-semibold uppercase tracking-[0.2em] text-[#d8b4fe]/80">
-                  3D view unavailable on this device — skills listed below
+                <div className="flex h-full flex-col items-center justify-center gap-2 px-6 text-center">
+                  <p className="text-base font-semibold text-[#f8fbff]">Explore the full stack below</p>
+                  <p className="max-w-sm text-sm leading-6 text-[#d8b4fe]/80">
+                    The interactive keyboard isn&rsquo;t supported on this device, so here&rsquo;s the complete toolkit instead.
+                  </p>
                 </div>
               }
             >
@@ -213,14 +216,16 @@ export default function Skills() {
                   if (keyboard) {
                     // The scene camera has a fixed world-per-pixel ratio, so
                     // the keyboard must shrink with the viewport to stay in frame.
-                    targetScale.current = isMobile ? 0.13 : width < 1100 ? 0.26 : 0.4;
+                    targetScale.current = isMobile ? 0.12 : width < 1100 ? 0.24 : 0.36;
                     keyboardRef.current = keyboard;
                     // Start collapsed; the in-view effect springs it up.
                     keyboard.scale.x = 0.001;
                     keyboard.scale.y = 0.001;
                     keyboard.scale.z = 0.001;
                     keyboard.position.x = 0;
-                    keyboard.position.y = isMobile ? 0 : -40;
+                    // Push the keyboard lower in the canvas so the far (top) row
+                    // clears the upper edge as the section scrolls past the nav.
+                    keyboard.position.y = isMobile ? -30 : -130;
                     keyboard.position.z = 0;
                     keyboard.rotation.x = 0;
                     keyboard.rotation.y = isMobile ? Math.PI / 6 : Math.PI / 12;

@@ -12,7 +12,7 @@ import Footer from '../components/Footer';
 import AdvancedScroll3D from '../components/AdvancedScroll3D';
 import Preloader from '../components/Preloader';
 import RobotStage from '../components/RobotStage';
-import CursorGlow from '../components/CursorGlow';
+import ElasticCursor from '../components/ElasticCursor';
 import { useMediaQuery } from '@/hooks/use-media-query';
 
 export default function Home() {
@@ -23,7 +23,7 @@ export default function Home() {
       stage={isDesktop ? <RobotStage /> : undefined}
       overlay={
         <>
-          <CursorGlow />
+          <ElasticCursor />
           <Preloader />
         </>
       }

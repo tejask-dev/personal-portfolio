@@ -6,7 +6,7 @@ import ScrollTextReveal from './ScrollTextReveal';
 
 const values = [
   { icon: ShieldCheck, title: 'Trust first', copy: 'I build AI that earns confidence through clarity, privacy, and responsible product decisions.' },
-  { icon: Handshake, title: 'Access over exclusivity', copy: 'My ventures focus on helping more people learn, finance, and navigate opportunity.' },
+  { icon: Handshake, title: 'Access over exclusivity', copy: 'My ventures focus on helping more people learn, build financial literacy, and navigate new opportunities.' },
   { icon: LineChart, title: 'Outcomes matter', copy: 'I care about adoption, measurable learning gains, and products people return to.' },
 ];
 

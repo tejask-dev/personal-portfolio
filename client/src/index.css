@@ -49,6 +49,20 @@
 @layer base {
     html {
         scroll-behavior: smooth;
+        /* Anchor jumps clear the fixed navbar instead of hiding headings. */
+        scroll-padding-top: 5.5rem;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        html {
+            scroll-behavior: auto;
+        }
+    }
+
+    /* Belt-and-suspenders: each anchored section keeps clearance below the nav. */
+    section[id],
+    header[id] {
+        scroll-margin-top: 5.5rem;
     }
 
     body {
@@ -365,13 +379,13 @@
 
     .section-shell {
         position: relative;
-        padding: 7rem 1.25rem;
+        padding: 5rem 1.25rem;
     }
 
     @media (min-width: 768px) {
         .section-shell {
-            padding-top: 8.5rem;
-            padding-bottom: 8.5rem;
+            padding-top: 6.5rem;
+            padding-bottom: 6.5rem;
         }
     }
 

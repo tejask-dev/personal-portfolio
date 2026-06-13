@@ -16,7 +16,7 @@ const projects = [
     title: 'Soma AI',
     category: 'AI/ML' as Filter,
     image: somaAI,
-    description: 'An AI-powered mental health companion offering private, personalized conversations — built end to end as a real product, not a demo.',
+    description: 'An AI-powered mental health companion offering private, personalized conversations — built end-to-end as a real product, not a demo.',
     problem: 'Students and young people need accessible, judgment-free mental health support that meets them where they are.',
     solution: 'Designed and shipped an LLM-driven companion with careful conversation design, privacy-first handling, and a calm product experience.',
     tech: ['Python', 'OpenAI API', 'React', 'Node.js'],
