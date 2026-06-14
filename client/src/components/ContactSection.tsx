@@ -61,16 +61,16 @@ export default function ContactSection() {
           <div className="grid gap-4 md:grid-cols-2">
             <label className="grid gap-2 text-sm font-semibold text-[#ddd6fe]">
               Name
-              <input name="name" className="rounded-2xl border border-[#f8fbff]/12 bg-[#070312]/70 px-4 py-3 text-[#f8fbff] outline-none focus:border-[#c084fc] focus:ring-2 focus:ring-[#a855f7]/25" />
+              <input name="name" autoComplete="name" required className="rounded-2xl border border-[#f8fbff]/12 bg-[#070312]/70 px-4 py-3 text-[#f8fbff] outline-none focus:border-[#c084fc] focus:ring-2 focus:ring-[#a855f7]/25" />
             </label>
             <label className="grid gap-2 text-sm font-semibold text-[#ddd6fe]">
               Email
-              <input name="email" type="email" className="rounded-2xl border border-[#f8fbff]/12 bg-[#070312]/70 px-4 py-3 text-[#f8fbff] outline-none focus:border-[#c084fc] focus:ring-2 focus:ring-[#a855f7]/25" />
+              <input name="email" type="email" autoComplete="email" required className="rounded-2xl border border-[#f8fbff]/12 bg-[#070312]/70 px-4 py-3 text-[#f8fbff] outline-none focus:border-[#c084fc] focus:ring-2 focus:ring-[#a855f7]/25" />
             </label>
           </div>
           <label className="mt-4 grid gap-2 text-sm font-semibold text-[#ddd6fe]">
             Message
-            <textarea name="message" rows={6} className="resize-none rounded-2xl border border-[#f8fbff]/12 bg-[#070312]/70 px-4 py-3 text-[#f8fbff] outline-none focus:border-[#c084fc] focus:ring-2 focus:ring-[#a855f7]/25" />
+            <textarea name="message" rows={6} required className="resize-none rounded-2xl border border-[#f8fbff]/12 bg-[#070312]/70 px-4 py-3 text-[#f8fbff] outline-none focus:border-[#c084fc] focus:ring-2 focus:ring-[#a855f7]/25" />
           </label>
           <button type="submit" className="mt-5 w-full rounded-full bg-[#a855f7] px-6 py-3 text-sm font-bold text-[#070312] transition hover:bg-[#c084fc] focus:outline-none focus:ring-2 focus:ring-[#c084fc]">
             Send Message

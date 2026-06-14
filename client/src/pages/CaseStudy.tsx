@@ -2,6 +2,7 @@ import { Link, useRoute } from 'wouter';
 import { ArrowLeft, ExternalLink } from 'lucide-react';
 import AdvancedScroll3D from '@/components/AdvancedScroll3D';
 import ScrollTextReveal from '@/components/ScrollTextReveal';
+import { useSeo } from '@/lib/seo';
 import docubridge from '@/assets/Docubridge.png';
 import somaAI from '@/assets/SomaAI.png';
 
@@ -33,6 +34,16 @@ const studies = {
 export default function CaseStudy() {
   const [, params] = useRoute('/case-studies/:slug');
   const study = params?.slug ? studies[params.slug as keyof typeof studies] : undefined;
+
+  useSeo(
+    study
+      ? {
+          title: `${study.title} — Case Study | Tejass Kaushik`,
+          description: study.summary,
+          path: `/case-studies/${params?.slug}`,
+        }
+      : { title: 'Case study not found | Tejass Kaushik', path: '/case-studies' },
+  );
 
   if (!study) {
     return (

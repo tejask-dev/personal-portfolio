@@ -71,7 +71,8 @@ export default function Awards() {
                 <motion.img
                   key={current.title}
                   src={current.image}
-                  alt={current.title}
+                  alt={`${current.title} — ${current.year}`}
+                  loading="lazy"
                   initial={{ opacity: 0, scale: 1.04 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.98 }}

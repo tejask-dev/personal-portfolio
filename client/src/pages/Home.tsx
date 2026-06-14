@@ -14,9 +14,11 @@ import Preloader from '../components/Preloader';
 import RobotStage from '../components/RobotStage';
 import ElasticCursor from '../components/ElasticCursor';
 import { useMediaQuery } from '@/hooks/use-media-query';
+import { useSeo } from '@/lib/seo';
 
 export default function Home() {
   const isDesktop = useMediaQuery('(min-width: 1024px)');
+  useSeo({ path: '/' });
 
   return (
     <AdvancedScroll3D
@@ -28,16 +30,24 @@ export default function Home() {
         </>
       }
     >
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[200] focus:rounded-full focus:bg-[#a855f7] focus:px-5 focus:py-2.5 focus:text-sm focus:font-bold focus:text-white"
+      >
+        Skip to content
+      </a>
       <Navigation />
-      <Hero />
-      <About />
-      <Skills />
-      <WesternIvey />
-      <Experience />
-      <Portfolio />
-      <Awards />
-      <Leadership />
-      <ContactSection />
+      <main id="main">
+        <Hero />
+        <About />
+        <Skills />
+        <WesternIvey />
+        <Experience />
+        <Portfolio />
+        <Awards />
+        <Leadership />
+        <ContactSection />
+      </main>
       <Footer />
     </AdvancedScroll3D>
   );

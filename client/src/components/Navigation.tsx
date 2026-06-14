@@ -78,6 +78,7 @@ export default function Navigation() {
                 key={item.name}
                 type="button"
                 onClick={() => scrollToSection(item.href)}
+                aria-current={isActive ? 'true' : undefined}
                 className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
                   isActive ? 'bg-[#f8fbff] text-[#070312]' : 'text-[#ede9fe] hover:bg-[#f8fbff]/[0.08] hover:text-[#f8fbff]'
                 }`}

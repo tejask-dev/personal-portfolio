@@ -68,12 +68,14 @@ export default function Hero() {
             ))}
           </motion.div>
 
+          {/* Single, descriptive H1 for SEO/screen readers; the animated
+              headline below is presentational to avoid a duplicate H1. */}
           <motion.h1 variants={item} className="sr-only">
-            Tejass Kaushik
+            Tejass Kaushik — building at the intersection of AI, entrepreneurship, and human ambition.
           </motion.h1>
 
           <ScrollTextReveal
-            as="h1"
+            as="p"
             text="Building at the intersection of AI, entrepreneurship, and human ambition."
             className="max-w-5xl text-[clamp(2.6rem,6.2vw,5.4rem)] font-semibold leading-[1.02] tracking-normal"
           />
