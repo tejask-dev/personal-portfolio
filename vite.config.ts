@@ -1,14 +1,29 @@
-import { defineConfig } from "vite";
+import { copyFileSync } from "node:fs";
+import { defineConfig, type Plugin } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
 import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 
-const repoName = "personal-portfolio";
+const outputDirectory = path.resolve(import.meta.dirname, "docs");
 
-export default defineConfig({
+function spaFallback(): Plugin {
+  return {
+    name: "spa-fallback",
+    apply: "build",
+    closeBundle() {
+      copyFileSync(
+        path.join(outputDirectory, "index.html"),
+        path.join(outputDirectory, "404.html"),
+      );
+    },
+  };
+}
+
+export default defineConfig(({ mode }) => ({
   plugins: [
     react(),
-    runtimeErrorOverlay(),
+    spaFallback(),
+    ...(mode === "development" ? [runtimeErrorOverlay()] : []),
   ],
   assetsInclude: ["**/*.JPEG", "**/*.JPG", "**/*.jpeg", "**/*.jpg", "**/*.pdf", "**/*.PDF"],
   resolve: {
@@ -19,9 +34,9 @@ export default defineConfig({
     },
   },
   root: path.resolve(import.meta.dirname, "client"),
-  base: '',
+  base: '/',
   build: {
-    outDir: path.resolve(import.meta.dirname, "docs"), // <--- CHANGE IS HERE!
+    outDir: outputDirectory,
     emptyOutDir: true,
   },
   server: {
@@ -30,4 +45,4 @@ export default defineConfig({
       deny: ["**/.*"],
     },
   },
-});
+}));

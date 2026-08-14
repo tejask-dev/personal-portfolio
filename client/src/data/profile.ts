@@ -2,79 +2,43 @@ export const profile = {
   name: 'Tejass Kaushik',
   shortName: 'Tejass',
   email: 'tejas.kaushik@outlook.com',
+  uwoEmail: 'tkaushi3@uwo.ca',
   location: 'Windsor, Ontario, Canada',
-  education: 'Incoming Western University Computer Science + Ivey, Class of 2030',
-  tagline: 'Building at the intersection of AI, entrepreneurship, and human ambition.',
+  education: 'Incoming Western University Computer Science and Ivey AEO, Class of 2030',
+  headline: 'I build software, test ideas, and keep what works.',
+  intro:
+    'Software and product builder. Former CTO at Stellar Learning; now testing new ideas and working on what comes next.',
   socials: {
     linkedin: 'https://www.linkedin.com/in/tejasskaushik/',
     github: 'https://github.com/tejask-dev',
-    instagram: 'https://www.instagram.com/tejas_kaushik007/',
+    instagram: 'https://www.instagram.com/tejass_kaushik007/',
   },
+  /**
+   * Proof strip: max four metrics, every value verified.
+   * Public figures are kept conservative and checked against first-party
+   * sources before being surfaced in the active homepage.
+   */
+  proof: [
+    { value: '40,000+', label: 'learners reported by Stellar Learning' },
+    { value: '3', label: 'client projects delivered through my web venture' },
+    { value: '1st', label: 'nationally, Youreka Canada research symposium' },
+  ],
+  // Kept as structured source data for legacy components and future pages.
+  tagline: 'Building and testing new software and product ideas.',
   metrics: [
-    { value: '10K+', label: 'Signups at Stellar Learning' },
-    { value: '300+', label: 'Soma AI users' },
-    { value: '40+', label: 'Students supported through tutoring' },
+    { value: '40,000+', label: 'Learners reported by Stellar Learning' },
+    { value: '3', label: 'Client projects delivered' },
     { value: '1st', label: 'National Youreka research winner' },
-    { value: 'Top 7', label: 'Target Alpha FPC national finalist' },
-    { value: '2030', label: 'Western CS + Ivey' },
   ],
-  focusAreas: [
-    'Applied AI products',
-    'AI agents and automation',
-    'Education technology',
-    'Financial literacy and investing',
-    'Global health research',
-    'Student entrepreneurship',
-  ],
-  techStack: [
-    'Python',
-    'TypeScript',
-    'React',
-    'Next.js',
-    'Node.js',
-    'Firebase',
-    'SQL',
-    'Tailwind CSS',
-    'OpenAI API',
-    'Machine Learning',
-  ],
+  focusAreas: ['Applied AI products', 'Education technology', 'Financial systems', 'Global health research'],
+  techStack: ['Python', 'TypeScript', 'React', 'Next.js', 'Node.js', 'Firebase', 'SQL', 'OpenAI API'],
   leadership: [
-    {
-      title: 'Founder, Coding Club',
-      description: 'Founded and led the school coding club, running workshops and mentoring students in programming and problem-solving fundamentals.',
-      icon: 'Code',
-    },
-    {
-      title: 'President, Science Olympiad Club',
-      description: 'Founded and led the Science Olympiad team to regional and national competitions, earning 1st place at University of Guelph Battle STEM.',
-      icon: 'FlaskConical',
-    },
-    {
-      title: 'Vice President, Target Alpha Windsor-Essex',
-      description: 'Led finance education and investment analysis initiatives, representing the chapter nationally and placing Top 7 at FPC 2025.',
-      icon: 'TrendingUp',
-    },
-    {
-      title: 'Co-President, Debate Club',
-      description: 'Co-led debate operations and coached team members, competing in Ethics Bowl regionals and earning 2nd place in first competition.',
-      icon: 'MessageSquare',
-    },
-    {
-      title: 'Executive, Relay for Life',
-      description: 'Organized fundraising and event logistics for one of the most impactful student-led charity initiatives at the school level.',
-      icon: 'Heart',
-    },
-    {
-      title: 'Founder, Top Score Tutoring',
-      description: 'Built a tutoring initiative from the ground up, supporting 40+ students across core academic subjects with personalized coaching.',
-      icon: 'GraduationCap',
-    },
+    { title: 'Founder, Coding Club', description: 'Founded and led programming workshops for students.', icon: 'Code' },
+    { title: 'President, Science Olympiad', description: 'Founded the team and led it to regional competition wins.', icon: 'FlaskConical' },
+    { title: 'Vice President, Target Alpha', description: 'Led finance education and investment analysis initiatives.', icon: 'TrendingUp' },
+    { title: 'Founder, Top Score Tutoring', description: 'Built a tutoring initiative supporting more than 40 students.', icon: 'GraduationCap' },
   ],
-  badges: [
-    'Incoming Western CS + Ivey, Class of 2030',
-    'AI Builder',
-    'Student Founder',
-    'Researcher',
-    'Entrepreneur',
-  ],
-};
+  badges: ['Western CS + Ivey AEO', 'Software Builder', 'Founder', 'Researcher'],
+} as const;
+
+export type Proof = (typeof profile.proof)[number];

@@ -50,7 +50,7 @@ export default function Footer() {
             <a aria-label="GitHub" href="https://github.com/tejask-dev" target="_blank" rel="noopener noreferrer" className="icon-button">
               <FaGithub className="h-4 w-4" />
             </a>
-            <a aria-label="Instagram" href="https://www.instagram.com/tejas_kaushik007/" target="_blank" rel="noopener noreferrer" className="icon-button">
+            <a aria-label="Instagram" href="https://www.instagram.com/tejass_kaushik007/?hl=en" target="_blank" rel="noopener noreferrer" className="icon-button">
               <FaInstagram className="h-4 w-4" />
             </a>
           </div>

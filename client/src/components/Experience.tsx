@@ -8,19 +8,19 @@ type Filter = (typeof filters)[number];
 
 const experiences = [
   {
-    role: 'CTO',
+    role: 'Former CTO',
     org: 'Stellar Learning',
-    dates: '2025 to Present',
-    description: 'Leading technical development for an AI-powered learning platform focused on personalized student experiences, product engineering, and scale.',
-    impact: '10K+ signups, 5K+ active users',
+    dates: '2025 to 2026',
+    description: 'Served as CTO and technology lead for a free exam-preparation platform built by a large volunteer team.',
+    impact: '40,000+ learners reported by Stellar',
     tags: ['AI/Tech', 'Education', 'Leadership', 'Startups'],
   },
   {
-    role: 'Founder & Developer',
+    role: 'Developer',
     org: 'Soma AI',
-    dates: '2024 to Present',
-    description: 'Built and launched an AI-powered mental health companion offering private, personalized conversations for emotional wellbeing.',
-    impact: '300+ users',
+    dates: '2025 to 2026',
+    description: 'Contributed to a team-built teen health experiment, primarily through its Flask backend and model integration.',
+    impact: 'Closed after 300+ people tried it',
     tags: ['Startups', 'AI/Tech'],
   },
   {
@@ -35,8 +35,8 @@ const experiences = [
     role: 'Software Engineering Intern',
     org: 'DocuBridge',
     dates: 'Summer 2025',
-    description: 'Worked on AI document processing and financial analysis workflows using modern web technologies and product-minded engineering.',
-    impact: 'AI document workflows',
+    description: 'Built a prototype for exploring uploaded Excel and CSV data through charts, summaries, and AI-assisted questions.',
+    impact: 'Financial-analysis prototype',
     tags: ['AI/Tech', 'Finance'],
   },
   {
@@ -82,7 +82,7 @@ const experiences = [
   {
     role: 'Competitor',
     org: 'Science Olympiad Battle STEM',
-    dates: '2022',
+    dates: '2024',
     description: 'Placed 1st in both Chemistry and Hydroecology at the University of Guelph Battle STEM event.',
     impact: '1st place Chemistry + Hydroecology',
     tags: ['Research', 'Education'],

@@ -252,7 +252,7 @@ export default function VirtualMacBook({ isOpen, onClose }: VirtualMacBookProps)
                             <h2 className="text-4xl font-bold text-white mb-4">Follow My Journey</h2>
                             <p className="text-xl text-white/90 mb-8">Check out my latest posts and updates on Instagram!</p>
                             <motion.a
-                                href="https://www.instagram.com/tejas_kaushik007/"
+                                href="https://www.instagram.com/tejass_kaushik007/?hl=en"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="inline-flex items-center gap-3 bg-white text-pink-600 px-8 py-4 rounded-full text-lg font-bold hover:scale-105 transition-transform shadow-2xl"

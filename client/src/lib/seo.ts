@@ -3,15 +3,16 @@ import { useEffect } from 'react';
 /** Centralized production origin — update here if the domain changes. */
 export const SITE_URL = 'https://tejass-kaushik.vercel.app';
 export const OG_IMAGE = `${SITE_URL}/og-image.png`;
-export const DEFAULT_TITLE = 'Tejass Kaushik | AI Builder, Founder & Western CS + Ivey Student';
+export const DEFAULT_TITLE = 'Tejass Kaushik — Software & Product Builder';
 export const DEFAULT_DESCRIPTION =
-  'Tejass Kaushik is an incoming Western Computer Science + Ivey AEO student, AI builder, researcher, and student founder building products across education, finance, and social impact.';
+  'Tejass Kaushik builds software and tests product ideas. Former CTO at Stellar Learning, a platform reporting 40,000+ learners.';
 
 type SeoOptions = {
   title?: string;
   description?: string;
-  /** Path beginning with "/" — combined with SITE_URL for the canonical + og:url. */
+  /** Path beginning with "/" — combined with SITE_URL for the canonical and og:url. */
   path?: string;
+  noIndex?: boolean;
 };
 
 function setMeta(selector: string, attr: 'name' | 'property', key: string, content: string) {
@@ -37,10 +38,10 @@ function setCanonical(href: string) {
 /**
  * Client-side SEO for an SPA route: keeps the document title, meta description,
  * canonical URL, and the title/url social tags in sync with the active page.
- * (Crawlers that execute JS — Google — pick these up; non-JS scrapers fall back
- * to the static defaults in index.html.)
+ * Crawlers that execute JavaScript pick these up; non-JavaScript scrapers fall
+ * back to the static defaults in index.html.
  */
-export function useSeo({ title, description, path = '/' }: SeoOptions) {
+export function useSeo({ title, description, path = '/', noIndex = false }: SeoOptions) {
   useEffect(() => {
     const fullTitle = title ?? DEFAULT_TITLE;
     const desc = description ?? DEFAULT_DESCRIPTION;
@@ -53,6 +54,7 @@ export function useSeo({ title, description, path = '/' }: SeoOptions) {
     setMeta('meta[property="og:url"]', 'property', 'og:url', url);
     setMeta('meta[name="twitter:title"]', 'name', 'twitter:title', fullTitle);
     setMeta('meta[name="twitter:description"]', 'name', 'twitter:description', desc);
+    setMeta('meta[name="robots"]', 'name', 'robots', noIndex ? 'noindex, follow' : 'index, follow');
     setCanonical(url);
-  }, [title, description, path]);
+  }, [title, description, path, noIndex]);
 }

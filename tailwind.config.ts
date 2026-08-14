@@ -2,7 +2,12 @@ import type { Config } from "tailwindcss";
 
 export default {
   darkMode: ["class"],
-  content: ["./client/index.html", "./client/src/**/*.{js,jsx,ts,tsx}"],
+  content: [
+    "./client/index.html",
+    "./client/src/App.tsx",
+    "./client/src/pages/{Home,CaseStudy,not-found}.tsx",
+    "./client/src/components/Reveal.tsx",
+  ],
   theme: {
     extend: {
       borderRadius: {

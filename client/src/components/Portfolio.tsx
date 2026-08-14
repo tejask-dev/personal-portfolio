@@ -16,39 +16,39 @@ const projects = [
     title: 'Soma AI',
     category: 'AI/ML' as Filter,
     image: somaAI,
-    description: 'An AI-powered mental health companion offering private, personalized conversations — built end-to-end as a real product, not a demo.',
-    problem: 'Students and young people need accessible, judgment-free mental health support that meets them where they are.',
-    solution: 'Designed and shipped an LLM-driven companion with careful conversation design, privacy-first handling, and a calm product experience.',
-    tech: ['Python', 'OpenAI API', 'React', 'Node.js'],
-    impact: '300+ users',
-    live: 'https://somaai-5qe3.onrender.com/',
+    description: 'A team-built conversational teen health experiment that was tested, then shut down.',
+    problem: 'Teen and sexual-health questions can be difficult to ask in conventional settings.',
+    solution: 'Contributed to the Flask backend and model integration behind the React conversation flow.',
+    tech: ['Python', 'Flask', 'React', 'OpenRouter'],
+    impact: 'Closed after 300+ people tried it',
+    live: null,
     caseStudy: '/case-studies/soma-ai',
-    github: 'https://github.com/tejask-dev',
-    role: 'Founder & Developer',
+    github: null,
+    role: 'Developer',
   },
   {
     title: 'Stellar Learning',
     category: 'AI/ML' as Filter,
     image: stellarImage,
-    description: 'An AI-powered personalized learning platform helping students practice, adapt, and build academic confidence at meaningful scale.',
-    problem: 'Students need adaptive learning support that responds faster than static practice tools.',
-    solution: 'Led product engineering for AI-personalized learning, progress tracking, and student growth loops.',
-    tech: ['React', 'Firebase', 'Node.js', 'AI/ML', 'Tailwind CSS'],
-    impact: '10K+ signups, 5K+ active users',
+    description: 'A free exam-preparation platform for AP, IB, SAT, and competitive mathematics.',
+    problem: 'Serious exam preparation should not depend on another paid subscription.',
+    solution: 'Helped set technical priorities and turn product goals into work a volunteer team could ship.',
+    tech: ['Technology Leadership', 'Product Engineering', 'React', 'Firebase'],
+    impact: '40,000+ learners reported by Stellar',
     live: 'https://stellarlearning.app/',
     caseStudy: 'https://stellarlearning.app/',
-    github: 'https://github.com/tejask-dev',
-    role: 'CTO',
+    github: null,
+    role: 'Former CTO',
   },
   {
     title: 'DocuBridge',
     category: 'AI/ML' as Filter,
     image: docubridge,
-    description: 'AI document processing and financial analysis platform for uploading, extracting, and analyzing complex financial documents.',
-    problem: 'Financial review is slowed by scattered documents and manual extraction workflows.',
-    solution: 'Contributed to upload, extraction, and AI-supported analysis workflows for financial document review.',
-    tech: ['React', 'TypeScript', 'Node.js', 'AI/ML'],
-    impact: 'Internship engineering work',
+    description: 'A prototype for exploring uploaded Excel and CSV data through charts, summaries, and AI-assisted questions.',
+    problem: 'Uploaded financial spreadsheets are difficult to inspect when analysis hides the source numbers.',
+    solution: 'Built reviewable analysis views with a Flask backend and React interface.',
+    tech: ['Python', 'Flask', 'React', 'TypeScript'],
+    impact: 'Internship prototype',
     live: null,
     caseStudy: '/case-studies/docubridge',
     github: 'https://github.com/tejask-dev/Docubridge-Intership',
@@ -64,9 +64,9 @@ const projects = [
     tech: ['Python', 'Data Analysis', 'Statistics', 'Research Methods'],
     impact: '1st place national',
     live: null,
-    caseStudy: 'https://github.com/tejask-dev/hiv-child-treatment-graphs',
-    github: 'https://github.com/tejask-dev/hiv-child-treatment-graphs',
-    role: 'Researcher',
+    caseStudy: '/case-studies/global-health-research',
+    github: null,
+    role: 'Co-author',
   },
   {
     title: 'Web Solutions Venture',
@@ -79,8 +79,8 @@ const projects = [
     tech: ['React', 'TypeScript', 'Tailwind CSS', 'Strategy'],
     impact: '3 clients, one $10K USD project',
     live: null,
-    caseStudy: '#contact',
-    github: 'https://github.com/tejask-dev',
+    caseStudy: '/case-studies/web-solutions-venture',
+    github: null,
     role: 'Founder',
   },
 ];
@@ -219,15 +219,17 @@ export default function Portfolio() {
                       Case Study
                       <ArrowUpRight className="h-4 w-4" />
                     </a>
-                    <a
-                      href={project.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={`${project.title} GitHub`}
-                      className="inline-flex items-center justify-center rounded-full border border-[#f8fbff]/14 px-4 py-2.5 text-[#f8fbff] transition hover:border-[#c084fc]/70 hover:text-[#f0abfc]"
-                    >
-                      <Github className="h-4 w-4" />
-                    </a>
+                    {project.github && (
+                      <a
+                        href={project.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`${project.title} GitHub`}
+                        className="inline-flex items-center justify-center rounded-full border border-[#f8fbff]/14 px-4 py-2.5 text-[#f8fbff] transition hover:border-[#c084fc]/70 hover:text-[#f0abfc]"
+                      >
+                        <Github className="h-4 w-4" />
+                      </a>
+                    )}
                   </div>
                 </div>
               </motion.article>
