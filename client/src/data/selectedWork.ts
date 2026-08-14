@@ -1,5 +1,5 @@
 import stellarImage from '@/assets/Stellar/stellar-current.png';
-import clientWorkImage from '@/assets/MortgageWebsite.png';
+import somaImage from '@/assets/SomaAI.png';
 import researchImage from '@/assets/Youreka/Research Paper.png';
 
 export type SelectedWork = {
@@ -33,15 +33,15 @@ export const selectedWork: SelectedWork[] = [
     treatment: 'product',
   },
   {
-    slug: 'web-solutions-venture',
-    title: 'Client web venture',
-    label: 'Independent client work',
-    role: 'Founder + developer',
-    period: '2025',
-    description: 'Three small-business websites, from scope to handoff.',
-    proof: 'Three client projects delivered',
-    image: clientWorkImage,
-    imageAlt: 'A mortgage business website delivered through the client web venture.',
+    slug: 'soma-ai',
+    title: 'Soma AI',
+    label: 'Closed health experiment',
+    role: 'Developer and backend contributor',
+    period: '2025—2026',
+    description: 'A team-built teen health product that didn\'t become durable.',
+    proof: '300+ people tried it, team-reported / experiment closed',
+    image: somaImage,
+    imageAlt: 'Historical Soma AI landing page for a team-built teen health experiment.',
     treatment: 'product',
   },
   {

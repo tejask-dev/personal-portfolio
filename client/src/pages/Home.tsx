@@ -118,7 +118,9 @@ export default function Home() {
             <article className={`work-entry work-entry--${project.treatment}`} key={project.slug}>
               <div className="work-entry-inner shell">
                 <Reveal className="work-heading">
-                  <p className="work-index">0{index + 1}</p>
+                  <p className="work-index">
+                    {String(index + 1).padStart(2, '0')} / {String(selectedWork.length).padStart(2, '0')}
+                  </p>
                   <div className="work-title-wrap">
                     <p className="work-label">{project.label}</p>
                     <h3><Link href={`/case-studies/${project.slug}`}>{project.title}</Link></h3>
@@ -203,7 +205,7 @@ export default function Home() {
             <div className="more-work">
               <span>More case notes</span>
               <Link href="/case-studies/docubridge">DocuBridge <Arrow /></Link>
-              <Link href="/case-studies/soma-ai">Soma AI / closed experiment <Arrow /></Link>
+              <Link href="/case-studies/web-solutions-venture">Client web venture <Arrow /></Link>
             </div>
           </div>
         </div>
