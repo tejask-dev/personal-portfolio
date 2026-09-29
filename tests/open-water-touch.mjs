@@ -12,17 +12,22 @@ import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-const repository = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const repository = path.resolve(
+  path.dirname(fileURLToPath(import.meta.url)),
+  "..",
+);
 const runtime = path.resolve(process.env.QA_RUNTIME || repository);
 const requireRuntime = createRequire(path.join(runtime, "package.json"));
 const { chromium } = requireRuntime("playwright");
 const baseURL = process.env.QA_URL || "http://127.0.0.1:4173";
+const versionSuffix = process.env.QA_RUN_LABEL === "v2" ? "-v2" : "";
 const browser = await chromium.launch({ channel: "chrome", headless: true });
 const report = {
   at: new Date().toISOString(),
   url: baseURL,
   browser: `Google Chrome ${browser.version()}`,
-  scope: "Chromium touch emulation using native compositor gestures; not physical-device evidence.",
+  scope:
+    "Chromium touch emulation using native compositor gestures; not physical-device evidence.",
   checks: [],
 };
 try {
@@ -36,8 +41,19 @@ try {
   const cdp = await page.context().newCDPSession(page);
   async function ready() {
     await page.goto(baseURL, { waitUntil: "networkidle" });
-    await page.waitForFunction(() => document.querySelector(".ow-experience")?.classList.contains("is-ready"));
-    assert.notEqual(await page.locator(".ow-experience").getAttribute("data-state"), "FALLBACK");
+    await page.waitForFunction(() =>
+      document.querySelector(".ow-experience")?.classList.contains("is-ready"),
+    );
+    assert.notEqual(
+      await page.locator(".ow-experience").getAttribute("data-state"),
+      "FALLBACK",
+    );
+    await page.waitForFunction(
+      () =>
+        document
+          .querySelector(".ow-experience")
+          ?.getAttribute("data-yacht-model") === "licensed",
+    );
   }
   await ready();
   const beforeZoom = await page.evaluate(() => visualViewport.scale);
@@ -50,8 +66,16 @@ try {
   });
   await page.waitForFunction(() => visualViewport.scale > 1.5);
   const afterZoom = await page.evaluate(() => visualViewport.scale);
-  assert.ok(afterZoom > beforeZoom * 1.5, `Native pinch zoom was blocked: ${beforeZoom} -> ${afterZoom}`);
-  report.checks.push({ name: "canvas-preserves-native-pinch-zoom", status: "pass", beforeZoom, afterZoom });
+  assert.ok(
+    afterZoom > beforeZoom * 1.5,
+    `Native pinch zoom was blocked: ${beforeZoom} -> ${afterZoom}`,
+  );
+  report.checks.push({
+    name: "canvas-preserves-native-pinch-zoom",
+    status: "pass",
+    beforeZoom,
+    afterZoom,
+  });
   console.log("PASS canvas-preserves-native-pinch-zoom");
 
   await ready();
@@ -64,15 +88,34 @@ try {
   });
   await page.waitForFunction(() => window.scrollY > 100);
   const scrollY = await page.evaluate(() => window.scrollY);
-  assert.equal(await page.locator(".ow-experience").getAttribute("data-state"), "PAUSED", "Scrolling should not start a voyage");
-  report.checks.push({ name: "canvas-preserves-native-vertical-scroll", status: "pass", scrollY });
+  assert.equal(
+    await page.locator(".ow-experience").getAttribute("data-state"),
+    "PAUSED",
+    "Scrolling should not start a voyage",
+  );
+  report.checks.push({
+    name: "canvas-preserves-native-vertical-scroll",
+    status: "pass",
+    scrollY,
+  });
   console.log("PASS canvas-preserves-native-vertical-scroll");
 } catch (error) {
-  report.checks.push({ name: "touch-gesture-regression", status: "fail", error: String(error.stack || error) });
+  report.checks.push({
+    name: "touch-gesture-regression",
+    status: "fail",
+    error: String(error.stack || error),
+  });
   process.exitCode = 1;
   console.error(error);
 } finally {
   await browser.close();
-  await mkdir(path.join(repository, "design", "previews"), { recursive: true });
-  await writeFile(path.join(repository, "design", "previews", "touch-qa.json"), JSON.stringify(report, null, 2) + "\n");
+  await mkdir(path.join(repository, "design", `previews${versionSuffix}`), {
+    recursive: true,
+  });
+  await writeFile(
+    versionSuffix
+      ? path.join(repository, "design", "touch-results-v2.json")
+      : path.join(repository, "design", "previews", "touch-qa.json"),
+    JSON.stringify(report, null, 2) + "\n",
+  );
 }

@@ -235,6 +235,42 @@ export default function Home() {
         <p>Open Water / An independent portfolio</p>
         <p>Fictional waters. Real work.</p>
       </footer>
+      <details className="ow-world-credits ow-shell">
+        <summary>World credits</summary>
+        <p>
+          Yacht:{" "}
+          <a
+            href="https://sketchfab.com/3d-models/motoryacht-35-0bdd7a0de7254426890bb5745bb7da6d"
+            target="_blank"
+            rel="noreferrer"
+          >
+            motoryacht 35
+          </a>{" "}
+          by{" "}
+          <a
+            href="https://sketchfab.com/angeloraffaelecatalano"
+            target="_blank"
+            rel="noreferrer"
+          >
+            angelo raffaele catalano
+          </a>
+          , licensed under{" "}
+          <a
+            href="https://creativecommons.org/licenses/by/4.0/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            CC BY 4.0
+          </a>
+          . Adapted from a converted GLB: flag removed, geometry simplified and
+          quantized, materials and scale changed for Open Water.
+        </p>
+        <p>
+          The architecture and procedural fallback yacht were adapted from the
+          original Open Water prototype. This world, its instruments, and its
+          races are fictional.
+        </p>
+      </details>
     </div>
   );
 }

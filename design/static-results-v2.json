@@ -1,0 +1,158 @@
+{
+  "at": "2026-09-29T23:07:46.595Z",
+  "url": "http://127.0.0.1:4173",
+  "browser": "Google Chrome 154.0.8037.59",
+  "scope": "Built production files served by local Vite preview, desktop Chrome at 390 × 844. No field metrics or real-device claims.",
+  "checks": [
+    {
+      "name": "homepage initial document without JavaScript",
+      "status": "pass",
+      "details": {
+        "viewport": 390,
+        "document": 390,
+        "body": 390
+      }
+    },
+    {
+      "name": "no JavaScript direct route: anticipy",
+      "status": "pass",
+      "details": {
+        "viewport": 390,
+        "document": 390,
+        "body": 390,
+        "summaryLength": 216,
+        "sections": 4
+      }
+    },
+    {
+      "name": "JavaScript direct route and return: anticipy",
+      "status": "pass",
+      "details": {
+        "viewport": 390,
+        "document": 390,
+        "body": 390,
+        "returnURL": "http://127.0.0.1:4173/#voyage",
+        "focus": "take-helm"
+      }
+    },
+    {
+      "name": "no JavaScript direct route: stellar-learning",
+      "status": "pass",
+      "details": {
+        "viewport": 390,
+        "document": 390,
+        "body": 390,
+        "summaryLength": 210,
+        "sections": 3
+      }
+    },
+    {
+      "name": "JavaScript direct route and return: stellar-learning",
+      "status": "pass",
+      "details": {
+        "viewport": 390,
+        "document": 390,
+        "body": 390,
+        "returnURL": "http://127.0.0.1:4173/#voyage",
+        "focus": "take-helm"
+      }
+    },
+    {
+      "name": "no JavaScript direct route: soma-ai",
+      "status": "pass",
+      "details": {
+        "viewport": 390,
+        "document": 390,
+        "body": 390,
+        "summaryLength": 180,
+        "sections": 3
+      }
+    },
+    {
+      "name": "JavaScript direct route and return: soma-ai",
+      "status": "pass",
+      "details": {
+        "viewport": 390,
+        "document": 390,
+        "body": 390,
+        "returnURL": "http://127.0.0.1:4173/#voyage",
+        "focus": "take-helm"
+      }
+    },
+    {
+      "name": "no JavaScript direct route: global-health-research",
+      "status": "pass",
+      "details": {
+        "viewport": 390,
+        "document": 390,
+        "body": 390,
+        "summaryLength": 274,
+        "sections": 3
+      }
+    },
+    {
+      "name": "JavaScript direct route and return: global-health-research",
+      "status": "pass",
+      "details": {
+        "viewport": 390,
+        "document": 390,
+        "body": 390,
+        "returnURL": "http://127.0.0.1:4173/#voyage",
+        "focus": "take-helm"
+      }
+    },
+    {
+      "name": "no JavaScript direct route: docubridge",
+      "status": "pass",
+      "details": {
+        "viewport": 390,
+        "document": 390,
+        "body": 390,
+        "summaryLength": 230,
+        "sections": 3
+      }
+    },
+    {
+      "name": "JavaScript direct route and return: docubridge",
+      "status": "pass",
+      "details": {
+        "viewport": 390,
+        "document": 390,
+        "body": 390,
+        "returnURL": "http://127.0.0.1:4173/#voyage",
+        "focus": "take-helm"
+      }
+    },
+    {
+      "name": "no JavaScript direct route: web-solutions-venture",
+      "status": "pass",
+      "details": {
+        "viewport": 390,
+        "document": 390,
+        "body": 390,
+        "summaryLength": 127,
+        "sections": 2
+      }
+    },
+    {
+      "name": "JavaScript direct route and return: web-solutions-venture",
+      "status": "pass",
+      "details": {
+        "viewport": 390,
+        "document": 390,
+        "body": 390,
+        "returnURL": "http://127.0.0.1:4173/#voyage",
+        "focus": "take-helm"
+      }
+    }
+  ],
+  "screenshots": [
+    "design/previews-v2/static-home-390.png",
+    "design/previews-v2/static-anticipy-390.png"
+  ],
+  "errors": [],
+  "summary": {
+    "passed": 13,
+    "failed": 0
+  }
+}

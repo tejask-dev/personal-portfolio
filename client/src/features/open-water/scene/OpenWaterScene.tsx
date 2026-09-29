@@ -14,13 +14,17 @@ import {
 } from "@react-three/fiber";
 import {
   Mesh,
+  Group,
   MeshBasicMaterial,
   NoToneMapping,
+  PerspectiveCamera,
+  ShaderMaterial,
   SphereGeometry,
   TorusGeometry,
   Vector3,
 } from "three";
 import { destinations } from "../data/world";
+import { updateRace, type RaceState } from "../systems/raceController";
 import {
   stepBoat,
   waveHeight,
@@ -31,20 +35,32 @@ import { createEnvironment, skyMaterial } from "./materials";
 import {
   createArchitecture,
   createBuoy,
+  createPlayground,
   createYacht,
   disposeModel,
 } from "./models";
 import { createOcean } from "./Ocean";
 import { Wake } from "./Wake";
+import { loadYachtAsset, disposeYachtAsset } from "./YachtAsset";
 
+export type LandmarkProjection = {
+  id: string;
+  x: number;
+  y: number;
+  visible: boolean;
+};
 export type OpenWaterSceneProps = {
   boat: MutableRefObject<BoatState>;
+  race: MutableRefObject<RaceState>;
   input: MutableRefObject<Input>;
+  resetKey: number;
   sailing: boolean;
   paused: boolean;
   daylight: boolean;
   cameraMode: "aerial" | "follow";
   onTelemetry: (boat: BoatState) => void;
+  onLandmarks: (points: LandmarkProjection[]) => void;
+  onYachtModel: (state: "loading" | "licensed" | "procedural") => void;
   onReady: () => void;
   onError: () => void;
   onCourse: (point: { x: number; z: number }) => void;
@@ -80,13 +96,17 @@ function World(props: OpenWaterSceneProps) {
     failed: false,
     cameraChanged: true,
     lightChanged: true,
+    cameraHeading: props.boat.current.heading,
   });
   const pointer = useRef<{ x: number; y: number; time: number } | null>(null);
   const objects = useMemo(() => {
     const environment = createEnvironment();
     const ocean = createOcean(environment),
       architecture = createArchitecture(environment),
-      yacht = createYacht(environment);
+      playground = createPlayground(environment),
+      fallbackYacht = createYacht(environment);
+    const yacht = new Group();
+    yacht.add(fallbackYacht);
     const sky = new Mesh(
       new SphereGeometry(1600, 32, 16),
       skyMaterial(environment),
@@ -107,7 +127,9 @@ function World(props: OpenWaterSceneProps) {
       environment,
       ocean,
       architecture,
+      playground,
       yacht,
+      fallbackYacht,
       sky,
       buoys,
       target,
@@ -115,8 +137,46 @@ function World(props: OpenWaterSceneProps) {
       eye: new Vector3(),
       aim: new Vector3(),
       currentAim: new Vector3(),
+      projection: new Vector3(),
     };
   }, []);
+  useEffect(() => {
+    const controller = new AbortController();
+    let loaded: Group | null = null;
+    latest.current.onYachtModel("loading");
+    loadYachtAsset(objects.environment, controller.signal)
+      .then((model) => {
+        if (controller.signal.aborted) {
+          disposeYachtAsset(model);
+          return;
+        }
+        loaded = model;
+        objects.yacht.add(model);
+        objects.fallbackYacht.visible = false;
+        latest.current.onYachtModel("licensed");
+        invalidate();
+      })
+      .catch(() => {
+        if (!controller.signal.aborted) {
+          latest.current.onYachtModel("procedural");
+          invalidate();
+        }
+      });
+    return () => {
+      controller.abort();
+      if (loaded) {
+        objects.yacht.remove(loaded);
+        disposeYachtAsset(loaded);
+      }
+    };
+  }, [objects, invalidate]);
+  useEffect(() => {
+    runtime.current.initialized = false;
+    runtime.current.cameraHeading = props.boat.current.heading;
+    runtime.current.accumulator = 0;
+    objects.wake.clear();
+    invalidate();
+  }, [props.resetKey, props.boat, objects, invalidate]);
   useEffect(() => {
     const fail = (event?: Event) => {
       event?.preventDefault();
@@ -173,7 +233,8 @@ function World(props: OpenWaterSceneProps) {
   useEffect(
     () => () => {
       disposeModel(objects.architecture);
-      disposeModel(objects.yacht);
+      disposeModel(objects.playground);
+      disposeModel(objects.fallbackYacht);
       objects.buoys.forEach(disposeModel);
       objects.ocean.geometry.dispose();
       objects.ocean.material.dispose();
@@ -201,7 +262,9 @@ function World(props: OpenWaterSceneProps) {
         state.accumulator += delta;
         let steps = 0;
         while (state.accumulator >= 1 / 60 && steps < 4) {
-          stepBoat(boat, p.input.current, 1 / 60);
+          if (p.race.current.phase !== "countdown")
+            stepBoat(boat, p.input.current, 1 / 60);
+          updateRace(p.race.current, boat, 1 / 60);
           state.accumulator -= 1 / 60;
           steps++;
         }
@@ -217,6 +280,7 @@ function World(props: OpenWaterSceneProps) {
         (1 - Math.exp(-delta * 1.8));
     state.lightChanged = false;
     environment.uBoat.value.set(boat.x, boat.z, -boat.heading);
+    environment.uBoatLift.value = boat.lift;
     // Sample the analytic surface at bow, stern, port and starboard. The visible
     // water, hull height, pitch and roll agree instead of using unrelated sines.
     const forwardX = Math.sin(boat.heading),
@@ -245,19 +309,48 @@ function World(props: OpenWaterSceneProps) {
     );
     yacht.position.set(
       boat.x,
-      waveHeight(boat.x, boat.z, state.time) + 0.12,
+      (boat.airborne || boat.rampId
+        ? boat.lift
+        : waveHeight(boat.x, boat.z, state.time)) + 0.12,
       boat.z,
     );
     yacht.rotation.set(
-      Math.atan2(bow - stern, 10),
+      boat.airborne
+        ? Math.atan2(boat.verticalSpeed, Math.max(Math.abs(boat.speed), 8)) *
+            0.72
+        : boat.rampId
+          ? boat.rampPitch
+          : Math.atan2(bow - stern, 10),
       -boat.heading,
-      Math.atan2(starboard - port, 3.2) - boat.turn * boat.speed * 0.004,
+      (boat.airborne ? 0 : Math.atan2(starboard - port, 3.2)) -
+        boat.turn * boat.speed * 0.004,
       "YXZ",
     );
     buoys.forEach((buoy, i) => {
       const dock = destinations[i].dock;
       buoy.position.y = waveHeight(dock.x, dock.z, state.time);
     });
+    const race = p.race.current;
+    for (const gate of objects.playground.userData.gates as Mesh[]) {
+      const material = gate.material as ShaderMaterial;
+      const relevant =
+        race.phase !== "idle" && gate.userData.courseId === race.courseId;
+      const next =
+        relevant &&
+        race.phase !== "finished" &&
+        gate.userData.gateIndex === race.checkpoint;
+      const passed = relevant && gate.userData.gateIndex < race.checkpoint;
+      material.uniforms.uColor.value.setRGB(
+        ...(next
+          ? [0.92, 0.46, 0.28]
+          : passed
+            ? [0.6, 0.75, 0.63]
+            : relevant
+              ? [0.82, 0.77, 0.63]
+              : [0.67, 0.53, 0.4]),
+      );
+      material.uniforms.uEmission.value = next ? 0.2 : 0.02;
+    }
     objects.target.visible = Boolean(boat.target);
     if (boat.target) {
       objects.target.position.set(
@@ -271,18 +364,40 @@ function World(props: OpenWaterSceneProps) {
       objects.wake.update(boat, state.time, p.sailing);
     if (!p.sailing) {
       if (size.width < 700) {
-        eye.set(52, 45, 90);
-        aim.set(25, 0, -17);
+        eye.set(-52, 40, 125);
+        aim.set(8, 18, 25);
       } else {
-        eye.set(62, 48, 85);
-        aim.set(0, 0, -15);
+        eye.set(-55, 34, 105);
+        aim.set(5, 0, -25);
       }
     } else if (p.cameraMode === "follow") {
-      eye.set(boat.x - forwardX * 25, 13, boat.z - forwardZ * 25);
-      aim.set(boat.x + forwardX * 13, 1.4, boat.z + forwardZ * 13);
+      if (!p.paused || state.cameraChanged) {
+        const change = Math.atan2(
+          Math.sin(boat.heading - state.cameraHeading),
+          Math.cos(boat.heading - state.cameraHeading),
+        );
+        state.cameraHeading +=
+          change * (!state.initialized ? 1 : 1 - Math.exp(-delta * 2.3));
+      }
+      const fx = Math.sin(state.cameraHeading),
+        fz = -Math.cos(state.cameraHeading),
+        speed = Math.max(0, boat.speed);
+      const portrait = size.width < 700,
+        trailingDistance =
+          (portrait ? 41 : 27) + speed * (portrait ? 0.16 : 0.1);
+      eye.set(
+        boat.x - fx * trailingDistance,
+        (portrait ? 17 : 11.5) + boat.lift * 0.35,
+        boat.z - fz * trailingDistance,
+      );
+      aim.set(
+        boat.x + fx * (17 + speed * 0.18),
+        1.4 + boat.lift * 0.22,
+        boat.z + fz * (17 + speed * 0.18),
+      );
     } else {
-      eye.set(boat.x + 29, 39, boat.z + 44);
-      aim.set(boat.x, 0, boat.z - 6);
+      eye.set(boat.x + 42, 51 + boat.lift * 0.16, boat.z + 62);
+      aim.set(boat.x, 0, boat.z - 12);
     }
     if (!p.paused || !state.initialized || state.cameraChanged) {
       const blend =
@@ -290,12 +405,39 @@ function World(props: OpenWaterSceneProps) {
       camera.position.lerp(eye, blend);
       currentAim.lerp(aim, blend);
       camera.lookAt(currentAim);
+      if (camera instanceof PerspectiveCamera) {
+        const desiredFov =
+          p.sailing && p.cameraMode === "follow"
+            ? 48 + Math.min(Math.max(boat.speed - 12, 0) / 14, 1) * 6
+            : 48;
+        camera.fov +=
+          (desiredFov - camera.fov) *
+          (!state.initialized || p.paused ? 1 : 1 - Math.exp(-delta * 3));
+        camera.updateProjectionMatrix();
+      }
     }
     state.cameraChanged = false;
     state.telemetry += delta;
     if (state.telemetry > 0.1 || !state.initialized) {
       state.telemetry = 0;
       p.onTelemetry({ ...boat });
+      if (!p.sailing)
+        p.onLandmarks(
+          destinations.map((destination) => {
+            const projected = objects.projection
+              .set(destination.x, 7, destination.z)
+              .project(camera);
+            return {
+              id: destination.id,
+              x: Math.round((projected.x + 1) * 500) / 10,
+              y: Math.round((1 - projected.y) * 500) / 10,
+              visible:
+                projected.z < 1 &&
+                projected.z > -1 &&
+                Math.abs(projected.x) < 1.08,
+            };
+          }),
+        );
     }
     state.initialized = true;
   });
@@ -332,6 +474,7 @@ function World(props: OpenWaterSceneProps) {
         }}
       />
       <primitive object={objects.architecture} />
+      <primitive object={objects.playground} />
       {objects.buoys.map((buoy, i) => (
         <primitive key={destinations[i].id} object={buoy} />
       ))}
@@ -356,7 +499,7 @@ export default function OpenWaterScene(props: OpenWaterSceneProps) {
         }}
         dpr={[1, 1.5]}
         frameloop={props.paused ? "demand" : "always"}
-        camera={{ position: [62, 48, 85], fov: 45, near: 0.15, far: 3000 }}
+        camera={{ position: [-55, 28, 105], fov: 48, near: 0.15, far: 3000 }}
         gl={{
           antialias: true,
           alpha: false,

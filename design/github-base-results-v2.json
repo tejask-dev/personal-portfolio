@@ -1,0 +1,13 @@
+{
+  "at": "2026-09-29T22:52:19.237Z",
+  "scope": "Isolated Vite GitHub-base build, local Chrome; asset prefix and client navigation only. Static route prerender checks are separate.",
+  "status": "pass",
+  "requests": [
+    {
+      "url": "http://127.0.0.1:4174/personal-portfolio/open-water/yacht.glb",
+      "status": 200
+    }
+  ],
+  "caseHref": "/personal-portfolio/case-studies/anticipy",
+  "errors": []
+}

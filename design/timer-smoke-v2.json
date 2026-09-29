@@ -1,0 +1,16 @@
+{
+  "at": "2026-09-29T23:08:34.307Z",
+  "url": "http://127.0.0.1:4173/",
+  "status": "pass",
+  "scope": "Focused Chrome UI smoke after the final formatter-only rebuild; rollover independently checked through exported pure function, no simulation state mutation.",
+  "boundary": {
+    "inputSeconds": 59.999,
+    "output": "01:00.00"
+  },
+  "timer": {
+    "visible": "00:01.28",
+    "accessibleName": "Elapsed time 00:01.28",
+    "pausedStable": true
+  },
+  "errors": []
+}

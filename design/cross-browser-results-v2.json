@@ -1,0 +1,172 @@
+{
+  "at": "2026-09-29T23:04:39.792Z",
+  "run": "v2",
+  "url": "http://127.0.0.1:4173",
+  "scope": "Local production-preview desktop browser engines with emulated viewport sizes. No native Safari, physical mobile device, or field performance claim.",
+  "engines": [
+    {
+      "name": "chrome",
+      "version": "154.0.8037.59",
+      "available": true
+    },
+    {
+      "name": "firefox",
+      "version": "155.0",
+      "available": true
+    },
+    {
+      "name": "webkit",
+      "version": "26.6",
+      "available": true
+    }
+  ],
+  "checks": [
+    {
+      "name": "chrome 390px opening, index, case, return",
+      "status": "pass",
+      "details": {
+        "viewport": 390,
+        "document": 390,
+        "body": 390,
+        "graphics": "ready",
+        "readingNavigation": "pass",
+        "keyboardNavigation": "Tab"
+      }
+    },
+    {
+      "name": "chrome 1440px opening, index, case, return",
+      "status": "pass",
+      "details": {
+        "viewport": 1440,
+        "document": 1440,
+        "body": 1440,
+        "graphics": "ready",
+        "readingNavigation": "pass",
+        "keyboardNavigation": "Tab"
+      }
+    },
+    {
+      "name": "chrome actual keyboard ramp takeoff and landing",
+      "status": "pass",
+      "details": {
+        "airborne": false,
+        "landed": true,
+        "x": 105,
+        "z": 40.059,
+        "jumps": 1,
+        "checkpoint": 2
+      }
+    },
+    {
+      "name": "chrome global pause freezes canvas",
+      "status": "pass",
+      "details": {
+        "canvasBytes": 889224,
+        "unchangedIntervalMs": 850
+      }
+    },
+    {
+      "name": "firefox 390px opening, index, case, return",
+      "status": "pass",
+      "details": {
+        "viewport": 390,
+        "document": 390,
+        "body": 390,
+        "graphics": "ready",
+        "readingNavigation": "pass",
+        "keyboardNavigation": "Tab"
+      }
+    },
+    {
+      "name": "firefox 1440px opening, index, case, return",
+      "status": "pass",
+      "details": {
+        "viewport": 1440,
+        "document": 1440,
+        "body": 1440,
+        "graphics": "ready",
+        "readingNavigation": "pass",
+        "keyboardNavigation": "Tab"
+      }
+    },
+    {
+      "name": "firefox actual keyboard ramp takeoff and landing",
+      "status": "pass",
+      "details": {
+        "airborne": false,
+        "landed": true,
+        "x": 105,
+        "z": 40.059,
+        "jumps": 1,
+        "checkpoint": 2
+      }
+    },
+    {
+      "name": "firefox global pause freezes canvas",
+      "status": "pass",
+      "details": {
+        "canvasBytes": 837507,
+        "unchangedIntervalMs": 850
+      }
+    },
+    {
+      "name": "webkit 390px opening, index, case, return",
+      "status": "pass",
+      "details": {
+        "viewport": 390,
+        "document": 390,
+        "body": 390,
+        "graphics": "ready",
+        "readingNavigation": "pass",
+        "keyboardNavigation": "Option+Tab (macOS link navigation)"
+      }
+    },
+    {
+      "name": "webkit 1440px opening, index, case, return",
+      "status": "pass",
+      "details": {
+        "viewport": 1440,
+        "document": 1440,
+        "body": 1440,
+        "graphics": "ready",
+        "readingNavigation": "pass",
+        "keyboardNavigation": "Option+Tab (macOS link navigation)"
+      }
+    },
+    {
+      "name": "webkit actual keyboard ramp takeoff and landing",
+      "status": "pass",
+      "details": {
+        "airborne": false,
+        "landed": true,
+        "x": 105,
+        "z": 40.059,
+        "jumps": 1,
+        "checkpoint": 2
+      }
+    },
+    {
+      "name": "webkit global pause freezes canvas",
+      "status": "pass",
+      "details": {
+        "canvasBytes": 1450669,
+        "unchangedIntervalMs": 850
+      }
+    }
+  ],
+  "errors": [],
+  "screenshots": [
+    "design/previews-v2/chrome-opening-390.png",
+    "design/previews-v2/chrome-opening-1440.png",
+    "design/previews-v2/firefox-opening-390.png",
+    "design/previews-v2/firefox-opening-1440.png",
+    "design/previews-v2/webkit-opening-390.png",
+    "design/previews-v2/webkit-opening-1440.png"
+  ],
+  "summary": {
+    "passed": 12,
+    "failed": 0,
+    "unavailable": [],
+    "graphicsFallbacks": []
+  }
+}

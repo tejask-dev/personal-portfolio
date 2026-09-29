@@ -1,0 +1,51 @@
+{
+  "verifiedAt": "2026-09-29",
+  "scope": "Standalone Node loader check; no browser or GPU used",
+  "sourceMeshes": 32,
+  "runtimeMeshes": 13,
+  "unchanged": [
+    "material count",
+    "triangle count",
+    "bounds",
+    "per-material expanded triangle positions and normals"
+  ],
+  "comparison": "All per-material SHA-256 geometry hashes equal before and after batching",
+  "runtime": {
+    "meshes": 13,
+    "materials": 13,
+    "triangles": 160180,
+    "min": [
+      -3.328758478164673,
+      -2.0711729526519775,
+      -10.800000190734863
+    ],
+    "max": [
+      3.328758478164673,
+      4.828526496887207,
+      10.800000190734863
+    ],
+    "geometryHashes": {
+      "yacht-blinn5": "bf4b3c65d2f0085488846baf5ce35afb2b53e5d06e7c4bc508d01f552555984c",
+      "yacht-blinn9": "d981d7bf0f712854f8453f2bd10978a384154a5a0f3a684773036dbf7d4be9ef",
+      "yacht-blinn10": "dc03a1c7d05ac75fbf7767dc33e94503152e4c78c8b71dbad317ed790248d20c",
+      "yacht-blinn12": "fc91dcbd45eaeecb65855ca7637a9633d4471effcc3a527ec26b565d68f7af00",
+      "yacht-chiglia1": "f92dec7d59ccc3357be3dc43ef0091da8c6ed405d1eb6080a589ab88a906d6aa",
+      "yacht-lambert1": "bee1be27495858ecf191a2f67366b7a2a464abb2baa5a0f9e296a3fbd40bf6c4",
+      "yacht-blinn2": "1050f5c785996008b4a5fa0217b5a6c6dc022cc0793843a4bfdcf7c2b0c18ddf",
+      "yacht-blinn1": "c885e5651d9fafa1e639bc9a3385c00d3e5e0da799852c7fd33266fa76669d02",
+      "yacht-phongE2": "9afa9386149bbea1ca009c1fe587da4bd5a6aa7c65c839f98943c3c4382533a0",
+      "yacht-fiancate": "263d8250d963f0f7e6e4e431336baa40b9eb78f04eba8b839a0ba2599ee16ba2",
+      "yacht-coperta1": "7e235a22223e331286787e9809316be61702cd8a1c7715e3dae42fb1a53a4ba4",
+      "yacht-nero1": "610aa1f4e7b18b664fca0e6fa26b10fc9e45132cdd45394bfce5446a3d2905dd",
+      "yacht-blinn6": "160798d6720676a02aafa70e1fff23ecde0b50b9cc8ca1b36346c4073f967ac6"
+    },
+    "disposal": {
+      "geometries": 13,
+      "materials": 13
+    },
+    "lateAbortDisposal": {
+      "geometries": 32,
+      "materials": 20
+    }
+  }
+}

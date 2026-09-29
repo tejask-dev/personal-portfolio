@@ -1,5 +1,7 @@
 # Open Water implementation
 
+Historical first iteration. The expanded archipelago, licensed yacht, and time trials are documented in `OPEN-WATER-V2.md` and `QUALITY-REVIEW-V2.md`.
+
 An editorial portfolio set in a compact fictional archipelago. Real identity and projects are available immediately; sailing is an optional way to discover the same work.
 
 ## Decisions

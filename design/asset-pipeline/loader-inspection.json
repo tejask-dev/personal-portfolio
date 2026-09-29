@@ -1,0 +1,144 @@
+{
+  "file": "motoryacht-optimized-0.001.glb",
+  "originalBounds": [
+    1.4642522600731585,
+    1.5175177288459265,
+    4.7506973730616835
+  ],
+  "center": [
+    0,
+    0.7532257451009747,
+    -0.07637351819037974
+  ],
+  "meshes": 32,
+  "materials": [
+    {
+      "name": "blinn5",
+      "type": "MeshPhysicalMaterial",
+      "metalness": 0,
+      "roughness": 0.1840745606544847
+    },
+    {
+      "name": "blinn2",
+      "type": "MeshPhysicalMaterial",
+      "metalness": 0,
+      "roughness": 0.12014794920000005
+    },
+    {
+      "name": "blinn1",
+      "type": "MeshPhysicalMaterial",
+      "metalness": 0,
+      "roughness": 0.3410436754114651
+    },
+    {
+      "name": "phongE2",
+      "type": "MeshPhysicalMaterial",
+      "metalness": 0,
+      "roughness": 0.9038281436094243
+    },
+    {
+      "name": "fiancate",
+      "type": "MeshPhysicalMaterial",
+      "metalness": 0,
+      "roughness": 0.15626466884474777
+    },
+    {
+      "name": "coperta1",
+      "type": "MeshPhysicalMaterial",
+      "metalness": 0,
+      "roughness": 0.4477826734462118
+    },
+    {
+      "name": "nero1",
+      "type": "MeshPhysicalMaterial",
+      "metalness": 0,
+      "roughness": 0.3831954167
+    },
+    {
+      "name": "lambert2",
+      "type": "MeshPhysicalMaterial",
+      "metalness": 0,
+      "roughness": 0.4831509160607168
+    },
+    {
+      "name": "lambert3",
+      "type": "MeshPhysicalMaterial",
+      "metalness": 0,
+      "roughness": 0.6
+    },
+    {
+      "name": "blinn6",
+      "type": "MeshPhysicalMaterial",
+      "metalness": 0,
+      "roughness": 0
+    },
+    {
+      "name": "blinn7",
+      "type": "MeshPhysicalMaterial",
+      "metalness": 0,
+      "roughness": 0.4959300456
+    },
+    {
+      "name": "blinn8",
+      "type": "MeshPhysicalMaterial",
+      "metalness": 0,
+      "roughness": 0.038728494899999966
+    },
+    {
+      "name": "blinn9",
+      "type": "MeshPhysicalMaterial",
+      "metalness": 0,
+      "roughness": 0.9207483815999999
+    },
+    {
+      "name": "blinn10",
+      "type": "MeshPhysicalMaterial",
+      "metalness": 0,
+      "roughness": 0.9207483815999999
+    },
+    {
+      "name": "blinn11",
+      "type": "MeshPhysicalMaterial",
+      "metalness": 0,
+      "roughness": 0.4583518359940141
+    },
+    {
+      "name": "blinn12",
+      "type": "MeshPhysicalMaterial",
+      "metalness": 0,
+      "roughness": 0.9207483815999999
+    },
+    {
+      "name": "phongE4",
+      "type": "MeshPhysicalMaterial",
+      "metalness": 0,
+      "roughness": 0.541648164
+    },
+    {
+      "name": "chiglia1",
+      "type": "MeshPhysicalMaterial",
+      "metalness": 0,
+      "roughness": 0.3889694472065286
+    },
+    {
+      "name": "lambert1",
+      "type": "MeshPhysicalMaterial",
+      "metalness": 0,
+      "roughness": 0.24540864799999995
+    },
+    {
+      "name": "blinn13",
+      "type": "MeshPhysicalMaterial",
+      "metalness": 0,
+      "roughness": 0.9207483815999999
+    }
+  ],
+  "images": [],
+  "render": {
+    "frame": 35,
+    "calls": 36,
+    "triangles": 161748,
+    "points": 0,
+    "lines": 0
+  }
+}

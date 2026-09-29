@@ -2,10 +2,14 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   destinations,
+  obstacles,
+  HOME,
+  ramps,
   WORLD_RADIUS,
 } from "../client/src/features/open-water/data/world.ts";
 import {
   createBoat,
+  HULL_RADIUS,
   distance,
   routeTo,
   steerTo,
@@ -37,7 +41,7 @@ test("independent boats begin at anchor without motion", () => {
 test("forward motion accelerates gradually, coasts, and settles", () => {
   const boat = createBoat();
   stepBoat(boat, { forward: true }, 1 / 60);
-  assert.ok(boat.speed > 0 && boat.speed < 0.2);
+  assert.ok(boat.speed > 0 && boat.speed <= 0.25);
   advance(boat, 3, { forward: true });
   const poweredSpeed = boat.speed;
   const releasedAt = { x: boat.x, z: boat.z };
@@ -55,9 +59,9 @@ test("steering curves underway and reverses its turn direction while reversing",
   reverse.speed = -4;
   advance(forward, 0.5, { forward: true, right: true });
   advance(reverse, 0.5, { backward: true, right: true });
-  assert.ok(forward.heading > -0.22);
-  assert.ok(reverse.heading < -0.22);
-  assert.ok(reverse.speed >= -4.5);
+  assert.ok(forward.heading > HOME.heading);
+  assert.ok(reverse.heading < HOME.heading);
+  assert.ok(reverse.speed >= -5);
 });
 
 test("each manual input immediately takes over an autopilot course", () => {
@@ -79,19 +83,19 @@ test("all destination pairs arrive outside structures, across four initial headi
         const boat = { ...createBoat(), ...from.dock, heading };
         steerTo(boat, to.dock, to.id);
         let ticks = 0;
-        while (boat.target && ticks++ < 60 * 65) {
+        while (boat.target && ticks++ < 60 * 35) {
           stepBoat(boat, {}, 1 / 60);
           assertFinite(boat);
-          for (const obstacle of destinations)
+          for (const obstacle of obstacles)
             assert.ok(
-              distance(boat, obstacle) >= obstacle.r + 3 - 1e-8,
+              distance(boat, obstacle) >= obstacle.r + HULL_RADIUS - 1e-8,
               `${from.id} -> ${to.id} entered ${obstacle.id}`,
             );
         }
         assert.equal(
           boat.arrived,
           to.id,
-          `${from.id} -> ${to.id} at heading ${heading} failed after 65 s`,
+          `${from.id} -> ${to.id} at heading ${heading} failed after 35 s`,
         );
         assert.ok(distance(boat, to.dock) < 2.8);
         assert.equal(boat.speed, 0);
@@ -112,7 +116,7 @@ test("routing detours around an obstacle instead of repeatedly selecting it", ()
 });
 
 test("exact obstacle overlap resolves to finite safe coordinates", () => {
-  for (const station of destinations) {
+  for (const station of obstacles) {
     const boat = { ...createBoat(), x: station.x, z: station.z };
     stepBoat(boat, {}, 1 / 60);
     assertFinite(boat);
@@ -121,7 +125,7 @@ test("exact obstacle overlap resolves to finite safe coordinates", () => {
 });
 
 test("autopilot recovers from an exact overlap and can leave for another destination", () => {
-  for (const station of destinations) {
+  for (const station of obstacles) {
     const boat = { ...createBoat(), x: station.x, z: station.z };
     const target = destinations.find(
       (candidate) => candidate.id !== station.id,
@@ -197,4 +201,177 @@ test("wave samples are deterministic, finite, bounded, and continuous", () => {
       assert.equal(height, waveHeight(x, 25, time));
       assert.ok(Math.abs(height - waveHeight(x + 0.001, 25, time)) < 0.001);
     }
+});
+
+test("both ramps produce an uphill climb, bounded ballistic flight, and a landing beyond the lip", () => {
+  for (const ramp of ramps) {
+    const boat = {
+      ...createBoat(),
+      x: ramp.x - Math.sin(ramp.heading) * (ramp.length / 2 + 35),
+      z: ramp.z + Math.cos(ramp.heading) * (ramp.length / 2 + 35),
+      heading: ramp.heading,
+    };
+    let climbed = false,
+      flew = false,
+      landed = false,
+      maximum = 0,
+      launchSpeed = 0;
+    for (let tick = 0; tick < 9 * 60; tick++) {
+      const wasAirborne = boat.airborne;
+      const oldLift = boat.lift;
+      stepBoat(boat, { forward: true }, 1 / 60);
+      assertFinite(boat);
+      assert.ok(
+        Number.isFinite(boat.lift) && Number.isFinite(boat.verticalSpeed),
+      );
+      if (boat.rampId === ramp.id && boat.lift > 0.4) {
+        climbed = true;
+        assert.ok(boat.rampPitch > 0);
+        assert.ok(boat.lift >= oldLift - 0.001);
+      }
+      if (!wasAirborne && boat.airborne) launchSpeed = boat.verticalSpeed;
+      if (boat.airborne) {
+        flew = true;
+        maximum = Math.max(maximum, boat.lift);
+      }
+      if (wasAirborne && !boat.airborne) {
+        landed = true;
+        assert.equal(boat.lift, 0);
+        assert.equal(boat.verticalSpeed, 0);
+        assert.ok(boat.landingImpact > 0);
+        const forwardDistance =
+          (boat.x - ramp.x) * Math.sin(ramp.heading) -
+          (boat.z - ramp.z) * Math.cos(ramp.heading);
+        assert.ok(forwardDistance > ramp.length / 2 + 12);
+        break;
+      }
+    }
+    assert.ok(
+      climbed && flew && landed,
+      `${ramp.id} did not complete a natural jump`,
+    );
+    assert.ok(maximum > ramp.height + 1 && maximum < 12);
+    assert.ok(launchSpeed > 4 && launchSpeed <= 8.5);
+    assert.equal(boat.jumpCount, 1);
+  }
+});
+
+test("a ramp cannot launch a boat approaching its raised back or its side", () => {
+  for (const ramp of ramps) {
+    for (const approach of ["back", "side"]) {
+      const forward = { x: Math.sin(ramp.heading), z: -Math.cos(ramp.heading) };
+      const right = { x: Math.cos(ramp.heading), z: Math.sin(ramp.heading) };
+      const point =
+        approach === "back"
+          ? {
+              x: ramp.x + forward.x * (ramp.length / 2 + 15),
+              z: ramp.z + forward.z * (ramp.length / 2 + 15),
+            }
+          : {
+              x: ramp.x - right.x * (ramp.width / 2 + 15),
+              z: ramp.z - right.z * (ramp.width / 2 + 15),
+            };
+      const boat = {
+        ...createBoat(),
+        ...point,
+        heading: ramp.heading + (approach === "back" ? Math.PI : Math.PI / 2),
+        speed: 18,
+      };
+      advance(boat, 4, { forward: true });
+      assert.equal(boat.jumpCount, 0);
+      assert.equal(boat.airborne, false);
+      assert.equal(boat.lift, 0);
+    }
+  }
+});
+
+test("ramp side impacts stay on the entry side without jumping or teleporting toward the lip", () => {
+  for (const ramp of ramps) {
+    const forward = { x: Math.sin(ramp.heading), z: -Math.cos(ramp.heading) };
+    const right = { x: Math.cos(ramp.heading), z: Math.sin(ramp.heading) };
+    for (const along of [0.1, 3, 5, 9]) {
+      for (const side of [-1, 1]) {
+        const across = side * (ramp.width / 2 + 0.05);
+        const boat = {
+          ...createBoat(),
+          x: ramp.x + forward.x * along + right.x * across,
+          z: ramp.z + forward.z * along + right.z * across,
+          heading: ramp.heading - (side * Math.PI) / 2,
+          speed: 18,
+        };
+        for (let tick = 0; tick < 90; tick++) {
+          const previous = { x: boat.x, z: boat.z };
+          stepBoat(boat, { forward: true }, 1 / 60);
+          const nextAlong =
+            (boat.x - ramp.x) * forward.x + (boat.z - ramp.z) * forward.z;
+          const nextAcross =
+            (boat.x - ramp.x) * right.x + (boat.z - ramp.z) * right.z;
+          const context = `${ramp.id}, along ${along}, side ${side}, tick ${tick}`;
+          assert.ok(
+            distance(boat, previous) <= 28 / 60 + 0.6 + 1e-8,
+            `${context}: unbounded impact displacement`,
+          );
+          assert.ok(
+            Math.abs(nextAlong - along) < 1e-8,
+            `${context}: impact changed position along the ramp`,
+          );
+          assert.ok(
+            nextAcross * side >= ramp.width / 2,
+            `${context}: crossed the side wall`,
+          );
+          assert.equal(boat.rampId, null, context);
+          assert.equal(boat.airborne, false, context);
+          assert.equal(boat.jumpCount, 0, context);
+          assert.equal(boat.lift, 0, context);
+        }
+      }
+    }
+  }
+});
+
+test("an uphill-facing side approach beside the low edge cannot board a ramp", () => {
+  for (const ramp of ramps) {
+    const forward = { x: Math.sin(ramp.heading), z: -Math.cos(ramp.heading) };
+    const right = { x: Math.cos(ramp.heading), z: Math.sin(ramp.heading) };
+    for (const side of [-1, 1]) {
+      const along = -ramp.length / 2 + 0.1;
+      const across = side * (ramp.width / 2 + 0.01);
+      const boat = {
+        ...createBoat(),
+        x: ramp.x + forward.x * along + right.x * across,
+        z: ramp.z + forward.z * along + right.z * across,
+        heading: ramp.heading - side * 0.6,
+        speed: 18,
+      };
+      stepBoat(boat, { forward: true }, 1 / 60);
+      const nextAcross =
+        (boat.x - ramp.x) * right.x + (boat.z - ramp.z) * right.z;
+      assert.ok(nextAcross * side >= ramp.width / 2);
+      assert.equal(boat.rampId, null);
+      assert.equal(boat.lift, 0);
+      assert.equal(boat.airborne, false);
+    }
+  }
+});
+
+test("airborne height follows gravity while thrust cannot create a second jump", () => {
+  const boat = {
+    ...createBoat(),
+    x: 0,
+    z: 170,
+    lift: 4,
+    verticalSpeed: 3,
+    airborne: true,
+    speed: 20,
+  };
+  const initial = { ...boat };
+  advance(boat, 0.5, { forward: true, right: true });
+  assert.ok(boat.lift > 4 && boat.lift < 4.5);
+  assert.ok(boat.verticalSpeed < 0);
+  assert.ok(boat.speed < initial.speed);
+  assert.ok(Math.abs(boat.heading - initial.heading) < 0.15);
+  advance(boat, 2, { forward: true });
+  assert.equal(boat.airborne, false);
+  assert.equal(boat.lift, 0);
+  assert.equal(boat.jumpCount, 0);
 });

@@ -1,5 +1,5 @@
 /**
- * Production-preview route checks, using the separately installed QA runtime.
+ * Production-preview route checks using repository dependencies (optional QA_RUNTIME override).
  * QA_URL=http://127.0.0.1:4173 node --experimental-strip-types tests/open-water-static.mjs
  * Desktop Chrome with a 390px viewport; not real-device or field performance evidence.
  */
@@ -22,7 +22,11 @@ const baseURL = (process.env.QA_URL || "http://127.0.0.1:4173").replace(
   "",
 );
 const browser = await chromium.launch({ channel: "chrome", headless: true });
-const screenshotDirectory = path.join(repository, "design/previews");
+const versionSuffix = process.env.QA_RUN_LABEL === "v2" ? "-v2" : "";
+const screenshotDirectory = path.join(
+  repository,
+  `design/previews${versionSuffix}`,
+);
 await mkdir(screenshotDirectory, { recursive: true });
 const report = {
   at: new Date().toISOString(),
@@ -93,7 +97,9 @@ try {
         path: path.join(screenshotDirectory, "static-home-390.png"),
         fullPage: false,
       });
-      report.screenshots.push("design/previews/static-home-390.png");
+      report.screenshots.push(
+        `design/previews${versionSuffix}/static-home-390.png`,
+      );
       return await reflow(page);
     } finally {
       await context.close();
@@ -156,7 +162,9 @@ try {
             path: path.join(screenshotDirectory, "static-anticipy-390.png"),
             fullPage: false,
           });
-          report.screenshots.push("design/previews/static-anticipy-390.png");
+          report.screenshots.push(
+            `design/previews${versionSuffix}/static-anticipy-390.png`,
+          );
         }
         return {
           ...(await reflow(page)),
@@ -230,7 +238,7 @@ try {
     failed: report.checks.filter((check) => check.status === "fail").length,
   };
   await writeFile(
-    path.join(repository, "design/static-results.json"),
+    path.join(repository, `design/static-results${versionSuffix}.json`),
     `${JSON.stringify(report, null, 2)}\n`,
   );
   console.log(JSON.stringify(report.summary));

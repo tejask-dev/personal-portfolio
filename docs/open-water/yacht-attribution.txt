@@ -1,0 +1,19 @@
+motoryacht 35
+by angelo raffaele catalano
+
+Creator: https://sketchfab.com/angeloraffaelecatalano
+Source: https://sketchfab.com/3d-models/motoryacht-35-0bdd7a0de7254426890bb5745bb7da6d
+License: Creative Commons Attribution 4.0 International (CC BY 4.0)
+https://creativecommons.org/licenses/by/4.0/
+
+The original work was obtained as an existing glTF conversion from:
+https://raw.githubusercontent.com/bob6664569/open-water/main/site/assets/boats/motoryacht_10.7r.glb
+
+Changes for Open Water: removed separate Italian flag fabric; welded and
+simplified geometry; reordered the vertex cache; quantized positions and normals.
+The renderer replaces materials with ivory, teak, glass, and chrome finishes,
+normalizes length to 21.6 scene units, and adjusts waterline placement. Hull,
+deck, and cockpit geometry remain adapted from the credited original work.
+
+This model remains licensed under CC BY 4.0 independently of the site's software.
+No endorsement by the original creator is implied.

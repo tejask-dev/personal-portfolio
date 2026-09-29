@@ -1698,3 +1698,763 @@
       );
   }
 }
+
+/* V2 / a sunlit archipelago, with optional play kept beside the portfolio. */
+.is-daylight .ow-nav {
+  color: #173e46;
+  border-color: #1a4d5138;
+}
+.is-daylight .ow-brand small,
+.is-daylight .ow-title-mark span {
+  color: #305a60;
+}
+.is-daylight .ow-nav svg:not(.ow-brand > svg) {
+  color: #244e53;
+}
+.is-daylight .ow-nav-links a:last-child {
+  border-color: #244e5377;
+}
+.is-daylight .ow-nav-links a:hover,
+.is-daylight .ow-nav-links button:hover {
+  color: #103139;
+}
+.is-daylight .ow-vignette {
+  background:
+    linear-gradient(90deg, #072f41a6, #103c423d 34%, transparent 61%),
+    linear-gradient(0deg, #082c3ba6, transparent 29%);
+}
+.ow-explore-note {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 24px 0 0;
+  font-size: 10px;
+  color: #d7e3dd;
+}
+.ow-explore-note > span {
+  font:
+    24px/1 Georgia,
+    serif;
+  color: #e6c19b;
+}
+.ow-destination {
+  background: #183d47e6;
+  min-width: 176px;
+  border-color: #d1e4d356;
+  padding: 11px 13px;
+}
+.ow-destination::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  width: 1px;
+  height: 26px;
+  background: linear-gradient(#d5e4d7a0, transparent);
+}
+.ow-chart {
+  width: 244px;
+  background: #103c48db;
+  box-shadow: 0 7px 25px #062d3412;
+  padding-inline: 13px;
+}
+.ow-map {
+  height: 172px;
+}
+.ow-chart-heading {
+  min-height: 34px;
+}
+.ow-chart-caption {
+  font-size: 6px;
+  margin-top: 10px;
+}
+.ow-environment {
+  gap: 18px;
+}
+.ow-environment button {
+  font-size: 10px;
+  text-shadow: 0 1px 5px #082c3b;
+  min-height: 44px;
+}
+.ow-voyage-top {
+  top: 136px;
+  gap: 22px;
+}
+.ow-voyage-top > button {
+  min-height: 44px;
+}
+.ow-voyage-top p {
+  font-size: 40px;
+}
+.ow-voyage-top p span {
+  max-width: 290px;
+  color: #e0e9df;
+}
+.ow-playground,
+.ow-race-panel {
+  position: absolute;
+  left: 7%;
+  top: 306px;
+  width: 300px;
+  z-index: 4;
+  background: #f0f1e8f5;
+  color: #1c4147;
+  box-shadow: 0 12px 40px #092e381c;
+}
+.ow-playground-toggle {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  text-align: left;
+  min-height: 72px;
+  gap: 14px;
+  padding: 16px 20px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+}
+.ow-playground-toggle > span:nth-child(2) {
+  flex: 1;
+  font-size: 13px;
+}
+.ow-playground-toggle small {
+  display: block;
+  font-size: 10px;
+  margin-top: 5px;
+  color: #506b69;
+}
+.ow-race-flag {
+  font:
+    28px Georgia,
+    serif;
+  color: #a4583c;
+}
+.ow-course-menu {
+  padding: 0 20px 14px;
+}
+.ow-course-menu > button {
+  display: flex;
+  align-items: center;
+  text-align: left;
+  width: 100%;
+  min-height: 73px;
+  padding: 15px 0;
+  border: 0;
+  border-top: 1px solid #204a482a;
+  color: #173d43;
+  background: transparent;
+  gap: 13px;
+}
+.ow-course-number {
+  font:
+    10px ui-monospace,
+    monospace;
+  color: #916149;
+}
+.ow-course-menu > button > span:nth-child(2) {
+  flex: 1;
+}
+.ow-course-menu strong {
+  display: block;
+  font: 300 23px/1.15 var(--serif);
+  letter-spacing: -0.03em;
+}
+.ow-course-menu small {
+  display: block;
+  margin-top: 6px;
+  font-size: 10px;
+  color: #496660;
+}
+.ow-course-menu > button:hover strong {
+  color: #9c4f32;
+}
+.ow-course-menu > p {
+  margin: 10px 0 0;
+  color: #4c6662;
+  font-size: 10px;
+  line-height: 1.65;
+}
+.ow-race-panel {
+  padding: 17px 20px 12px;
+}
+.ow-race-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+.ow-race-heading .ow-micro {
+  font-size: 6px;
+  letter-spacing: 0.15em;
+}
+.ow-race-heading button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  border: 0;
+  padding: 0;
+  background: none;
+  color: #345650;
+  font-size: 10px;
+}
+.ow-race-heading button > span {
+  font-size: 18px;
+}
+.ow-race-panel h2 {
+  font: 300 32px/1.05 var(--serif);
+  letter-spacing: -0.04em;
+  margin: 4px 0 20px;
+}
+.ow-race-clock {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #214d482b;
+}
+.ow-race-clock > strong {
+  font:
+    300 35px/1 ui-monospace,
+    monospace;
+  letter-spacing: -0.065em;
+  font-variant-numeric: tabular-nums;
+}
+.ow-race-clock > span {
+  color: #577268;
+  font-size: 9px;
+}
+.ow-race-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin: 15px 0 12px;
+  font-size: 11px;
+}
+.ow-race-progress > span:last-child {
+  font-size: 9px;
+  color: #577068;
+}
+.ow-race-track {
+  display: flex;
+  gap: 4px;
+}
+.ow-race-track i {
+  display: block;
+  height: 3px;
+  background: #204f4830;
+  flex: 1;
+}
+.ow-race-track i.is-passed {
+  background: #4e8172;
+}
+.ow-race-track i.is-next {
+  background: #b96f4e;
+}
+.ow-race-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 10px;
+}
+.ow-race-bottom > button {
+  display: inline-flex;
+  gap: 12px;
+  align-items: center;
+  border: 0;
+  min-height: 44px;
+  background: transparent;
+  color: #335d54;
+  padding: 0;
+  font-size: 10px;
+}
+.ow-race-bottom > span {
+  font:
+    7px ui-monospace,
+    monospace;
+  color: #5b7269;
+}
+.ow-countdown {
+  display: flex;
+  align-items: center;
+  gap: 21px;
+  padding: 5px 0 14px;
+}
+.ow-countdown > strong {
+  font: 300 80px/0.95 var(--serif);
+  color: #a65f40;
+}
+.ow-countdown > span {
+  max-width: 116px;
+  font-size: 12px;
+  line-height: 1.6;
+}
+.ow-race-best {
+  margin: 16px 0 2px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: #4a695e;
+}
+.ow-race-best strong {
+  font:
+    11px ui-monospace,
+    monospace;
+}
+.ow-race-panel.is-finished {
+  border-top: 3px solid #be9257;
+}
+.ow-playground ~ .ow-arrival {
+  bottom: 95px;
+}
+@media (min-width: 1500px) {
+  .ow-playground,
+  .ow-race-panel {
+    top: 328px;
+  }
+}
+@media (max-width: 1100px) {
+  .ow-playground,
+  .ow-race-panel {
+    left: 6%;
+    width: 270px;
+  }
+  .ow-chart {
+    width: 214px;
+  }
+  .ow-map {
+    height: 151px;
+  }
+}
+@media (max-width: 800px) {
+  .ow-explore-note {
+    max-width: 230px;
+    line-height: 1.6;
+  }
+  .ow-playground,
+  .ow-race-panel {
+    left: 26px;
+    top: 292px;
+    width: 252px;
+  }
+  .ow-voyage-top p {
+    font-size: 34px;
+  }
+}
+@media (max-width: 600px) {
+  .is-daylight .ow-vignette {
+    background:
+      linear-gradient(90deg, #082f429c, transparent 90%),
+      linear-gradient(0deg, #062f3ec7, transparent 32%);
+  }
+  .ow-experience {
+    min-height: 844px;
+  }
+  .ow-intro {
+    top: 131px;
+  }
+  .ow-intro h1 {
+    font-size: 78px;
+  }
+  .ow-context {
+    margin-bottom: 19px;
+  }
+  .ow-explore-note {
+    display: none;
+  }
+  .ow-instruments {
+    bottom: 65px;
+    gap: 4px;
+  }
+  .ow-chart {
+    width: 174px;
+    padding: 5px 9px 7px;
+  }
+  .ow-chart-heading {
+    min-height: 33px;
+    height: 33px;
+    font-size: 7px;
+    letter-spacing: 0.15em;
+  }
+  .ow-map {
+    height: 115px;
+  }
+  .ow-environment {
+    gap: 17px;
+  }
+  .ow-environment button {
+    font-size: 8px;
+  }
+  .ow-voyage-top {
+    top: 108px;
+    gap: 13px;
+  }
+  .ow-voyage-top p {
+    font-size: 30px;
+  }
+  .ow-voyage-top p span {
+    max-width: 280px;
+    font-size: 10px;
+  }
+  .ow-playground,
+  .ow-race-panel {
+    top: 249px;
+    left: 25px;
+    width: 260px;
+  }
+  .ow-playground-toggle {
+    min-height: 60px;
+    padding: 13px 17px;
+  }
+  .ow-course-menu {
+    padding: 0 17px 10px;
+  }
+  .ow-course-menu > button {
+    min-height: 61px;
+    padding: 10px 0;
+  }
+  .ow-race-panel {
+    padding: 6px 17px;
+  }
+  .ow-race-panel h2 {
+    font-size: 28px;
+    margin-bottom: 12px;
+  }
+  .ow-race-heading .ow-micro {
+    font-size: 5.5px;
+  }
+  .ow-race-clock {
+    padding-bottom: 10px;
+  }
+  .ow-race-clock > strong {
+    font-size: 30px;
+  }
+  .ow-race-progress {
+    margin: 10px 0;
+  }
+  .ow-countdown > strong {
+    font-size: 64px;
+  }
+  .ow-countdown > span {
+    font-size: 11px;
+  }
+  .ow-touch-controls {
+    bottom: 177px;
+    width: 132px;
+  }
+  .ow-touch-controls button {
+    background: #153d4ceb;
+  }
+  .ow-status-text {
+    font-size: 6px;
+  }
+  .ow-playground ~ .ow-arrival {
+    bottom: 270px;
+  }
+}
+@media (max-width: 360px) {
+  .ow-playground,
+  .ow-race-panel {
+    left: 21px;
+    width: 248px;
+  }
+  .ow-chart {
+    width: 148px;
+  }
+  .ow-map {
+    height: 107px;
+  }
+  .ow-touch-controls {
+    left: 17px;
+    width: 92px;
+  }
+  .ow-environment {
+    gap: 13px;
+  }
+}
+@media (max-height: 620px) and (min-width: 700px) {
+  .ow-playground,
+  .ow-race-panel {
+    top: 210px;
+  }
+  .ow-voyage-top {
+    top: 112px;
+  }
+  .ow-voyage-top p {
+    display: none;
+  }
+}
+.ow-chart-coordinates {
+  display: none;
+}
+@media (max-width: 600px) {
+  .ow-chart:not(.is-collapsed) {
+    width: 196px;
+  }
+  .ow-chart-coordinates {
+    display: block;
+  }
+  .ow-map {
+    height: 138px;
+    margin-bottom: 47px;
+  }
+  .ow-map-pin {
+    left: calc((var(--pin-index) + 0.5) * 25%) !important;
+    top: calc(100% + 25px) !important;
+  }
+  .ow-map-pin::before {
+    inset: 5px;
+  }
+}
+@media (max-width: 360px) {
+  .ow-touch-controls {
+    left: 14px;
+    width: 92px;
+    gap: 3px;
+  }
+}
+/* The numbered dock controls form a separate 44px row, keeping close harbor
+   coordinates from producing overlapping targets on the expanded world map. */
+.ow-chart-coordinates {
+  display: block;
+}
+.ow-map {
+  margin-bottom: 47px;
+}
+.ow-map-pin {
+  left: calc((var(--pin-index) + 0.5) * 25%) !important;
+  top: calc(100% + 25px) !important;
+}
+.ow-map-pin::before {
+  inset: 5px;
+}
+.ow-map-pin:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.is-daylight .ow-brand {
+  color: #f0f2e5;
+}
+.is-daylight .ow-brand small {
+  color: #d5e3db;
+}
+.ow-destination-anticipy::after {
+  left: 88%;
+}
+@media (max-width: 600px), (max-height: 620px) and (min-width: 700px) {
+  .ow-experience.is-sailing:not([data-race-phase="idle"]) .ow-voyage-top p {
+    display: none;
+  }
+  .ow-race-panel {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 9px;
+    top: 159px;
+    left: 21px;
+    right: 21px;
+    width: auto;
+    padding: 1px 14px;
+  }
+  .ow-race-heading {
+    grid-column: 1 / -1;
+  }
+  .ow-race-panel h2 {
+    grid-column: 1;
+    font-size: 24px;
+    margin: 0;
+    align-self: center;
+  }
+  .ow-race-clock {
+    grid-column: 2;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0;
+    border: 0;
+  }
+  .ow-race-clock > strong {
+    font-size: 29px;
+  }
+  .ow-race-clock > span {
+    display: none;
+  }
+  .ow-race-progress {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 12px 0 8px;
+    font-size: 10px;
+  }
+  .ow-race-track,
+  .ow-race-bottom,
+  .ow-race-best {
+    grid-column: 1 / -1;
+  }
+  .ow-race-bottom {
+    margin: 1px 0 0;
+  }
+  .ow-countdown {
+    grid-column: 2;
+    padding: 0;
+    gap: 10px;
+    justify-content: flex-end;
+  }
+  .ow-countdown > strong {
+    font-size: 49px;
+  }
+  .ow-countdown > span {
+    max-width: 80px;
+    font-size: 9px;
+  }
+  .ow-race-best {
+    margin-top: 11px;
+  }
+}
+@media (max-width: 360px) {
+  .ow-race-panel h2 {
+    font-size: 21px;
+  }
+  .ow-race-clock > strong {
+    font-size: 25px;
+  }
+}
+.ow-world-credits {
+  padding: 0 0 32px;
+  font-size: 11px;
+  color: #48675f;
+}
+.ow-world-credits summary {
+  width: max-content;
+  cursor: pointer;
+  min-height: 44px;
+  padding-block: 14px;
+  font-size: 10px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.ow-world-credits p {
+  max-width: 720px;
+  line-height: 1.8;
+  margin: 12px 0;
+}
+.ow-world-credits a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  color: #244b42;
+}
+
+/* Touch steering also belongs on tablets and phones held sideways. */
+@media (pointer: coarse) and (min-width: 601px) {
+  .ow-touch-controls {
+    display: flex;
+    position: absolute;
+    z-index: 4;
+    left: 28px;
+    bottom: 106px;
+    width: 140px;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+  .ow-touch-controls button {
+    width: 44px;
+    height: 44px;
+    border: 1px solid #c7ded288;
+    color: #e6eddb;
+    background: #153d4ceb;
+    font:
+      20px Georgia,
+      serif;
+    touch-action: none;
+  }
+  .ow-touch-controls button:nth-child(3) {
+    order: 4;
+  }
+  .ow-touch-controls button:disabled {
+    opacity: 0.45;
+  }
+}
+@media (max-height: 620px) and (min-width: 700px) {
+  .ow-experience.is-sailing {
+    min-height: 320px;
+    height: 100svh;
+  }
+  .is-sailing .ow-nav {
+    min-height: 64px;
+    margin-inline: 22px;
+  }
+  .is-sailing .ow-brand > svg {
+    width: 23px;
+    height: 31px;
+  }
+  .is-sailing .ow-title-mark {
+    display: none;
+  }
+  .is-sailing .ow-voyage-top {
+    left: 22px;
+    top: 68px;
+  }
+  .is-sailing .ow-playground {
+    left: 22px;
+    top: 116px;
+    width: 260px;
+  }
+  .is-sailing .ow-race-panel {
+    left: 22px;
+    right: auto;
+    top: 116px;
+    width: 260px;
+  }
+  .is-sailing .ow-race-heading .ow-micro {
+    font-size: 6px;
+  }
+  .is-sailing .ow-race-panel h2 {
+    font-size: 23px;
+  }
+  .is-sailing .ow-instruments {
+    right: 22px;
+    bottom: 12px;
+    gap: 5px;
+  }
+  .is-sailing .ow-chart {
+    width: 196px;
+  }
+  .is-sailing .ow-map {
+    height: 112px;
+  }
+  .is-sailing .ow-environment {
+    gap: 12px;
+  }
+  .is-sailing .ow-environment button {
+    font-size: 8px;
+  }
+  .is-sailing .ow-status {
+    min-height: 42px;
+    left: 22px;
+    right: 22px;
+  }
+  .is-sailing .ow-status-text {
+    max-width: 290px;
+    font-size: 6px;
+  }
+  .is-sailing .ow-control-help,
+  .is-sailing .ow-telemetry {
+    display: none;
+  }
+  .is-sailing .ow-touch-controls {
+    left: calc(50% - 70px);
+    bottom: 56px;
+  }
+  .is-sailing .ow-arrival {
+    left: 22px;
+    bottom: 56px;
+    width: 260px;
+    padding: 14px;
+  }
+  .is-sailing .ow-arrival h2 {
+    font-size: 24px;
+  }
+  .is-sailing .ow-arrival img {
+    width: 70px;
+    height: 52px;
+  }
+}

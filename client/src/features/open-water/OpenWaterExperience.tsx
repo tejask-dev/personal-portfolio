@@ -13,7 +13,7 @@ import {
 import { flushSync } from "react-dom";
 import { useLocation } from "wouter";
 import { selectedWork } from "@/data/selectedWork";
-import { destinations, type Destination } from "./data/world";
+import { destinations, type Destination, type RaceCourse } from "./data/world";
 import {
   createBoat,
   distance,
@@ -23,6 +23,14 @@ import {
 } from "./systems/boatController";
 import { voyage } from "./voyage";
 import Chart from "./ui/Chart";
+import RacePanel, { raceTime } from "./ui/RacePanel";
+import {
+  cancelRace,
+  startRace,
+  restartRace,
+  type RaceState,
+} from "./systems/raceController";
+import type { LandmarkProjection } from "./scene/OpenWaterScene";
 const Scene = lazy(() => import("./scene/OpenWaterScene"));
 class SceneBoundary extends Component<
   { children: ReactNode; onError: () => void },
@@ -66,6 +74,7 @@ export function Sailmark() {
 export default function OpenWaterExperience() {
   const [, navigate] = useLocation();
   const boat = useRef(voyage.boat);
+  const race = useRef(voyage.race);
   const input = useRef<Input>({});
   const root = useRef<HTMLElement>(null);
   const helm = useRef<HTMLDivElement>(null);
@@ -88,13 +97,28 @@ export default function OpenWaterExperience() {
   const [indexOpen, setIndexOpen] = useState(false);
   const [telemetry, setTelemetry] = useState<BoatState>({ ...boat.current });
   const [arriving, setArriving] = useState(false);
+  const [raceTelemetry, setRaceTelemetry] = useState<RaceState>({
+    ...race.current,
+  });
+  const [landmarks, setLandmarks] = useState<LandmarkProjection[]>([]);
+  const [resetKey, setResetKey] = useState(0);
+  const [yachtModel, setYachtModel] = useState<
+    "loading" | "licensed" | "procedural"
+  >("loading");
+  const updateYachtModel = useCallback(
+    (state: "loading" | "licensed" | "procedural") => setYachtModel(state),
+    [],
+  );
   const isQuiet =
     paused || reduced || !visible || !tabVisible || indexOpen || arriving;
-  const destination = destinations.find(
-    (d) =>
-      boat.current.arrived === d.id ||
-      (sailing && distance(boat.current, d.dock) < 11),
-  );
+  const destination =
+    raceTelemetry.phase === "idle"
+      ? destinations.find(
+          (d) =>
+            boat.current.arrived === d.id ||
+            (sailing && distance(boat.current, d.dock) < 11),
+        )
+      : undefined;
   const target = destinations.find((d) => telemetry.target?.id === d.id);
   const status = failed
     ? "Reading mode / The work is still here"
@@ -102,21 +126,47 @@ export default function OpenWaterExperience() {
       ? "Calm mode / Choose a place to read"
       : paused
         ? "At anchor / Motion paused"
-        : destination
-          ? `Moored / ${destination.name}`
-          : target
-            ? `On course / ${target.name}`
-            : sailing
-              ? "Underway / Make yourself at home"
-              : "At anchor / Ready when you are";
-  const updateTelemetry = useCallback(
-    (value: BoatState) => setTelemetry({ ...value }),
+        : raceTelemetry.phase === "countdown"
+          ? "At the starting line / Get ready"
+          : raceTelemetry.phase === "racing"
+            ? `Time trial / Gate ${raceTelemetry.checkpoint + 1}`
+            : raceTelemetry.phase === "finished"
+              ? `Course complete / Your time ${raceTime(raceTelemetry.finishTime ?? raceTelemetry.elapsed)}${raceTelemetry.courseId && voyage.bestTimes[raceTelemetry.courseId] !== undefined ? ` / Session best ${raceTime(voyage.bestTimes[raceTelemetry.courseId])}` : ""}`
+              : destination
+                ? `Moored / ${destination.name}`
+                : target
+                  ? `On course / ${target.name}`
+                  : sailing
+                    ? "Underway / Make yourself at home"
+                    : "At anchor / Ready when you are";
+  const updateTelemetry = useCallback((value: BoatState) => {
+    setTelemetry({ ...value });
+    const current = race.current;
+    if (
+      current.phase === "finished" &&
+      current.courseId &&
+      current.finishTime !== null
+    ) {
+      voyage.bestTimes[current.courseId] = Math.min(
+        voyage.bestTimes[current.courseId] ?? Infinity,
+        current.finishTime,
+      );
+    }
+    setRaceTelemetry({ ...current });
+  }, []);
+  const updateLandmarks = useCallback(
+    (points: LandmarkProjection[]) =>
+      setLandmarks((previous) =>
+        JSON.stringify(previous) === JSON.stringify(points) ? previous : points,
+      ),
     [],
   );
   const onReady = useCallback(() => setReady(true), []);
   const onError = useCallback(() => {
     setFailed(true);
     setSailing(false);
+    cancelRace(race.current);
+    setRaceTelemetry({ ...race.current });
     input.current = {};
   }, []);
 
@@ -183,13 +233,18 @@ export default function OpenWaterExperience() {
     }
     setPaused(false);
     setSailing(true);
-    requestAnimationFrame(() => helm.current?.focus({ preventScroll: true }));
+    requestAnimationFrame(() => {
+      root.current?.scrollIntoView({ block: "start" });
+      helm.current?.focus({ preventScroll: true });
+    });
   };
   const selectDestination = (d: Destination) => {
     if (failed || reduced) {
       readDestination(d);
       return;
     }
+    cancelRace(race.current);
+    setRaceTelemetry({ ...race.current });
     steerTo(boat.current, d.dock, d.id);
     setTelemetry({ ...boat.current });
     start();
@@ -197,12 +252,41 @@ export default function OpenWaterExperience() {
   const plotCourse = useCallback(
     (point: { x: number; z: number }) => {
       if (!sailing || isQuiet) return;
+      if (race.current.phase === "countdown" || race.current.phase === "racing")
+        return;
       steerTo(boat.current, point);
       setTelemetry({ ...boat.current });
       helm.current?.focus({ preventScroll: true });
     },
     [sailing, isQuiet],
   );
+  const beginRace = (course: RaceCourse) => {
+    if (!ready || failed || reduced) return;
+    startRace(race.current, course.id, boat.current);
+    input.current = {};
+    setRaceTelemetry({ ...race.current });
+    setTelemetry({ ...boat.current });
+    setPaused(false);
+    setSailing(true);
+    setCameraMode("follow");
+    setResetKey((key) => key + 1);
+    requestAnimationFrame(() => helm.current?.focus({ preventScroll: true }));
+  };
+  const retryRace = () => {
+    restartRace(race.current, boat.current);
+    input.current = {};
+    setRaceTelemetry({ ...race.current });
+    setTelemetry({ ...boat.current });
+    setPaused(false);
+    setResetKey((key) => key + 1);
+    requestAnimationFrame(() => helm.current?.focus({ preventScroll: true }));
+  };
+  const leaveRace = () => {
+    cancelRace(race.current);
+    input.current = {};
+    setRaceTelemetry({ ...race.current });
+    requestAnimationFrame(() => helm.current?.focus({ preventScroll: true }));
+  };
   const readDestination = async (d: Destination, matchCut = false) => {
     voyage.returnFocus = matchCut ? "arrival-read" : `destination-${d.id}`;
     voyage.returnPending = true;
@@ -245,9 +329,12 @@ export default function OpenWaterExperience() {
     } else navigate(d.href);
   };
   const reset = () => {
+    cancelRace(race.current);
+    setRaceTelemetry({ ...race.current });
     Object.assign(boat.current, createBoat());
     setTelemetry({ ...boat.current });
     setSailing(false);
+    setResetKey((key) => key + 1);
     input.current = {};
     requestAnimationFrame(() => document.getElementById("take-helm")?.focus());
   };
@@ -281,6 +368,16 @@ export default function OpenWaterExperience() {
       id="voyage"
       className={`ow-experience ${sailing ? "is-sailing" : ""} ${daylight ? "is-daylight" : ""} ${ready ? "is-ready" : ""}`}
       aria-label="Open Water, an interactive portfolio"
+      data-race-phase={raceTelemetry.phase}
+      data-race-checkpoint={raceTelemetry.checkpoint}
+      data-race-elapsed={raceTelemetry.elapsed.toFixed(3)}
+      data-airborne={telemetry.airborne}
+      data-jump-count={telemetry.jumpCount}
+      data-yacht-model={yachtModel}
+      data-boat-x={telemetry.x.toFixed(3)}
+      data-boat-z={telemetry.z.toFixed(3)}
+      data-boat-heading={telemetry.heading.toFixed(4)}
+      data-boat-speed={telemetry.speed.toFixed(3)}
       data-state={
         failed
           ? "FALLBACK"
@@ -309,12 +406,16 @@ export default function OpenWaterExperience() {
             <Suspense fallback={null}>
               <Scene
                 boat={boat}
+                race={race}
                 input={input}
+                resetKey={resetKey}
                 sailing={sailing}
                 paused={isQuiet}
                 daylight={daylight}
                 cameraMode={cameraMode}
                 onTelemetry={updateTelemetry}
+                onLandmarks={updateLandmarks}
+                onYachtModel={updateYachtModel}
                 onReady={onReady}
                 onError={onError}
                 onCourse={plotCourse}
@@ -388,30 +489,57 @@ export default function OpenWaterExperience() {
         <a className="ow-direct" href="#work">
           Or go straight to the work <span aria-hidden="true">→</span>
         </a>
+        <p className="ow-explore-note">
+          <span aria-hidden="true">↝</span> Find a quiet cove. Or chase a better
+          lap.
+        </p>
       </div>
       {!sailing && !failed && (
         <div className="ow-destination-labels">
-          {destinations.slice(0, 3).map((d) => (
-            <a
-              id={`destination-${d.id}`}
-              key={d.id}
-              className={`ow-destination ow-destination-${d.id}`}
-              href={nativeHref(d.href)}
-              onClick={(e) => {
-                if (!e.metaKey && !e.ctrlKey && !e.shiftKey && e.button === 0) {
-                  e.preventDefault();
-                  readDestination(d);
-                }
-              }}
-            >
-              <span className="ow-number">{d.number}</span>
-              <span>
-                <strong>{d.name}</strong>
-                <small>{d.project}</small>
-              </span>
-              <Arrow />
-            </a>
-          ))}
+          {destinations.slice(0, 3).map((d) => {
+            const projected = landmarks.find((point) => point.id === d.id);
+            if (
+              !projected?.visible ||
+              projected.x < 43 ||
+              projected.y < 20 ||
+              projected.y > 68
+            )
+              return null;
+            return (
+              <a
+                id={`destination-${d.id}`}
+                key={d.id}
+                className={`ow-destination ow-destination-${d.id}`}
+                style={{
+                  left:
+                    d.id === "anticipy"
+                      ? `clamp(35%, calc(${projected.x}% - 176px), calc(100% - 210px))`
+                      : `clamp(48%, calc(${projected.x}% - 88px), calc(100% - 210px))`,
+                  top: `calc(${projected.y}% - 86px)`,
+                  right: "auto",
+                }}
+                href={nativeHref(d.href)}
+                onClick={(e) => {
+                  if (
+                    !e.metaKey &&
+                    !e.ctrlKey &&
+                    !e.shiftKey &&
+                    e.button === 0
+                  ) {
+                    e.preventDefault();
+                    readDestination(d);
+                  }
+                }}
+              >
+                <span className="ow-number">{d.number}</span>
+                <span>
+                  <strong>{d.name}</strong>
+                  <small>{d.project}</small>
+                </span>
+                <Arrow />
+              </a>
+            );
+          })}
         </div>
       )}
       {sailing && (
@@ -420,10 +548,30 @@ export default function OpenWaterExperience() {
             ↖ Back to the opening
           </button>
           <p>
-            Follow your curiosity.
-            <span>Choose a place on the chart, or set your own course.</span>
+            {raceTelemetry.phase === "idle"
+              ? "The water is yours."
+              : "Find your line."}
+            <span>
+              {raceTelemetry.phase === "idle"
+                ? "Coves, courses, and a few places worth stopping."
+                : "Through the pennants. Around the islands. Over the water."}
+            </span>
           </p>
         </div>
+      )}
+      {sailing && (
+        <RacePanel
+          race={raceTelemetry}
+          best={
+            raceTelemetry.courseId
+              ? voyage.bestTimes[raceTelemetry.courseId]
+              : undefined
+          }
+          paused={isQuiet}
+          onStart={beginRace}
+          onRestart={retryRace}
+          onExit={leaveRace}
+        />
       )}
       {destination && sailing && (
         <div className="ow-arrival">
@@ -467,7 +615,11 @@ export default function OpenWaterExperience() {
         </div>
       )}
       <div className="ow-instruments">
-        <Chart boat={telemetry} onSelect={selectDestination} />
+        <Chart
+          boat={telemetry}
+          race={raceTelemetry}
+          onSelect={selectDestination}
+        />
         <div className="ow-environment">
           <button
             onClick={() => setDaylight(!daylight)}
@@ -539,8 +691,11 @@ export default function OpenWaterExperience() {
         <p className="ow-control-help">
           {sailing ? (
             <>
-              <kbd>W A S D</kbd> steer <span>·</span> click water to set a
-              course <span>·</span> Esc to pause
+              <kbd>W A S D</kbd> steer <span>·</span>{" "}
+              {raceTelemetry.phase === "idle"
+                ? "click water to set a course"
+                : "through the marked gates"}{" "}
+              <span>·</span> Esc to pause
             </>
           ) : (
             <>A little exploration. A different perspective.</>

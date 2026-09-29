@@ -21,12 +21,20 @@ const requireRuntime = createRequire(path.join(runtime, "package.json"));
 const { chromium } = requireRuntime("playwright");
 const AxeBuilder = requireRuntime("@axe-core/playwright").default;
 const baseURL = process.env.QA_URL || "http://127.0.0.1:4173";
-const artifactDirectory = path.join(repository, "design", "previews");
+const versionSuffix = process.env.QA_RUN_LABEL === "v2" ? "-v2" : "";
+const artifactDirectory = path.join(
+  repository,
+  "design",
+  `previews${versionSuffix}`,
+);
 const faultInjectionChecks = new Set([
   "context-loss",
   "webgl-unavailable",
   "unavailable-media",
   "scene-chunk-unavailable",
+  "yacht-asset-aborted",
+  "yacht-asset-corrupt",
+  "yacht-asset-pending",
 ]);
 await mkdir(artifactDirectory, { recursive: true });
 const browser = await chromium.launch({ channel: "chrome", headless: true });
@@ -145,6 +153,12 @@ async function ready(page) {
     "FALLBACK",
     "normal Chrome run unexpectedly entered graphics fallback",
   );
+  await page.waitForFunction(
+    () =>
+      document
+        .querySelector(".ow-experience")
+        ?.getAttribute("data-yacht-model") === "licensed",
+  );
   await page.evaluate(() => document.fonts.ready);
 }
 
@@ -166,7 +180,7 @@ async function screenshot(page, filename) {
     path: path.join(artifactDirectory, filename),
     fullPage: false,
   });
-  report.screenshots.push(`design/previews/${filename}`);
+  report.screenshots.push(`design/previews${versionSuffix}/${filename}`);
 }
 
 async function audit(page, label) {
@@ -217,6 +231,31 @@ try {
           .getByRole("button", { name: "Work index", exact: true })
           .waitFor({ state: "visible" });
         const dimensions = await assertReflow(page);
+        const labels = await page
+          .locator(".ow-destination")
+          .evaluateAll((elements) =>
+            elements
+              .map((element) => {
+                const r = element.getBoundingClientRect();
+                return {
+                  id: element.id,
+                  x: r.x,
+                  y: r.y,
+                  width: r.width,
+                  height: r.height,
+                };
+              })
+              .filter((rectangle) => rectangle.width && rectangle.height),
+          );
+        for (let a = 0; a < labels.length; a++)
+          for (let b = a + 1; b < labels.length; b++)
+            assert.ok(
+              labels[a].x + labels[a].width <= labels[b].x ||
+                labels[b].x + labels[b].width <= labels[a].x ||
+                labels[a].y + labels[a].height <= labels[b].y ||
+                labels[b].y + labels[b].height <= labels[a].y,
+              `Landmark labels overlap: ${labels[a].id} and ${labels[b].id}`,
+            );
         if (width === 390 || width === 1440) {
           await page
             .getByRole("button", { name: "Motion on", exact: true })
@@ -277,7 +316,12 @@ try {
           }),
         );
         await page.waitForTimeout(400);
-        assert.ok(await page.locator(".ow-experience").evaluate(element => element.getBoundingClientRect().bottom <= 0), "test did not move the whole experience out of view");
+        assert.ok(
+          await page
+            .locator(".ow-experience")
+            .evaluate((element) => element.getBoundingClientRect().bottom <= 0),
+          "test did not move the whole experience out of view",
+        );
         const draws = await page.evaluate(() => window.__openWaterQaDrawCalls);
         assert.ok(draws > 0);
         await page.waitForTimeout(500);
@@ -475,8 +519,8 @@ try {
         await page
           .getByRole("button", { name: "Take the helm", exact: true })
           .tap();
-        const marker = page.locator(".ow-map g[transform]");
-        const before = await marker.getAttribute("transform");
+        const marker = page.locator(".ow-experience");
+        const before = await marker.getAttribute("data-boat-z");
         const box = await page
           .getByRole("button", { name: "Accelerate", exact: true })
           .boundingBox();
@@ -494,7 +538,7 @@ try {
           touchPoints: [],
         });
         assert.notEqual(
-          await marker.getAttribute("transform"),
+          await marker.getAttribute("data-boat-z"),
           before,
           "the first touch press failed to move the boat",
         );
@@ -523,6 +567,51 @@ try {
       }
     },
   );
+
+  await check("clicking visible water plots and follows a course", async () => {
+    const { context, page } = await makePage("water-course");
+    try {
+      await ready(page);
+      await page
+        .getByRole("button", { name: "Take the helm", exact: true })
+        .click();
+      await page.waitForTimeout(900);
+      const before = await page
+        .locator(".ow-experience")
+        .evaluate((element) => ({
+          x: Number(element.dataset.boatX),
+          z: Number(element.dataset.boatZ),
+        }));
+      await page.mouse.click(970, 670);
+      await page.waitForFunction((initial) => {
+        const data = document.querySelector(".ow-experience")?.dataset;
+        return (
+          data &&
+          Math.hypot(
+            Number(data.boatX) - initial.x,
+            Number(data.boatZ) - initial.z,
+          ) > 1
+        );
+      }, before);
+      await page.waitForTimeout(200);
+      const after = await page
+        .locator(".ow-experience")
+        .evaluate((element) => ({
+          x: Number(element.dataset.boatX),
+          z: Number(element.dataset.boatZ),
+        }));
+      assert.ok(
+        Math.hypot(after.x - before.x, after.z - before.z) > 1,
+        "Water selection did not produce actual movement",
+      );
+      return {
+        input: "pointer click on visible water",
+        displacement: Math.hypot(after.x - before.x, after.z - before.z),
+      };
+    } finally {
+      await context.close();
+    }
+  });
 
   await check(
     "destination arrival opens a real route and returns to the voyage",
@@ -703,6 +792,165 @@ try {
     },
   );
 
+  await check(
+    "pending yacht download allows sailing and cancels cleanly on case navigation",
+    async () => {
+      const { context, page } = await makePage("yacht-asset-pending");
+      let release;
+      const gate = new Promise((resolve) => {
+        release = resolve;
+      });
+      let intercepted = 0;
+      try {
+        await page.route(
+          /\/open-water\/yacht\.glb(?:\?.*)?$/,
+          async (route) => {
+            intercepted++;
+            await gate;
+            await route.abort("failed").catch(() => {});
+          },
+        );
+        await page.goto(baseURL, { waitUntil: "domcontentloaded" });
+        await page.waitForFunction(() =>
+          document
+            .querySelector(".ow-experience")
+            ?.classList.contains("is-ready"),
+        );
+        await page.waitForTimeout(200);
+        assert.ok(intercepted > 0, "Yacht request never began");
+        assert.equal(
+          await page.locator(".ow-experience").getAttribute("data-yacht-model"),
+          "loading",
+        );
+        await page
+          .getByRole("button", { name: "Take the helm", exact: true })
+          .click();
+        const before = await page
+          .locator(".ow-map g[transform]")
+          .getAttribute("transform");
+        await page.locator(".ow-helm-focus").focus();
+        await page.keyboard.down("w");
+        await page.waitForTimeout(900);
+        await page.keyboard.up("w");
+        assert.notEqual(
+          await page.locator(".ow-map g[transform]").getAttribute("transform"),
+          before,
+          "Pending model blocked keyboard movement",
+        );
+        assert.equal(
+          await page.locator(".ow-experience").getAttribute("data-yacht-model"),
+          "loading",
+        );
+        await page
+          .getByRole("button", { name: "Work index", exact: true })
+          .click();
+        await page.getByRole("dialog").waitFor({ state: "visible" });
+        await page.locator("#index-anticipy").click();
+        await page.waitForURL("**/case-studies/anticipy");
+        await page
+          .getByRole("heading", { level: 1, name: "Anticipy", exact: true })
+          .waitFor();
+        assert.deepEqual(
+          report.consoleErrors.filter(
+            (error) =>
+              error.check === "yacht-asset-pending" &&
+              error.kind === "pageerror",
+          ),
+          [],
+          "Pending model navigation caused an unhandled error",
+        );
+        return {
+          model: "loading",
+          movement: "actual keyboard",
+          navigation: "Anticipy case study before model completes",
+        };
+      } finally {
+        release();
+        await page.keyboard.up("w").catch(() => {});
+        await context.close();
+      }
+    },
+  );
+
+  for (const mode of ["aborted", "corrupt"])
+    await check(
+      `licensed yacht ${mode} load keeps procedural sailing and portfolio`,
+      async () => {
+        const name = `yacht-asset-${mode}`;
+        const { context, page } = await makePage(name);
+        let intercepted = 0;
+        try {
+          await page.route(
+            /\/open-water\/yacht\.glb(?:\?.*)?$/,
+            async (route) => {
+              intercepted++;
+              if (mode === "aborted") await route.abort("failed");
+              else
+                await route.fulfill({
+                  status: 200,
+                  contentType: "model/gltf-binary",
+                  body: "invalid glb supplied by local QA fault injection",
+                });
+            },
+          );
+          await page.goto(baseURL, { waitUntil: "networkidle" });
+          await page.waitForFunction(
+            () =>
+              document
+                .querySelector(".ow-experience")
+                ?.getAttribute("data-yacht-model") === "procedural",
+          );
+          assert.ok(
+            intercepted > 0,
+            "Licensed yacht request was not intercepted",
+          );
+          assert.notEqual(
+            await page.locator(".ow-experience").getAttribute("data-state"),
+            "FALLBACK",
+            "Optional asset failure disabled graphics",
+          );
+          await page
+            .getByRole("button", { name: "Take the helm", exact: true })
+            .click();
+          const before = await page
+            .locator(".ow-map g[transform]")
+            .getAttribute("transform");
+          await page.locator(".ow-helm-focus").focus();
+          await page.keyboard.down("w");
+          await page.waitForTimeout(900);
+          await page.keyboard.up("w");
+          assert.notEqual(
+            await page
+              .locator(".ow-map g[transform]")
+              .getAttribute("transform"),
+            before,
+            "Procedural fallback yacht did not respond to keyboard",
+          );
+          await page
+            .getByRole("button", { name: "Work index", exact: true })
+            .click();
+          await page.locator("#index-anticipy").click();
+          await page.waitForURL("**/case-studies/anticipy");
+          assert.deepEqual(
+            report.consoleErrors.filter(
+              (error) => error.check === name && error.kind === "pageerror",
+            ),
+            [],
+            "Model failure escaped its local error boundary",
+          );
+          return {
+            intercepted,
+            fallback: "procedural",
+            sailing: "keyboard input",
+            reading: "Anticipy case study",
+          };
+        } finally {
+          await page.keyboard.up("w").catch(() => {});
+          await context.close();
+        }
+      },
+    );
+
   for (const [slug, title] of [
     ["anticipy", "Anticipy"],
     ["stellar-learning", "Stellar Learning"],
@@ -821,8 +1069,10 @@ try {
           ],
         ]) {
           await prepare();
-          if (label === "index") await screenshot(page, "open-water-index-1440.png");
-          if (label === "stellar-case-study") await screenshot(page, "stellar-case-study-1440.png");
+          if (label === "index")
+            await screenshot(page, "open-water-index-1440.png");
+          if (label === "stellar-case-study")
+            await screenshot(page, "stellar-case-study-1440.png");
           try {
             await audit(page, label);
           } catch (error) {
@@ -842,7 +1092,8 @@ try {
     );
     const requests = report.failedRequests.filter(
       (request) =>
-        !faultInjectionChecks.has(request.check) && !request.error?.includes("ERR_ABORTED"),
+        !faultInjectionChecks.has(request.check) &&
+        !request.error?.includes("ERR_ABORTED"),
     );
     assert.deepEqual(errors, [], "unexpected browser runtime errors");
     assert.deepEqual(requests, [], "unexpected failed network requests");
@@ -850,17 +1101,25 @@ try {
 } finally {
   await browser.close();
   report.expectedFaultInjection = {
-    consoleErrors: report.consoleErrors.filter(item => faultInjectionChecks.has(item.check)),
-    failedRequests: report.failedRequests.filter(item => faultInjectionChecks.has(item.check)),
+    consoleErrors: report.consoleErrors.filter((item) =>
+      faultInjectionChecks.has(item.check),
+    ),
+    failedRequests: report.failedRequests.filter((item) =>
+      faultInjectionChecks.has(item.check),
+    ),
   };
-  report.consoleErrors = report.consoleErrors.filter(item => !faultInjectionChecks.has(item.check));
-  report.failedRequests = report.failedRequests.filter(item => !faultInjectionChecks.has(item.check));
+  report.consoleErrors = report.consoleErrors.filter(
+    (item) => !faultInjectionChecks.has(item.check),
+  );
+  report.failedRequests = report.failedRequests.filter(
+    (item) => !faultInjectionChecks.has(item.check),
+  );
   report.summary = {
     passed: report.checks.filter((check) => check.status === "pass").length,
     failed: report.checks.filter((check) => check.status === "fail").length,
   };
   await writeFile(
-    path.join(repository, "design", "browser-results.json"),
+    path.join(repository, "design", `browser-results${versionSuffix}.json`),
     `${JSON.stringify(report, null, 2)}\n`,
   );
   console.log(JSON.stringify(report.summary));
