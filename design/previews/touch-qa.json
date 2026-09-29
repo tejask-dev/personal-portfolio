@@ -1,0 +1,19 @@
+{
+  "at": "2026-09-29T21:30:13.048Z",
+  "url": "http://127.0.0.1:4173",
+  "browser": "Google Chrome 154.0.8037.58",
+  "scope": "Chromium touch emulation using native compositor gestures; not physical-device evidence.",
+  "checks": [
+    {
+      "name": "canvas-preserves-native-pinch-zoom",
+      "status": "pass",
+      "beforeZoom": 1,
+      "afterZoom": 2
+    },
+    {
+      "name": "canvas-preserves-native-vertical-scroll",
+      "status": "pass",
+      "scrollY": 301
+    }
+  ]
+}

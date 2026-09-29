@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 900" role="img" aria-labelledby="title desc">
+  <title id="title">From conversation to approved action</title>
+  <desc id="desc">An illustrative concept diagram for Anticipy. Conversation becomes a proposed action, followed by user approval, then a connected software action. It is not a product screenshot.</desc>
+  <defs>
+    <linearGradient id="sea" x2="0" y2="1"><stop stop-color="#224d59"/><stop offset="1" stop-color="#102d3a"/></linearGradient>
+    <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse"><path d="M60 0H0V60" fill="none" stroke="#c6d6c9" stroke-opacity=".08"/></pattern>
+  </defs>
+  <path fill="url(#sea)" d="M0 0h1440v900H0z"/>
+  <path fill="url(#grid)" d="M0 0h1440v900H0z"/>
+  <g fill="none" stroke="#c6d6c9" stroke-opacity=".11">
+    <ellipse cx="720" cy="496" rx="610" ry="238"/>
+    <ellipse cx="720" cy="496" rx="490" ry="184"/>
+    <ellipse cx="720" cy="496" rx="370" ry="130"/>
+  </g>
+  <g font-family="Arial, Helvetica, sans-serif" fill="#f0f0df">
+    <text x="100" y="108" font-size="18" letter-spacing="5">ANTICIPY / SIGNAL STATION</text>
+    <text x="100" y="196" font-family="Georgia, serif" font-size="54">An intention, carried through.</text>
+    <text x="100" y="246" font-size="21" fill="#bdd1d0">The person stays in the decision.</text>
+    <path d="M230 465H1202" fill="none" stroke="#b5c9bf" stroke-opacity=".6" stroke-dasharray="3 9"/>
+    <g stroke="#c8d8cb" fill="#193c47" stroke-width="1.5">
+      <circle cx="230" cy="465" r="70"/><circle cx="550" cy="465" r="70"/>
+      <circle cx="870" cy="465" r="87" fill="#d4e3cc"/><circle cx="870" cy="465" r="103" fill="none" stroke-opacity=".4"/>
+      <circle cx="1190" cy="465" r="70"/>
+    </g>
+    <g stroke="#d4e3cc" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M203 455v20m13-34v48m14-62v76m14-58v40m13-29v18"/>
+      <rect x="524" y="437" width="51" height="57" rx="3"/><path d="M535 454h29m-29 12h29m-29 12h18"/>
+      <path d="M846 465l16 16 32-35" stroke="#173b43" stroke-width="5"/>
+      <path d="M1168 465h41m-15-15 15 15-15 15M1167 446v-8h45v54h-45v-8"/>
+    </g>
+    <g font-size="22" text-anchor="middle">
+      <text x="230" y="617">Conversation</text>
+      <text x="550" y="617">Proposed action</text>
+      <text x="870" y="617">User approval</text>
+      <text x="1190" y="617">Software action</text>
+    </g>
+    <g font-family="monospace" font-size="14" fill="#b8ccc8" text-anchor="middle" letter-spacing="3">
+      <text x="230" y="656">01 / INTENTION</text><text x="550" y="656">02 / PROPOSAL</text>
+      <text x="870" y="656">03 / PERMISSION</text><text x="1190" y="656">04 / EXECUTION</text>
+    </g>
+    <path d="M100 763h1240" stroke="#bdd1d0" stroke-opacity=".3"/>
+    <text x="100" y="810" font-size="16" fill="#bdd1d0" letter-spacing="1">ILLUSTRATIVE CONCEPT · NOT A PRODUCT INTERFACE</text>
+    <text x="1340" y="810" font-size="16" text-anchor="end" fill="#bdd1d0">Being built at Anticipation Labs</text>
+  </g>
+</svg>

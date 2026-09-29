@@ -1,0 +1,8 @@
+{
+  "url": "http://127.0.0.1:4174/personal-portfolio/",
+  "checks": [
+    "GitHub-base scene, native destination link, case route and return link pass",
+    "GitHub-base no-JavaScript extensionless route and return link pass"
+  ],
+  "errors": []
+}

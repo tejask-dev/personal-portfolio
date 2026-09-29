@@ -1,0 +1,232 @@
+{
+  "at": "2026-09-29T21:27:03.950Z",
+  "run": "production-final",
+  "url": "http://127.0.0.1:4173",
+  "browser": "Google Chrome 154.0.8037.58",
+  "scope": "Local automated desktop Chrome with emulated viewport sizes; not device, Safari, Firefox, screen-reader, or real-user performance evidence.",
+  "visualBaseline": "Screenshots captured for human inspection. No production visual regression baseline exists.",
+  "checks": [
+    {
+      "name": "responsive 320×740",
+      "status": "pass",
+      "durationMs": 726,
+      "details": {
+        "viewport": 320,
+        "body": 320,
+        "document": 320
+      }
+    },
+    {
+      "name": "responsive 390×844",
+      "status": "pass",
+      "durationMs": 1067,
+      "details": {
+        "viewport": 390,
+        "body": 390,
+        "document": 390
+      }
+    },
+    {
+      "name": "responsive 768×1024",
+      "status": "pass",
+      "durationMs": 686,
+      "details": {
+        "viewport": 768,
+        "body": 768,
+        "document": 768
+      }
+    },
+    {
+      "name": "responsive 1440×960",
+      "status": "pass",
+      "durationMs": 1176,
+      "details": {
+        "viewport": 1440,
+        "body": 1440,
+        "document": 1440
+      }
+    },
+    {
+      "name": "responsive 1920×1080",
+      "status": "pass",
+      "durationMs": 692,
+      "details": {
+        "viewport": 1920,
+        "body": 1920,
+        "document": 1920
+      }
+    },
+    {
+      "name": "200% equivalent reflow at 720×480 CSS pixels (not actual browser zoom)",
+      "status": "pass",
+      "durationMs": 767,
+      "details": "Reflow emulation for a 1440×960 display at 200%; actual browser zoom controls were not exercised."
+    },
+    {
+      "name": "scrolling the experience offscreen stops GPU draws and returning resumes them",
+      "status": "pass",
+      "durationMs": 1997
+    },
+    {
+      "name": "index dialog focus containment, Escape, and focus restoration",
+      "status": "pass",
+      "durationMs": 824
+    },
+    {
+      "name": "steering, manual takeover, paused pixels, and resumed motion",
+      "status": "pass",
+      "durationMs": 4079
+    },
+    {
+      "name": "About from the index closes reading and focuses the biography",
+      "status": "pass",
+      "durationMs": 778
+    },
+    {
+      "name": "mobile first touch accelerates and a vertical gesture scrolls the page",
+      "status": "pass",
+      "durationMs": 2136
+    },
+    {
+      "name": "destination arrival opens a real route and returns to the voyage",
+      "status": "pass",
+      "durationMs": 7156
+    },
+    {
+      "name": "reduced motion starts static and opens work without sailing",
+      "status": "pass",
+      "durationMs": 2536
+    },
+    {
+      "name": "WebGL context loss exposes a usable reading fallback",
+      "status": "pass",
+      "durationMs": 758
+    },
+    {
+      "name": "WebGL initialization failure keeps the index and direct links",
+      "status": "pass",
+      "durationMs": 745
+    },
+    {
+      "name": "unavailable scene JavaScript falls back to usable portfolio content",
+      "status": "pass",
+      "durationMs": 766
+    },
+    {
+      "name": "direct route /case-studies/anticipy",
+      "status": "pass",
+      "durationMs": 662
+    },
+    {
+      "name": "direct route /case-studies/stellar-learning",
+      "status": "pass",
+      "durationMs": 664
+    },
+    {
+      "name": "direct route /case-studies/global-health-research",
+      "status": "pass",
+      "durationMs": 666
+    },
+    {
+      "name": "direct route /case-studies/soma-ai",
+      "status": "pass",
+      "durationMs": 662
+    },
+    {
+      "name": "no JavaScript exposes profile and project links in initial HTML",
+      "status": "pass",
+      "durationMs": 128
+    },
+    {
+      "name": "unavailable project media keeps content and links usable",
+      "status": "pass",
+      "durationMs": 646
+    },
+    {
+      "name": "WCAG AA automated audit: opening, index, and case study",
+      "status": "pass",
+      "durationMs": 1832
+    },
+    {
+      "name": "no unexpected runtime or network errors",
+      "status": "pass",
+      "durationMs": 0
+    }
+  ],
+  "consoleErrors": [],
+  "failedRequests": [],
+  "accessibility": [
+    {
+      "label": "opening",
+      "violations": [],
+      "incomplete": [
+        "color-contrast"
+      ]
+    },
+    {
+      "label": "index",
+      "violations": [],
+      "incomplete": [
+        "color-contrast"
+      ]
+    },
+    {
+      "label": "stellar-case-study",
+      "violations": [],
+      "incomplete": [
+        "aria-prohibited-attr"
+      ]
+    }
+  ],
+  "screenshots": [
+    "design/previews/open-water-mobile-390.png",
+    "design/previews/open-water-desktop-1440.png",
+    "design/previews/open-water-index-1440.png",
+    "design/previews/stellar-case-study-1440.png"
+  ],
+  "summary": {
+    "passed": 24,
+    "failed": 0
+  },
+  "expectedFaultInjection": {
+    "consoleErrors": [
+      {
+        "check": "webgl-unavailable",
+        "kind": "console",
+        "message": "THREE.WebGLRenderer: Error creating WebGL context."
+      },
+      {
+        "check": "webgl-unavailable",
+        "kind": "console",
+        "message": "Error: Error creating WebGL context.\n    at new C_ (http://127.0.0.1:4173/assets/OpenWaterScene-C57qoIGH.js:3841:20302)\n    at vC (http://127.0.0.1:4173/assets/OpenWaterScene-C57qoIGH.js:3883:24427)\n    at Object.configure (http://127.0.0.1:4173/assets/OpenWaterScene-C57qoIGH.js:3883:25691)\n    at http://127.0.0.1:4173/assets/OpenWaterScene-C57qoIGH.js:3883:36064\n    at Nl (http://127.0.0.1:4173/assets/index-XaAAaQG_.js:40:24403)\n    at Pa (http://127.0.0.1:4173/assets/index-XaAAaQG_.js:40:31757)\n    at Na (http://127.0.0.1:4173/assets/index-XaAAaQG_.js:40:31603)\n    at Na (http://127.0.0.1:4173/assets/index-XaAAaQG_.js:40:31508)\n    at od (http://127.0.0.1:4173/assets/index-XaAAaQG_.js:40:31157)\n    at fd (http://127.0.0.1:4173/assets/index-XaAAaQG_.js:40:41142)"
+      },
+      {
+        "check": "scene-chunk-unavailable",
+        "kind": "console",
+        "message": "Failed to load resource: net::ERR_FAILED"
+      },
+      {
+        "check": "scene-chunk-unavailable",
+        "kind": "console",
+        "message": "TypeError: Failed to fetch dynamically imported module: http://127.0.0.1:4173/assets/OpenWaterScene-C57qoIGH.js"
+      },
+      {
+        "check": "unavailable-media",
+        "kind": "console",
+        "message": "Failed to load resource: net::ERR_FAILED"
+      }
+    ],
+    "failedRequests": [
+      {
+        "check": "scene-chunk-unavailable",
+        "url": "http://127.0.0.1:4173/assets/OpenWaterScene-C57qoIGH.js",
+        "error": "net::ERR_FAILED"
+      },
+      {
+        "check": "unavailable-media",
+        "url": "http://127.0.0.1:4173/assets/stellar-current-rEeAM62U.png",
+        "error": "net::ERR_FAILED"
+      }
+    ]
+  }
+}
