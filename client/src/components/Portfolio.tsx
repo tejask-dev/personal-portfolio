@@ -8,7 +8,7 @@ import docubridge from '../assets/Docubridge.png';
 import researchPaper from '../assets/Youreka/Research Paper.png';
 import stellarImage from '../assets/Stellar/image.png';
 
-const filters = ['All', 'AI/ML', 'Web', 'Research', 'Client Work'] as const;
+const filters = ['All', 'AI/ML', 'Web', 'Research'] as const;
 type Filter = (typeof filters)[number];
 
 const projects = [
@@ -68,21 +68,7 @@ const projects = [
     github: null,
     role: 'Co-author',
   },
-  {
-    title: 'Web Solutions Venture',
-    category: 'Client Work' as Filter,
-    image: null,
-    visual: 'clients',
-    description: 'A client-services venture built through the Summer Company Program, delivering strategy-led web design for business owners.',
-    problem: 'Local businesses need credible digital presences that communicate trust and convert attention into revenue.',
-    solution: 'Packaging web design, brand positioning, and product thinking for real estate, landscaping, and international business clients.',
-    tech: ['React', 'TypeScript', 'Tailwind CSS', 'Strategy'],
-    impact: '3 clients, one $10K USD project',
-    live: null,
-    caseStudy: '/case-studies/web-solutions-venture',
-    github: null,
-    role: 'Founder',
-  },
+
 ];
 
 export default function Portfolio() {
@@ -137,30 +123,12 @@ export default function Portfolio() {
                 className="group overflow-hidden rounded-[1.5rem] border border-[#f8fbff]/10 bg-[#16091f]/76 shadow-xl shadow-black/10 backdrop-blur transition hover:-translate-y-1 hover:border-[#c084fc]/55 hover:shadow-2xl"
               >
                 <div className="relative h-52 overflow-hidden">
-                  {project.image ? (
-                    <img
-                      src={project.image}
-                      alt={`${project.title} preview`}
-                      className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
-                      loading="lazy"
-                    />
-                  ) : (
-                    <div className="relative h-full w-full overflow-hidden bg-[radial-gradient(circle_at_20%_20%,rgba(216,180,254,0.42),transparent_32%),linear-gradient(135deg,#16091f_0%,#4c1d95_48%,#7c3aed_100%)] p-5 transition duration-700 group-hover:scale-105">
-                      <div className="absolute right-5 top-5 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-bold uppercase tracking-[0.2em] text-white/85 backdrop-blur">
-                        Client Work
-                      </div>
-                      <div className="absolute bottom-5 left-5 right-5 rounded-2xl border border-white/15 bg-[#070312]/70 p-4 shadow-2xl backdrop-blur">
-                        <p className="text-xs font-bold uppercase tracking-[0.2em] text-fuchsia-200">{project.title}</p>
-                        <div className="mt-3 grid grid-cols-3 gap-2">
-                          {['3 clients', '$10K', 'Strategy'].map((label) => (
-                            <span key={label} className="rounded-full bg-white/10 px-3 py-2 text-center text-xs font-bold text-white">
-                              {label}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  )}
+                  <img
+                    src={project.image}
+                    alt={`${project.title} preview`}
+                    className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                    loading="lazy"
+                  />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#16091f] via-transparent to-transparent" />
                   <span className="absolute left-4 top-4 rounded-full bg-[#070312]/70 px-3 py-1 text-xs font-bold uppercase tracking-[0.16em] text-[#e9d5ff] backdrop-blur">
                     {project.category}

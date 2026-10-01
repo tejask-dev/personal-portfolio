@@ -35,7 +35,7 @@ export default function Chart({
   return (
     <aside
       className={`ow-chart ${expanded ? "" : "is-collapsed"}`}
-      aria-label="Chart of four fictional destinations and two courses"
+      aria-label={`Chart of four fictional destinations and ${raceCourses.length} courses`}
     >
       <button
         className="ow-chart-heading"
@@ -222,7 +222,7 @@ export default function Chart({
             <span>
               {racing
                 ? "Free sail to set a course"
-                : "4 destinations · 2 courses"}
+                : `4 destinations · ${raceCourses.length} courses`}
             </span>
             <span>Fictional waters</span>
           </div>

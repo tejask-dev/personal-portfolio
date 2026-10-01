@@ -16,8 +16,8 @@ const baseURL = (process.env.QA_URL || "http://127.0.0.1:4173").replace(
   /\/$/,
   "",
 );
-const run = process.env.QA_RUN_LABEL || "v2";
-const artifactDirectory = path.join(repository, `design/previews-${run}`);
+const run = process.env.QA_RUN_LABEL || "v4";
+const artifactDirectory = path.join(repository, "design/open-water-v4/implementation-qa/cross-browser");
 await mkdir(artifactDirectory, { recursive: true });
 const report = {
   at: new Date().toISOString(),
@@ -25,14 +25,19 @@ const report = {
   url: baseURL,
   scope:
     "Local production-preview desktop browser engines with emulated viewport sizes. No native Safari, physical mobile device, or field performance claim.",
+  entryAssets:[...(await (await fetch(baseURL)).text()).matchAll(/(?:src|href)="([^"?]*\/assets\/[^"?]+\.(?:js|css))"/g)].map(match=>match[1]),
   engines: [],
   checks: [],
   errors: [],
   screenshots: [],
 };
 const filter = process.env.QA_ENGINES?.split(",");
+const loadedAssets = page => page.evaluate(() => performance.getEntriesByType("resource")
+  .map(entry => new URL(entry.name).pathname)
+  .filter(name => /\/assets\/(?:index|OpenWaterScene|ReefEnvironment|RegionEnvironment)-.*\.(?:js|css)$/.test(name)));
 
 async function check(name, operation) {
+  if(process.env.QA_ONLY&&!new RegExp(process.env.QA_ONLY,"i").test(name))return;
   try {
     const details = await operation();
     report.checks.push({ name, status: "pass", details });
@@ -121,11 +126,8 @@ for (const [name, api, options] of [
               path: path.join(artifactDirectory, screenshot),
               fullPage: false,
             });
-            report.screenshots.push(`design/previews-${run}/${screenshot}`);
-            const trigger = page.getByRole("button", {
-              name: "Work index",
-              exact: true,
-            });
+            report.screenshots.push(`design/open-water-v4/implementation-qa/cross-browser/${screenshot}`);
+            const trigger=page.locator(".exp-nav").getByRole("button",{name:/^Work/});
             await trigger.click();
             const dialog = page.getByRole("dialog");
             await dialog.waitFor({ state: "visible" });
@@ -152,8 +154,20 @@ for (const [name, api, options] of [
               ),
               "Work index did not restore focus",
             );
+            // Keyboard activation and a different modal page must retain the
+            // same outside origin, not a now-hidden button inside the dialog.
+            await trigger.focus();
+            await page.keyboard.press("Enter");
+            await dialog.waitFor({ state: "visible" });
+            await dialog.getByRole("button", { name: "Map", exact: true }).click();
+            await page.keyboard.press("Escape");
+            await dialog.waitFor({ state: "hidden" });
+            await page.waitForFunction(
+              element => document.activeElement === element,
+              await trigger.elementHandle(),
+            );
             await trigger.click();
-            await page.locator("#index-stellar").click();
+            await page.locator('dialog[open] a[href$="/case-studies/stellar-learning"]').click();
             await page.locator(".case-page h1").waitFor({ state: "visible" });
             assert.equal(
               await page.locator(".case-page h1").innerText(),
@@ -176,6 +190,8 @@ for (const [name, api, options] of [
               ...widths,
               graphics,
               readingNavigation: "pass",
+              focusReturn: "pointer activation and keyboard activation with nested panel navigation",
+              loadedAssets: await loadedAssets(page),
               keyboardNavigation:
                 name === "webkit"
                   ? "Option+Tab (macOS link navigation)"
@@ -196,6 +212,8 @@ for (const [name, api, options] of [
           viewport: { width: 1440, height: 960 },
         });
         const page = await context.newPage();
+        const errors = [];
+        page.on("pageerror", error => errors.push(error.message));
         page.setDefaultTimeout(20000);
         try {
           await page.goto(baseURL, { waitUntil: "networkidle" });
@@ -209,10 +227,8 @@ for (const [name, api, options] of [
               document.querySelector(".ow-experience")?.dataset.yachtModel ===
               "licensed",
           );
-          await page
-            .getByRole("button", { name: "Take the helm", exact: true })
-            .click();
-          await page.getByRole("button", { name: /^Time trials/ }).click();
+          await page.locator("#take-helm").click();
+          await page.locator(".exp-discovery-rail").getByRole("button",{name:/Playground/}).click();
           await page
             .getByRole("button", { name: "Start Jump circuit", exact: true })
             .click();
@@ -221,7 +237,7 @@ for (const [name, api, options] of [
               document.querySelector(".ow-experience")?.dataset.racePhase ===
               "racing",
           );
-          await page.locator(".ow-helm-focus").focus();
+          await page.locator("#yacht-controls").focus();
           await page.keyboard.down("w");
           let airborne = false,
             landed = false,
@@ -258,8 +274,10 @@ for (const [name, api, options] of [
               document.querySelector(".ow-experience")?.dataset.racePhase ===
               "idle",
           );
-          return { airborne, landed, ...final };
+          assert.deepEqual(errors, [], "Unhandled page errors during actual ramp controls");
+          return { ...final, airborneObserved: airborne, landingObserved: landed, loadedAssets: await loadedAssets(page) };
         } finally {
+          report.errors.push(...errors.map(message => ({ name, test: "ramp", message })));
           await page.keyboard.up("w").catch(() => {});
           await context.close();
         }
@@ -270,6 +288,8 @@ for (const [name, api, options] of [
         viewport: { width: 1440, height: 960 },
       });
       const page = await context.newPage();
+      const errors = [];
+      page.on("pageerror", error => errors.push(error.message));
       page.setDefaultTimeout(20000);
       try {
         await page.goto(baseURL, { waitUntil: "networkidle" });
@@ -283,17 +303,19 @@ for (const [name, api, options] of [
             document.querySelector(".ow-experience")?.dataset.yachtModel ===
             "licensed",
         );
-        await page
-          .getByRole("button", { name: "Motion on", exact: true })
-          .click();
+        await page.locator("#take-helm").click();
+        await page.waitForTimeout(3500);
+        await page.getByRole("button",{name:"Pause",exact:true}).click();
         await page.waitForTimeout(350);
-        const canvas = page.locator(".ow-scene canvas");
+        const canvas = page.locator(".exp-scene canvas");
         const before = await canvas.screenshot();
         await page.waitForTimeout(850);
         const after = await canvas.screenshot();
         assert.ok(before.equals(after), "Canvas pixels changed while paused");
-        return { canvasBytes: before.length, unchangedIntervalMs: 850 };
+        assert.deepEqual(errors, [], "Unhandled page errors while pausing");
+        return { canvasBytes: before.length, unchangedIntervalMs: 850, loadedAssets: await loadedAssets(page) };
       } finally {
+        report.errors.push(...errors.map(message => ({ name, test: "pause", message })));
         await context.close();
       }
     });
@@ -312,7 +334,7 @@ report.summary = {
     .map((item) => item.name),
 };
 await writeFile(
-  path.join(repository, `design/cross-browser-results-${run}.json`),
+  path.join(repository, "design/open-water-v4/implementation-qa/cross-browser-results.json"),
   `${JSON.stringify(report, null, 2)}\n`,
 );
 console.log(JSON.stringify(report.summary));

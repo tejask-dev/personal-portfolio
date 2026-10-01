@@ -7,26 +7,40 @@ import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 const outputDirectory = path.resolve(import.meta.dirname, "docs");
 
 function spaFallback(): Plugin {
+  let resolvedOutput = outputDirectory;
   return {
     name: "spa-fallback",
     apply: "build",
+    configResolved(config) {
+      resolvedOutput = path.resolve(config.root, config.build.outDir);
+    },
     closeBundle() {
       copyFileSync(
-        path.join(outputDirectory, "index.html"),
-        path.join(outputDirectory, "404.html"),
+        path.join(resolvedOutput, "index.html"),
+        path.join(resolvedOutput, "404.html"),
       );
     },
   };
 }
 
 export default defineConfig(({ mode }) => ({
+  // Parallel checkouts can share dependencies but must not replace each other's optimized modules.
+  cacheDir: path.resolve(import.meta.dirname, "node_modules", `.vite-${path.basename(import.meta.dirname)}-${mode}`),
   plugins: [
     react(),
     spaFallback(),
     ...(mode === "development" ? [runtimeErrorOverlay()] : []),
   ],
-  assetsInclude: ["**/*.JPEG", "**/*.JPG", "**/*.jpeg", "**/*.jpg", "**/*.pdf", "**/*.PDF"],
+  assetsInclude: [
+    "**/*.JPEG",
+    "**/*.JPG",
+    "**/*.jpeg",
+    "**/*.jpg",
+    "**/*.pdf",
+    "**/*.PDF",
+  ],
   resolve: {
+    dedupe: ["react", "react-dom", "three"],
     alias: {
       "@": path.resolve(import.meta.dirname, "client", "src"),
       "@shared": path.resolve(import.meta.dirname, "shared"),
@@ -34,7 +48,7 @@ export default defineConfig(({ mode }) => ({
     },
   },
   root: path.resolve(import.meta.dirname, "client"),
-  base: '/',
+  base: "/",
   build: {
     outDir: outputDirectory,
     emptyOutDir: true,

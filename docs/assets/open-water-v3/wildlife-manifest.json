@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "source": "https://opengameart.org/content/animated-fish",
+  "license": "CC0-1.0",
+  "builder": "scripts/build-open-water-wildlife.mjs",
+  "dolphin": {
+    "sourceSha256": "4b6f1ff9487bf25bd3dd7e3397723a356579ee9e3d62e915f978c003ee41644f",
+    "outputBytes": 288000,
+    "triangles": 7744,
+    "bodyTriangles": 7040,
+    "bones": 13,
+    "maxSkinInfluences": 4,
+    "loopSeconds": 1.6,
+    "loopKeys": 49,
+    "forward": "+Z",
+    "length": 3.35,
+    "originalAnimationUsed": false
+  },
+  "fish": {
+    "outputBytes": 190160,
+    "models": [
+      {
+        "name": "Fish1",
+        "sourceSha256": "1adea1cca2f02f351cf524b60d2448502e3acb3ef2965f74a21c45a5dfce77e3",
+        "triangles": 544
+      },
+      {
+        "name": "Fish2",
+        "sourceSha256": "ab12853cbd9c205a3aeb1d2cff1fd0cced44e5faa707020637bfd41634201509",
+        "triangles": 502
+      },
+      {
+        "name": "Fish3",
+        "sourceSha256": "142bb6559b928c61ff839eecbba4ee0cfafa964df37720db6a6ba3a90b4ed639",
+        "triangles": 686
+      }
+    ]
+  }
+}

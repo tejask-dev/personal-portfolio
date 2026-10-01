@@ -20,7 +20,7 @@ const runtime = path.resolve(process.env.QA_RUNTIME || repository);
 const requireRuntime = createRequire(path.join(runtime, "package.json"));
 const { chromium } = requireRuntime("playwright");
 const baseURL = process.env.QA_URL || "http://127.0.0.1:4173";
-const versionSuffix = process.env.QA_RUN_LABEL === "v2" ? "-v2" : "";
+const output=path.join(repository,"design/open-water-v3/implementation-qa");
 const browser = await chromium.launch({ channel: "chrome", headless: true });
 const report = {
   at: new Date().toISOString(),
@@ -28,6 +28,7 @@ const report = {
   browser: `Google Chrome ${browser.version()}`,
   scope:
     "Chromium touch emulation using native compositor gestures; not physical-device evidence.",
+  entryAssets:[...(await (await fetch(baseURL)).text()).matchAll(/(?:src|href)="([^"?]*\/assets\/[^"?]+\.(?:js|css))"/g)].map(match=>match[1]),
   checks: [],
 };
 try {
@@ -55,11 +56,18 @@ try {
           ?.getAttribute("data-yacht-model") === "licensed",
     );
   }
+  async function canvasPoint(){
+    const canvas=page.locator(".exp-scene canvas");await canvas.scrollIntoViewIfNeeded();
+    return canvas.evaluate(element=>{const r=element.getBoundingClientRect();
+      for(const fx of [.55,.7,.35,.85])for(const fy of [.35,.55,.7]){const x=r.x+r.width*fx,y=r.y+r.height*fy;
+        if(x>0&&x<innerWidth&&y>0&&y<innerHeight&&document.elementFromPoint(x,y)===element)return {x,y};}
+      throw new Error("No unobscured visible canvas point for native gesture");});
+  }
   await ready();
+  const pinchPoint=await canvasPoint();
   const beforeZoom = await page.evaluate(() => visualViewport.scale);
   await cdp.send("Input.synthesizePinchGesture", {
-    x: 100,
-    y: 600,
+    ...pinchPoint,
     scaleFactor: 2,
     relativeSpeed: 500,
     gestureSourceType: "touch",
@@ -79,14 +87,15 @@ try {
   console.log("PASS canvas-preserves-native-pinch-zoom");
 
   await ready();
+  const scrollPoint=await canvasPoint();
+  const beforeScroll=await page.evaluate(()=>window.scrollY);
   await cdp.send("Input.synthesizeScrollGesture", {
-    x: 100,
-    y: 650,
+    ...scrollPoint,
     yDistance: -300,
     speed: 800,
     gestureSourceType: "touch",
   });
-  await page.waitForFunction(() => window.scrollY > 100);
+  await page.waitForFunction(before=>window.scrollY>before+100,beforeScroll);
   const scrollY = await page.evaluate(() => window.scrollY);
   assert.equal(
     await page.locator(".ow-experience").getAttribute("data-state"),
@@ -109,13 +118,6 @@ try {
   console.error(error);
 } finally {
   await browser.close();
-  await mkdir(path.join(repository, "design", `previews${versionSuffix}`), {
-    recursive: true,
-  });
-  await writeFile(
-    versionSuffix
-      ? path.join(repository, "design", "touch-results-v2.json")
-      : path.join(repository, "design", "previews", "touch-qa.json"),
-    JSON.stringify(report, null, 2) + "\n",
-  );
+  await mkdir(output,{recursive:true});
+  await writeFile(path.join(output,"touch-gesture-results.json"),JSON.stringify(report,null,2)+"\n");
 }

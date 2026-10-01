@@ -172,9 +172,10 @@ function batchStaticMeshes(group: Group) {
 export async function loadYachtAsset(
   environment: SeaEnvironment,
   signal?: AbortSignal,
+  quality: "low" | "high" = "high",
 ): Promise<Group> {
   if (signal?.aborted) throw abortError();
-  const response = await fetch(ASSET_URL, { signal });
+  const response = await fetch(quality === "low" ? `${import.meta.env.BASE_URL}assets/open-water-v3/yacht-low.glb` : ASSET_URL, { signal });
   if (!response.ok) throw new Error(`Yacht asset returned ${response.status}`);
   const bytes = await response.arrayBuffer();
   if (signal?.aborted) throw abortError();

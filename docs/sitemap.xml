@@ -30,9 +30,4 @@
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
   </url>
-  <url>
-    <loc>https://tejass-kaushik.vercel.app/case-studies/web-solutions-venture</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.5</priority>
-  </url>
 </urlset>

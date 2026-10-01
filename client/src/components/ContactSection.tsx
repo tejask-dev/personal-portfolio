@@ -33,7 +33,7 @@ export default function ContactSection() {
           <p className="eyebrow">Contact</p>
           <ScrollTextReveal text="Let's build something ambitious." className="section-title max-w-3xl" />
           <p className="mt-6 max-w-xl text-lg leading-8 text-[#ede9fe]">
-            For collaborations, startups, internships, speaking, research, or client projects.
+            For collaborations, startups, internships, speaking, or research.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <a href={`mailto:${profile.email}`} className="icon-button" aria-label="Email Tejass">

@@ -8,6 +8,7 @@ import {
 } from "three";
 import { waveHeight, type BoatState } from "../systems/boatController";
 import type { SeaEnvironment } from "./materials";
+import { vesselProfile } from "../data/vessels";
 type Sample = {
   x: number;
   z: number;
@@ -64,9 +65,10 @@ export class Wake {
     this.geometry.setDrawRange(0, 0);
   }
   update(boat: BoatState, time: number, sailing: boolean) {
+    const hull = vesselProfile(boat.vesselId), spread = hull.beam / 3.4;
     const grounded = !boat.airborne && !boat.rampId && boat.lift < 0.45;
-    const sternX = boat.x - Math.sin(boat.heading) * 10.5,
-      sternZ = boat.z + Math.cos(boat.heading) * 10.5;
+    const sternX = boat.x - Math.sin(boat.heading) * hull.length * .5,
+      sternZ = boat.z + Math.cos(boat.heading) * hull.length * .5;
     if (
       !sailing ||
       (this.samples[0] &&
@@ -122,7 +124,7 @@ export class Wake {
       opacity: number,
     ) => {
       const age = time - sample.time,
-        spread = width + age * 0.7;
+        spread = width * hull.beam / 3.4 + age * 0.7;
       raw(
         sample.x + Math.cos(sample.heading) * side * spread,
         sample.z + Math.sin(sample.heading) * side * spread,
@@ -155,8 +157,8 @@ export class Wake {
       const strength = Math.min((boat.speed - 5) / 18, 1) * 0.43;
       const bow = (x: number, z: number, alpha: number) =>
         raw(
-          boat.x + Math.cos(boat.heading) * x - Math.sin(boat.heading) * z,
-          boat.z + Math.sin(boat.heading) * x + Math.cos(boat.heading) * z,
+          boat.x + Math.cos(boat.heading) * x * spread - Math.sin(boat.heading) * z * hull.length / 20,
+          boat.z + Math.sin(boat.heading) * x * spread + Math.cos(boat.heading) * z * hull.length / 20,
           alpha,
         );
       for (const side of [-1, 1]) {

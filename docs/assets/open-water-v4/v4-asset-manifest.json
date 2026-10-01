@@ -1,0 +1,68 @@
+{
+  "version": 1,
+  "generator": "scripts/build-open-water-v4-assets.mjs",
+  "source": [
+    "client/src/features/open-water/scene/VesselModelsV4.ts",
+    "client/src/features/open-water/scene/CompanionModelsV4.ts"
+  ],
+  "license": "Original work; no third-party geometry, textures or audio",
+  "axes": "Y-up, forward -Z, metres, waterline y=0",
+  "assets": [
+    {
+      "file": "superyacht-low.glb",
+      "kind": "superyacht",
+      "quality": "low",
+      "bytes": 681160,
+      "sha256": "4e7538cbaef7341a5f08d09ec729893843e389789a57014f42f3789c99a75481"
+    },
+    {
+      "file": "superyacht-high.glb",
+      "kind": "superyacht",
+      "quality": "high",
+      "bytes": 3399304,
+      "sha256": "3732290013ac296b69f85694ed6babaf06dc543b631d5e4303eceee91763e313"
+    },
+    {
+      "file": "tender-low.glb",
+      "kind": "tender",
+      "quality": "low",
+      "bytes": 253360,
+      "sha256": "6bd5e732cd7e9fe5a9bdf4b468f4f8c3ef0bb32af3a04e36997f887c00bda409"
+    },
+    {
+      "file": "tender-high.glb",
+      "kind": "tender",
+      "quality": "high",
+      "bytes": 1230116,
+      "sha256": "46ac4345f2b5eae085fdfa626ad7f5735428aad7ea4fe8b7659cd523f6984795"
+    },
+    {
+      "file": "nemo-low.glb",
+      "kind": "nemo",
+      "quality": "low",
+      "bytes": 58716,
+      "sha256": "657773efa625b6b81e6cf18b5bee5d969890a452af4b1e96252b1bee186ab40c"
+    },
+    {
+      "file": "nemo-high.glb",
+      "kind": "nemo",
+      "quality": "high",
+      "bytes": 187748,
+      "sha256": "8f399ae8547461d6c4590ef2ef99b840b4b6d8a245f22172490ad32b93fdc0a4"
+    },
+    {
+      "file": "dory-low.glb",
+      "kind": "dory",
+      "quality": "low",
+      "bytes": 57564,
+      "sha256": "d8ea8555b180204bf27476bafa7f074e2d4bfee313ffd0166800fae20c08dd9b"
+    },
+    {
+      "file": "dory-high.glb",
+      "kind": "dory",
+      "quality": "high",
+      "bytes": 188032,
+      "sha256": "e4f69f49278c3abef2c1b542c2b70512930f061ddc80d1b9e282955dd250b7e2"
+    }
+  ]
+}

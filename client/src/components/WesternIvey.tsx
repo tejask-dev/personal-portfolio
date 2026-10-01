@@ -24,8 +24,8 @@ const cards = [
   {
     icon: Rocket,
     title: 'Founder Path',
-    copy: 'Building products, ventures, and client work through university with a bias toward real users and measurable outcomes.',
-    detail: 'Products · Startups · Client Work · Ventures',
+    copy: 'Building products and exploring research through university with a bias toward real users and measurable outcomes.',
+    detail: 'Products · Startups · Research',
     accentColor: 'from-sky-500/20 to-blue-500/10',
     borderColor: 'hover:border-sky-500/40',
   },

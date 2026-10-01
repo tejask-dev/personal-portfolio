@@ -12,14 +12,16 @@ import {
   Group,
   Matrix4,
   Mesh,
+  MeshBasicMaterial,
   Quaternion,
   SphereGeometry,
+  ShaderMaterial,
   TorusGeometry,
   Vector3,
 } from "three";
 import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
-import { destinations, islands, ramps, raceCourses } from "../data/world";
+import { destinations, islands, ramps, raceCourses, LIGHTHOUSE, DIVE_BUOY } from "../data/world";
 import {
   architectureMaterial,
   type SeaEnvironment,
@@ -42,7 +44,7 @@ const PI = Math.PI;
 
 /** All architecture and yacht details are authored geometry. Bake static parts
  * into material batches so rails and deck planks do not each cost a draw call. */
-class Builder {
+export class Builder {
   parts = new Map<
     string,
     {
@@ -153,7 +155,7 @@ class Builder {
   }
   sphere(p: V3, scale: V3, color: string, gloss = 0.3, emission = 0) {
     this.add(
-      new SphereGeometry(1, 28, 14),
+      new SphereGeometry(1, 18, 10),
       p,
       scale,
       color,
@@ -675,136 +677,80 @@ export function createArchitecture(environment: SeaEnvironment) {
   const b = new Builder();
   for (const st of destinations) {
     b.offset = [st.x, 0, st.z];
-    const r = st.r;
-    const phase = destinations.indexOf(st) * 0.83;
-    limestoneShelf(b, r, phase);
-    // A restrained promenade rests on an irregular stone outcrop.
-    const terrace = new Shape();
-    for (let i = 0; i <= 64; i++) {
-      const angle = (i / 64) * PI * 2,
-        radius = r * (0.77 + 0.035 * Math.sin(angle * 3 + phase));
-      const x = Math.cos(angle) * radius,
-        z = Math.sin(angle) * radius;
-      i ? terrace.lineTo(x, z) : terrace.moveTo(x, z);
+    const r=st.r,phase=destinations.indexOf(st)*.83;
+    limestoneShelf(b,r,phase);
+    const dockDirection=Math.atan2(st.dock.x-st.x,st.dock.z-st.z),dx=Math.sin(dockDirection),dz=Math.cos(dockDirection);
+    const dockCenter=r+3.2;
+    b.roundedBox([dx*dockCenter,.78,dz*dockCenter],[3.4,.42,9.1],"#e6e0cf",.08,[0,dockDirection,0],.05);
+    b.box([dx*dockCenter,1.005,dz*dockCenter],[3.1,.035,8.8],colors.teak,[0,dockDirection,0]);
+    for(const side of [-1,1])b.cylinder([dx*(r+6.6)+Math.cos(dockDirection)*side*1.2,1.3,dz*(r+6.6)-Math.sin(dockDirection)*side*1.2],[.08,.58,.08],colors.steel,1,1,12);
+    if(st.id==="anticipy"){
+      // A low marine workshop: deep open frontage, a precise overhanging roof,
+      // and one slim radio spar. The lighthouse owns the vertical skyline.
+      b.roundedBox([0,1.35,0],[16,.5,11],"#e4deca",.17,[0,0,0],.03);
+      b.box([-6,3.15,-1],[.45,3.6,7.6],"#ece6d5");
+      b.box([6,3.15,-1],[.45,3.6,7.6],"#ece6d5");
+      b.box([0,3.15,-4.6],[12,3.6,.4],"#ded8c2");
+      b.box([0,3.2,-4.35],[10.8,2.2,.045],colors.glass,[0,0,0],.65);
+      b.roundedBox([0,5.02,-.8],[14,.33,9.3],colors.white,.12,[0,0,0],.1);
+      b.box([0,4.83,-.5],[11.7,.08,8.4],colors.teak);
+      for(const x of [-4.3,0,4.3])b.cylinder([x,3.12,3.25],[.08,3.45,.08],colors.steel,1,1,12);
+      b.roundedBox([0,2.55,1.2],[7.8,.22,1.7],colors.teak,.08);
+      for(const x of [-3.1,3.1])b.box([x,2,1.2],[.2,1,.95],colors.navy);
+      // Inspectable workbench and a human-scale marine radio, not a screen wall.
+      b.roundedBox([-1.5,2.85,1.2],[1.65,.42,1.05],"#ebe4d2",.06);
+      b.box([-1.5,3.09,1.2],[1.38,.025,.77],colors.glass);
+      b.roundedBox([2.1,2.96,1.16],[.72,.62,.44],colors.navy,.06);
+      b.box([2.1,3.02,1.395],[.47,.25,.015],"#a7bdb0");
+      b.rod([2.3,3.2,1.15],[2.3,4.4,1.15],.018,colors.steel);
+      b.rod([5.8,1.2,-4.1],[5.8,8.8,-4.1],.055,colors.steel);
+      b.rod([5.0,7.1,-4.1],[6.6,7.1,-4.1],.027,colors.steel);
+      b.box([5.81,7.9,-4.08],[.045,1.1,.045],"#be745d");
+    }else if(st.id==="stellar"){
+      b.cylinder([0,1.4,0],[11,.5,11],"#e9e1cd");
+      for(let i=0;i<12;i++){
+        const a=i/12*PI*2;
+        b.cylinder([Math.cos(a)*8.5,4.0,Math.sin(a)*8.5],[.18,5,.18],colors.white,1,1,16);
+      }
+      b.ring(7.35,1.55,[0,6.55,0],"#eee7d8",[0,0,0],[1,.24,1],.06);
+      b.ring(9.05,.11,[0,6.6,0],colors.white);
+      b.ring(5.87,.10,[0,6.6,0],colors.teak);
+      b.cylinder([0,1.8,0],[2.65,.45,2.65],"#c9c6aa");
+      b.sphere([0,3.3,0],[1.65,1.65,1.65],colors.blue,.65);
+      b.ring(2.7,.065,[0,3.3,0],colors.gold,[.45,0,.37]);
+      for(let i=0;i<5;i++){
+        const a=i/5*PI*2;
+        b.roundedBox([Math.cos(a)*6.3,1.92,Math.sin(a)*6.3],[3,.3,1.15],colors.teak,.1,[0,-a+PI/2,0]);
+      }
+    }else if(st.id==="research"){
+      // Asymmetric low observatory; warm roof and a shaded glazed instrument bay.
+      b.roundedBox([-1,2.2,0],[14,2.1,8.5],"#e3ddcb",.25);
+      b.box([-1,2.9,4.28],[12.4,1.8,.035],colors.glass,[0,0,0],.7);
+      b.roundedBox([-1,3.38,-.6],[15.5,.35,9.4],colors.white,.16,[0,0,-.07]);
+      b.sphere([2.5,3.7,-1.7],[3.7,2.65,3.7],"#e8e4d7",.25);
+      b.ring(3.7,.10,[2.5,3.71,-1.7],colors.teak);
+      b.rod([2.5,4.2,-1.7],[4.65,7.05,-3.4],.34,colors.ivory);
+      b.rod([4.2,6.45,-3.05],[4.9,7.38,-3.62],.43,colors.navy);
+      for(const x of [-7,-3]){
+        b.box([x,1.55,-7],[3.15,.12,2.1],colors.glass,[-.24,0,0],.65);
+        b.rod([x,1.2,-7],[x,1.6,-7],.06,colors.steel);
+      }
+      b.roundedBox([3.3,1.75,6.8],[6,.4,1.3],colors.teak,.1);
+    }else{
+      // Anchorage is a low timber quay and open pergola. No second tower.
+      b.roundedBox([0,1.32,1],[18,.38,11.5],colors.teak,.13);
+      b.roundedBox([-3,2.15,-2.5],[7.8,1.5,4],"#e5dfcc",.12);
+      b.box([-3,3.04,-2.5],[8.7,.28,4.9],colors.white);
+      b.box([-3,2.25,-.48],[6.7,1.2,.025],colors.glass);
+      for(const x of [1.5,7.5])for(const z of [-3.2,3.3])b.box([x,3.03,z],[.18,3.4,.18],colors.teak);
+      for(let i=0;i<9;i++)b.box([1.4+i*.79,4.8,.05],[.17,.17,7.1],colors.teak);
+      for(const x of [2.7,5.7])b.roundedBox([x,1.87,2],[2,.43,2.5],"#e8dfc6",.14);
+      b.roundedBox([-4.8,1.85,4.7],[5.2,.36,1.5],colors.teak,.12);
     }
-    b.add(
-      planGeometry(terrace, 0.18, 0.08),
-      [0, 1.23, 0],
-      [1, 1, 1],
-      "#e8e4d4",
-    );
-    const dockDirection = Math.atan2(st.dock.x - st.x, st.dock.z - st.z),
-      dx = Math.sin(dockDirection),
-      dz = Math.cos(dockDirection);
-    const dockCenter = r + 3.2;
-    b.roundedBox(
-      [dx * dockCenter, 0.78, dz * dockCenter],
-      [3.4, 0.42, 9.1],
-      colors.ivory,
-      0.08,
-      [0, dockDirection, 0],
-    );
-    b.box(
-      [dx * dockCenter, 1.005, dz * dockCenter],
-      [3.1, 0.035, 8.8],
-      colors.teak,
-      [0, dockDirection, 0],
-    );
-    for (const side of [-1, 1]) {
-      const rightX = Math.cos(dockDirection),
-        rightZ = -Math.sin(dockDirection);
-      b.cylinder(
-        [
-          dx * (r + 6.6) + rightX * side * 1.2,
-          1.3,
-          dz * (r + 6.6) + rightZ * side * 1.2,
-        ],
-        [0.08, 0.58, 0.08],
-        colors.steel,
-        1,
-        1,
-        12,
-      );
-    }
-    b.localScale = st.id === "stellar" ? r / 12.5 : r / 11.8;
-    if (st.id === "anticipy") {
-      b.cylinder([0, 1.21, 0], [6.2, 0.45, 6.2], colors.white);
-      b.box([-3.1, 4.7, 0], [0.52, 7.3, 3.8], colors.white, [0, 0, -0.06]);
-      b.box([3.1, 4.7, 0], [0.52, 7.3, 3.8], colors.white, [0, 0, 0.06]);
-      b.box([0, 8.3, 0], [6.7, 0.4, 3.8], colors.white);
-      b.ring(3, 0.14, [0, 5.25, -0.3], colors.steel, [PI / 2, 0, 0]);
-      b.ring(2.1, 0.1, [0, 5.25, -0.25], "#9ebdb4", [PI / 2, 0, 0]);
-      b.sphere([0, 5.25, -0.25], [0.38, 0.38, 0.38], "#d7e8cd", 0.4, 0.5);
-      b.box([0, 2.2, 3.7], [4.3, 1.3, 1.2], colors.navy);
-      for (let i = 0; i < 5; i++)
-        b.box([-1.5 + i * 0.75, 2.9, 3.7], [0.48, 0.06, 0.67], "#a5ccbb");
-      b.rod([0, 8.4, 0], [0, 13.7, 0], 0.06);
-      b.sphere([0, 13.7, 0], [0.16, 0.16, 0.16], "#e7d5a1", 0.3, 0.7);
-      b.ring(1.6, 0.04, [0, 10.5, 0]);
-      for (const x of [-6, 6]) {
-        b.cylinder([x, 2, 2], [0.1, 2, 0.1], colors.steel);
-        b.sphere([x, 3, 2], [0.22, 0.22, 0.22], "#d0dbc6", 0.4, 0.6);
-      }
-    } else if (st.id === "stellar") {
-      b.cylinder([0, 1.34, 0], [8.65, 0.6, 8.65], colors.white);
-      for (let i = 0; i < 14; i++) {
-        const a = (i / 14) * PI * 2;
-        b.cylinder(
-          [Math.cos(a) * 7.25, 3.87, Math.sin(a) * 7.25],
-          [0.2, 5, 0.2],
-          colors.white,
-          1,
-          1,
-          16,
-        );
-      }
-      b.ring(6.4, 1.22, [0, 6.4, 0], colors.white, [0, 0, 0], [1, 0.35, 1]);
-      b.ring(8.05, 0.16, [0, 6.36, 0], colors.white);
-      b.sphere([0, 4, 0], [2.05, 2.05, 2.05], colors.blue, 0.65);
-      b.ring(3.6, 0.095, [0, 4, 0], colors.gold, [0.35, 0, 0.4]);
-      b.ring(2.7, 0.07, [0, 4, 0], colors.steel, [PI / 2.4, 0, -0.3]);
-      for (const x of [-5.2, 5.2])
-        b.box([x, 1.8, 4.6], [2.4, 0.35, 1], colors.teak);
-    } else if (st.id === "research") {
-      b.cylinder([0, 2.4, 0], [5, 2.85, 5], colors.ivory);
-      b.sphere([0, 3.75, 0], [4.75, 2.7, 4.75], colors.glass, 0.75);
-      b.ring(4.8, 0.16, [0, 3.7, 0], colors.white);
-      b.ring(3.6, 0.13, [0, 7, 0], colors.gold, [PI / 2, 0.35, 0.3]);
-      b.ring(3.5, 0.085, [0, 7, 0], colors.steel, [0.35, 0, -0.38]);
-      b.rod([-2, 4, 1.4], [2.1, 10, -2], 0.45, colors.white);
-      b.rod([1.5, 9.1, -1.5], [2.35, 10.4, -2.25], 0.58, colors.navy);
-      for (const x of [-6.7, 6.7]) {
-        b.box([x, 1.7, 3.9], [3.2, 0.12, 3.4], colors.glass, [-0.2, 0, 0], 0.6);
-        for (let j = 0; j < 4; j++)
-          b.box(
-            [x - 1.2 + j * 0.8, 1.79, 3.9],
-            [0.02, 0.02, 3.25],
-            colors.steel,
-            [-0.2, 0, 0],
-          );
-      }
-    } else {
-      b.cylinder([-2, 6.5, -1], [1.6, 11.3, 1.6], colors.white, 0.88, 1.22, 32);
-      b.cylinder([-2, 12.2, -1], [1.7, 0.4, 1.7], colors.navy);
-      b.cylinder([-2, 13.1, -1], [1.2, 1.7, 1.2], colors.glass);
-      b.cylinder([-2, 14.35, -1], [1.9, 1.1, 1.9], colors.navy, 0, 1, 32);
-      b.ring(1.55, 0.035, [-2, 12.7, -1]);
-      b.sphere([-2, 13.1, -1], [0.5, 0.6, 0.5], "#e3d39d", 0.25, 0.8);
-      b.box([3.4, 2.2, 1.5], [5, 2.6, 4.1], colors.white);
-      b.box([3.4, 3.6, 1.5], [5.8, 0.25, 4.8], colors.teak);
-      b.box([3.4, 2.4, 3.57], [4.25, 1.8, 0.04], colors.glass, [0, 0, 0], 0.7);
-      for (const z of [-4, 4]) {
-        b.cylinder([6.2, 1.5, z], [0.8, 1, 0.8], colors.ivory);
-        b.sphere([6.2, 2.5, z], [1, 1.4, 0.9], colors.sage);
-      }
-    }
-    b.localScale = 1;
-    for (let i = 0; i < 3; i++) {
-      const angle = 2.6 + i * 0.45,
-        x = Math.cos(angle) * r * 0.69,
-        z = Math.sin(angle) * r * 0.69;
-      b.cylinder([x, 1.5, z], [0.54, 0.55, 0.54], "#c5b496", 1, 1.15, 14);
-      b.sphere([x, 2.13, z], [0.72, 0.93, 0.72], "#77836a", 0.03);
+    for(let i=0;i<3;i++){
+      const a=2.6+i*.45,x=Math.cos(a)*r*.70,z=Math.sin(a)*r*.70;
+      b.cylinder([x,1.4,z],[.54,.55,.54],"#c5b496",1,1.15,14);
+      b.sphere([x,1.99,z],[.72,.84,.72],"#78876b",.02);
     }
   }
   for (let index = 0; index < islands.length; index++) {
@@ -860,7 +806,22 @@ export function createArchitecture(environment: SeaEnvironment) {
         );
     }
   }
-  return b.finish(environment);
+  const architecture=b.finish(environment);
+  const lighthouse=createLighthouse(environment);
+  architecture.add(lighthouse);
+  architecture.userData.lighthouseLens=lighthouse.userData.lens;
+  const buoy=createDiveBuoy(environment);
+  architecture.add(buoy);
+  architecture.name="sunlit-archipelago";
+  const workshop=destinations.find(d=>d.id==="anticipy")!;
+  for(const item of [{id:"artifact",p:[workshop.x-1.5,2.95,workshop.z+1.2],size:[3.2,1.5,1.6]},{id:"radio",p:[workshop.x+2.1,3.45,workshop.z+1.16],size:[1.25,1.7,1.05]}]){
+    const material=new MeshBasicMaterial();material.visible=false;
+    const proxy=new Mesh(new BoxGeometry(...item.size as [number,number,number]),material);
+    proxy.position.set(...item.p as [number,number,number]);proxy.name=`encounter-${item.id}`;
+    proxy.userData.encounter=item.id;architecture.add(proxy);
+  }
+  batchStaticArchitecture(architecture);
+  return architecture;
 }
 /** Static playground fittings plus one separately tintable accent mesh per gate.
  * gate.userData={courseId,gateIndex,id}; material uniforms.uColor can be changed
@@ -952,14 +913,15 @@ export function createPlayground(environment: SeaEnvironment) {
     for (let i = 0; i < course.gates.length; i++) {
       const gate = course.gates[i],
         accent = new Builder(),
+        frame = new Builder(),
         rightX = Math.cos(gate.heading),
         rightZ = Math.sin(gate.heading),
         height = gate.minLift ? 6.2 : 3.5;
       for (const side of [-1, 1]) {
         const x = gate.x + rightX * gate.halfWidth * side,
           z = gate.z + rightZ * gate.halfWidth * side;
-        b.cylinder([x, 0.32, z], [0.9, 0.65, 0.9], colors.ivory, 1, 0.86, 20);
-        b.cylinder(
+        frame.cylinder([x, 0.32, z], [0.9, 0.65, 0.9], colors.ivory, 1, 0.86, 20);
+        frame.cylinder(
           [x, height * 0.5 + 0.5, z],
           [0.066, height, 0.066],
           colors.steel,
@@ -978,6 +940,16 @@ export function createPlayground(environment: SeaEnvironment) {
           [x, height - 0.34, z],
         );
         accent.add(flag.geometry(), [0, 0, 0], [1, 1, 1], "#b87960");
+      }
+      // Course frames remain separate so inactive circuits can actually leave
+      // the scene, including their poles, rather than accumulating pale clutter.
+      const frameGroup = frame.finish(environment);
+      for (const child of [...frameGroup.children]) {
+        if (child instanceof Mesh) {
+          child.name = `${course.id}/${gate.id}/frame`;
+          child.userData = { courseId: course.id, gateIndex: i, id: gate.id, frame: true };
+          gateMeshes.push(child); group.add(child);
+        }
       }
       const accentGroup = accent.finish(environment);
       for (const child of [...accentGroup.children]) {
@@ -1009,4 +981,120 @@ export function disposeModel(group: Group) {
       materials.forEach((material) => material.dispose());
     }
   });
+}
+
+/** Sole vertical landmark. Dimensions deliberately match the approved 34.5
+ * scene-unit tower; the optical assembly is separately addressable. */
+export function createLighthouse(environment:SeaEnvironment):Group {
+  const b=new Builder();
+  limestoneShelf(b,LIGHTHOUSE.r,(destinations.length+islands.length)*.83);
+  b.cylinder([0,1.37,0],[6.2,.48,6.2],"#dbd5c2",1,1.04,64);
+  b.cylinder([0,1.89,0],[4.5,.56,4.5],"#eee7d7",1,1.02,64);
+  b.cylinder([0,8.9,0],[1,13.4,1],"#ece7d9",2.90,3.70,64);
+  b.cylinder([0,18.2,0],[1,5.2,1],"#b76f55",2.60,2.90,64);
+  b.cylinder([0,24.1,0],[1,6.6,1],"#ece7d9",2.20,2.60,64);
+  // A recessed door and thin reveal establish a human scale at the base.
+  b.roundedBox([0,3.2,3.47],[1.35,2.15,.10],colors.navy,.13);
+  b.roundedBox([0,3.2,3.535],[.95,1.78,.035],colors.teak,.08);
+  for(const y of [8.7,13.0,23.6])b.roundedBox([0,y,3.7-(y-2.2)*.0607],[.55,1.26,.06],colors.glass,.12);
+  b.cylinder([0,27.52,0],[4.1,.28,4.1],"#e4e0d4",1,1,64);
+  b.cylinder([0,27.79,0],[2.83,.26,2.83],colors.navy,1,1,48);
+  for(let i=0;i<24;i++){
+    const a=i/24*PI*2,x=Math.cos(a)*3.83,z=Math.sin(a)*3.83;
+    b.rod([x,27.66,z],[x,28.8,z],.035,colors.navy);
+  }
+  b.ring(3.83,.045,[0,28.8,0],colors.navy);
+  b.ring(3.83,.028,[0,28.19,0],colors.navy);
+  for(let i=0;i<12;i++){
+    const a=i/12*PI*2;
+    b.rod([Math.cos(a)*2.57,27.9,Math.sin(a)*2.57],[Math.cos(a)*2.57,31.55,Math.sin(a)*2.57],.055,colors.navy);
+  }
+  b.cylinder([0,31.64,0],[2.88,.22,2.88],colors.navy,1,1,48);
+  b.cylinder([0,32.68,0],[1,1.86,1],colors.navy,.34,3.12,48);
+  b.cylinder([0,33.75,0],[.28,.42,.28],colors.gold,.6,1,20);
+  b.rod([0,33.96,0],[0,34.5,0],.055,colors.navy);
+  // Low storehouse sits at the tower foot, with a short quay rather than tower2.
+  b.roundedBox([-4.2,2.15,-2.0],[3.0,1.65,3.5],"#dbd6c1",.15);
+  b.box([-4.2,3.03,-2.0],[3.65,.2,4.1],colors.teak);
+  b.box([4.8,.93,2.3],[5.5,.22,2.6],colors.teak,[0,.48,0]);
+  const group=b.finish(environment);group.name="lighthouse";
+  group.position.set(LIGHTHOUSE.x,0,LIGHTHOUSE.z);
+  group.userData.encounter="lighthouse";
+  const lensBuilder=new Builder();
+  lensBuilder.cylinder([0,-1.35,0],[.7,.20,.7],colors.gold,1,1,24);
+  lensBuilder.rod([0,-1.25,0],[0,.25,0],.075,colors.gold);
+  lensBuilder.sphere([0,0,0],[.40,.58,.40],"#fff0c5",.3,.80);
+  for(let i=0;i<8;i++)lensBuilder.ring(.40+Math.sin(i/7*PI)*.42,.045,[0,-.62+i*.177,0],colors.gold);
+  lensBuilder.box([0,0,.72],[1.8,1.7,.08],colors.navy);
+  const lens=lensBuilder.finish(environment);lens.name="lighthouse-lens";lens.position.y=29.62;
+  group.add(lens);group.userData.lens=lens;
+  const panes=new Surface();
+  for(let i=0;i<12;i++){
+    const a=i/12*PI*2+.013,c=(i+1)/12*PI*2-.013,r=2.55;
+    panes.quad([Math.cos(a)*r,27.96,Math.sin(a)*r],[Math.cos(c)*r,27.96,Math.sin(c)*r],[Math.cos(c)*r,31.50,Math.sin(c)*r],[Math.cos(a)*r,31.50,Math.sin(a)*r]);
+  }
+  const glazing=new Mesh(panes.geometry(),architectureMaterial("#568587",environment,.7,0,2,.17));
+  glazing.material.side=DoubleSide;glazing.material.forceSinglePass=true;group.add(glazing);
+  return group;
+}
+
+export function createDiveBuoy(environment:SeaEnvironment):Group {
+  const b=new Builder();
+  b.cylinder([0,.19,0],[.95,.6,.95],"#ece5d5",.72,1,24);
+  b.cylinder([0,.59,0],[.63,.24,.63],"#be785d",1,1,24);
+  b.rod([0,.6,0],[0,3.3,0],.045,colors.navy);
+  const pennant=new Surface();
+  pennant.quad([0,3.2,0],[1.2,3.2,0],[1.2,2.45,0],[0,2.45,0]);
+  b.add(pennant.geometry(),[0,0,0],[1,1,1],"#be785d");
+  b.box([.6,2.83,.018],[1.18,.13,.02],colors.white,[0,0,-.47]);
+  const group=b.finish(environment);group.name="reef-dive-buoy";
+  group.position.set(DIVE_BUOY.x,0,DIVE_BUOY.z);
+  group.userData.encounter="reef";
+  return group;
+}
+
+/** Consolidate static surfaces by finish across the whole harbor. The animated
+ * optical assembly and transparent panes retain their own objects. Colors stay
+ * exact; near-identical matte/teak roughness values use one authored finish. */
+function batchStaticArchitecture(root:Group):void {
+  const lens=root.userData.lighthouseLens as Group;
+  const batches=new Map<string,{meshes:Mesh[];material:ShaderMaterial}>();
+  root.updateMatrixWorld(true);
+  root.traverse(object=>{
+    if(!(object instanceof Mesh)||!(object.material instanceof ShaderMaterial)||object.material.transparent)return;
+    for(let p=object.parent;p;p=p.parent)if(p===lens)return;
+    const material=object.material,u=material.uniforms;
+    if(!u.uColor||!u.uFinish)return;
+    const finish=u.uFinish.value,gloss=u.uGloss.value;
+    if(finish===0&&gloss<.3)u.uGloss.value=.08;
+    if(finish===1&&gloss<.4)u.uGloss.value=.18;
+    if(finish===4&&gloss<.4)u.uGloss.value=.20;
+    const key=JSON.stringify([u.uColor.value.getHexString(),u.uGloss.value,u.uEmission.value,finish,u.uOpacity.value]);
+    const batch=batches.get(key)??{meshes:[],material};batch.meshes.push(object);batches.set(key,batch);
+  });
+  for(const [key,batch]of batches){
+    if(batch.meshes.length<2)continue;
+    const geometries=batch.meshes.map(mesh=>mesh.geometry.clone().applyMatrix4(mesh.matrixWorld));
+    const geometry=mergeGeometries(geometries);geometries.forEach(g=>g.dispose());
+    if(!geometry)continue;
+    const discarded=new Set<ShaderMaterial>();
+    for(const mesh of batch.meshes){mesh.removeFromParent();mesh.geometry.dispose();if(mesh.material!==batch.material)discarded.add(mesh.material as ShaderMaterial);}
+    discarded.forEach(material=>material.dispose());
+    const mesh=new Mesh(geometry,batch.material);mesh.name=`harbor-finish-${key}`;root.add(mesh);
+  }
+  // Merged geometry no longer carries its old encounter ancestry. These cheap
+  // pick proxies preserve interactions and semantic landmark bounds, but their
+  // invisible materials do not add a submitted draw call.
+  const lighthouse=root.getObjectByName("lighthouse");
+  if(lighthouse){
+    const material=new MeshBasicMaterial();material.visible=false;
+    const proxy=new Mesh(new CylinderGeometry(2.8,3.8,34.5,12),material);
+    proxy.position.y=17.25;proxy.name="encounter-lighthouse";proxy.userData.encounter="lighthouse";lighthouse.add(proxy);
+  }
+  const buoy=root.getObjectByName("reef-dive-buoy");
+  if(buoy){
+    const material=new MeshBasicMaterial();material.visible=false;
+    const proxy=new Mesh(new BoxGeometry(2.6,3.6,1.8),material);
+    proxy.position.y=1.5;proxy.name="encounter-reef";proxy.userData.encounter="reef";buoy.add(proxy);
+  }
 }

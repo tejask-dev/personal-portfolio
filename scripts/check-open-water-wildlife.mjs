@@ -1,0 +1,78 @@
+// Render the actual TypeScript wildlife module and local GLBs in installed Chrome.
+// No production page edits; Vite and the browser are closed when the check completes.
+import {createServer} from 'vite';
+import {chromium} from 'playwright';
+import fs from 'node:fs';
+const out='/tmp/open-water-v3-wildlife';fs.mkdirSync(out,{recursive:true});
+const server=await createServer({server:{host:'127.0.0.1',port:8797,strictPort:true},mode:'test'});
+await server.listen();const browser=await chromium.launch({headless:true,channel:'chrome'});
+try {
+ const page=await browser.newPage({viewport:{width:1200,height:800},deviceScaleFactor:1});
+ const errors=[];page.on('pageerror',e=>errors.push(String(e)));page.on('console',m=>{if(m.type()==='error'&&!m.text().includes('favicon'))errors.push(m.text())});
+ await page.route('**/wildlife-inspection',route=>route.fulfill({contentType:'text/html',body:'<html><head><link rel="icon" href="data:,"></head><body style="margin:0"></body></html>'}));
+ await page.goto('http://127.0.0.1:8797/wildlife-inspection');
+ const result=await page.evaluate(async()=>{
+  const moduleSource=await (await fetch('/src/features/open-water/scene/Wildlife.ts')).text();
+  const threePath=moduleSource.match(/from ["']([^"']*three\.js[^"']*)["']/)?.[1];
+  if(!threePath)throw new Error('Could not resolve Vite Three dependency');
+  const T=await import(threePath);
+  const {createWildlife}=await import('/src/features/open-water/scene/Wildlife.ts');
+  const {createEnvironment,SEA_LIGHTING}=await import('/src/features/open-water/scene/materials.ts');
+  const env=createEnvironment(), scene=new T.Scene();scene.background=new T.Color('#afd2cd');
+  const renderer=new T.WebGLRenderer({antialias:true});renderer.setSize(1200,800);document.body.appendChild(renderer.domElement);
+  scene.add(new T.HemisphereLight(SEA_LIGHTING.skyColor,SEA_LIGHTING.groundColor,SEA_LIGHTING.hemisphereIntensity));const sun=new T.DirectionalLight(SEA_LIGHTING.sunColor,SEA_LIGHTING.sunIntensity);sun.position.copy(SEA_LIGHTING.sunDirection).multiplyScalar(100);scene.add(sun);
+  const camera=new T.PerspectiveCamera(45,1.5,.1,300);camera.position.set(-56,0,4);camera.lookAt(-66,-3.5,-12);
+  const states=[],wildlife=createWildlife(env,{quality:'low',onAssetState:(state,error)=>states.push({state,error})});scene.add(wildlife.group);
+  const frame={mode:'reef',boat:{x:0,z:35,heading:0},diver:{x:-69,y:-3.5,z:-8,heading:0},dakotaState:'greeting',quiet:true,camouflageRevealed:true,camouflageOutline:true,cleanerMoment:1};
+  wildlife.update(0,0,frame);renderer.render(scene,camera);
+  const before=wildlife.reef.getObjectByName('Responsive-school-1').instanceMatrix.array.slice();
+  wildlife.update(100,1,frame);const after=wildlife.reef.getObjectByName('Responsive-school-1').instanceMatrix.array.slice();
+  const quietStable=before.every((v,i)=>v===after[i]);
+  wildlife.update(100,0,{...frame,diver:{x:100,y:-3.5,z:100}});const far=wildlife.reef.getObjectByName('Responsive-school-1').instanceMatrix.array.slice();
+  const response=before.some((v,i)=>Math.abs(v-far[i])>.001);
+  await wildlife.loadCharacter();wildlife.update(0,0,frame);renderer.render(scene,camera);
+  const skinned=[];wildlife.dakota.traverse(o=>{if(o.isSkinnedMesh)skinned.push(o)});
+  const body=skinned[0],weights=body.geometry.getAttribute('skinWeight');let normalized=true;
+  for(let i=0;i<weights.count;i++)if(Math.abs(weights.getX(i)+weights.getY(i)+weights.getZ(i)+weights.getW(i)-1)>.001)normalized=false;
+  const loaderPath=moduleSource.match(/from ["']([^"']*GLTFLoader[^"']*)["']/)?.[1];
+  const {GLTFLoader}=await import(loaderPath);const model=await new GLTFLoader().loadAsync('/assets/open-water-v3/dakota.glb');
+  let skin;model.scene.traverse(o=>{if(o.isSkinnedMesh)skin=o});const mixer=new T.AnimationMixer(model.scene);const clip=model.animations[0];mixer.clipAction(clip).play();
+  const pos=skin.geometry.getAttribute('position');let tailVertex=0;for(let i=0;i<pos.count;i++)if(pos.getZ(i)<pos.getZ(tailVertex))tailVertex=i;
+  const sample=time=>{mixer.setTime(time);model.scene.updateMatrixWorld(true);return skin.applyBoneTransform(tailVertex,new T.Vector3().fromBufferAttribute(pos,tailVertex)).toArray()};
+  const loopSamples=[0,.4,.8,1.2,clip.duration].map(sample);const loopSeam=loopSamples[0].every((v,i)=>Math.abs(v-loopSamples[4][i])<1e-5);
+  const eachQuarterMoves=loopSamples.slice(1).every((sample,i)=>sample.some((v,j)=>Math.abs(v-loopSamples[i][j])>.001));
+  const completeTracks=clip.tracks.every(track=>Math.abs(track.times.at(-1)-clip.duration)<1e-5);
+  const originalFetch=window.fetch;window.fetch=async(input,init)=>String(input).includes('/assets/open-water-v3/')?new Response('unavailable',{status:503}):originalFetch(input,init);
+  const failed=createWildlife(env);await failed.loadCharacter();const failureState=failed.assetState,failureHasCharacter=failed.dakota.children.length===1;failed.dispose();window.fetch=originalFetch;
+  const high=createWildlife(env,{quality:'high'});const highCount=high.group.userData.fishCount;high.setQuality('low');const switchedLow=high.group.userData.fishCount===48&&high.reef.getObjectByName('Responsive-school-1').count===15;high.setQuality('high');const switchedHigh=high.group.userData.fishCount===120&&high.reef.getObjectByName('Responsive-school-1').count===39;high.dispose();high.dispose();
+  const density=createWildlife(env,{quality:'low'});
+  density.update(0,0,frame);
+  const densityBefore=density.reef.getObjectByName('Responsive-school-1').instanceMatrix.array.slice(0,15*16);
+  density.update(0,0,{...frame,mode:'surface'});
+  const surfaceLow=density.group.userData.fishCount;
+  density.setQuality('high');const surfaceHigh=density.group.userData.fishCount;
+  density.update(0,0,frame);const reefHigh=density.group.userData.fishCount;
+  density.setQuality('low');density.update(0,0,frame);
+  const densityAfter=density.reef.getObjectByName('Responsive-school-1').instanceMatrix.array;
+  const densityRestored=surfaceLow===18&&surfaceHigh===42&&reefHigh===120&&density.group.userData.fishCount===48&&densityBefore.every((v,i)=>v===densityAfter[i]);
+  density.dispose();
+  const aborted=createWildlife(env);const controller=new AbortController();const promise=aborted.loadCharacter(controller.signal);controller.abort();await promise;const abortState=aborted.assetState;aborted.dispose();
+  const late=createWildlife(env);const latePromise=late.loadCharacter();late.dispose();await latePromise;const disposedChildren=late.group.children.length;
+  const liveFrame={...frame,quiet:false};for(let i=0;i<30;i++)wildlife.update(i*.016,.016,liveFrame);
+  const pausedBefore=wildlife.reef.getObjectByName('Responsive-school-1').instanceMatrix.array.slice();wildlife.update(500,.016,{...liveFrame,paused:true});const pausedAfter=wildlife.reef.getObjectByName('Responsive-school-1').instanceMatrix.array;const pausedStable=pausedBefore.every((v,i)=>v===pausedAfter[i]);
+  wildlife.update(0,0,{...liveFrame,paused:true,encounter:'fish-apart'});
+  const explicitApart=pausedBefore.some((v,i)=>Math.abs(v-wildlife.reef.getObjectByName('Responsive-school-1').instanceMatrix.array[i])>.001);
+  wildlife.update(0,0,{...liveFrame,paused:true,encounter:'fish'});
+  const explicitReturn=pausedBefore.every((v,i)=>Math.abs(v-wildlife.reef.getObjectByName('Responsive-school-1').instanceMatrix.array[i])<.001);
+  const encounterTags=['Dakota-world-anchor','Responsive-school-1','Camouflage-octopus','Cleaner-fish-station'].map(name=>wildlife.group.getObjectByName(name).userData.encounter).join(',');
+  const octopus=wildlife.reef.getObjectByName('Camouflage-octopus').children[0];const beforeColor=octopus.material.color.getHex();
+  wildlife.update(0,0,{...liveFrame,paused:true,camouflageRevealed:false,cleanerMoment:2});
+  const pausedComparison=octopus.material.color.getHex()!==beforeColor&&wildlife.reef.getObjectByName('Cleaner-client').position.x===-2.6;
+  window.drawWildlife=(view)=>{wildlife.update(0,0,frame);if(view==='octopus'){camera.position.set(-79,-1.3,-3.1);camera.lookAt(-82.25,-3.85,-7.3)}else if(view==='cleaner'){camera.position.set(-49.6,-2.9,-18.8);camera.lookAt(-53.4,-5.15,-23)}else if(view==='dakota'){camera.position.set(wildlife.dakota.position.x+5,wildlife.dakota.position.y+1.3,wildlife.dakota.position.z+4);camera.lookAt(wildlife.dakota.position)}else{camera.position.set(-56,0,4);camera.lookAt(-66,-3.5,-12)}renderer.render(scene,camera)};
+  window.cleanup=()=>{wildlife.dispose();renderer.dispose()};
+  return {densityRestored,surfaceLow,surfaceHigh,reefHigh,switchedLow,switchedHigh,explicitApart,explicitReturn,encounterTags,pausedComparison,loopSeam,eachQuarterMoves,completeTracks,failureState,failureHasCharacter,states,lowCount:wildlife.group.userData.fishCount,highCount,quietStable,response,pausedStable,abortState,disposedChildren,normalized,bones:body.skeleton.bones.length,fishSource:wildlife.reef.getObjectByName('Responsive-school-1').userData.source};
+ });
+ for(const view of ['all','dakota','octopus','cleaner']){await page.evaluate(view=>window.drawWildlife(view),view);await page.screenshot({path:`${out}/runtime-${view}.png`})}
+ await page.evaluate(()=>window.cleanup());console.log(JSON.stringify({errors,...result,output:out},null,2));
+ if(!result.densityRestored||!result.switchedLow||!result.switchedHigh||!result.explicitApart||!result.explicitReturn||result.encounterTags!=='dakota,fish,camouflage,cleaner'||!result.pausedComparison||!result.loopSeam||!result.eachQuarterMoves||!result.completeTracks||result.failureState!=='fallback'||!result.failureHasCharacter||errors.length||!result.quietStable||!result.response||!result.pausedStable||!result.normalized||result.lowCount>48||result.highCount>120||result.abortState!=='idle'||result.disposedChildren!==0||result.states.at(-1)?.state!=='ready')process.exitCode=1;
+}finally{await browser.close();await server.close()}

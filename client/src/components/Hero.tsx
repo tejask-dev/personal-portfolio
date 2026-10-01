@@ -153,7 +153,7 @@ export default function Hero() {
         className="mx-auto mt-16 w-full max-w-7xl"
         aria-label="Selected impact metrics"
       >
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:max-w-3xl">
+        <div className="grid grid-cols-2 gap-3 lg:max-w-3xl">
           {profile.metrics.map((stat) => (
             <div
               key={stat.label}

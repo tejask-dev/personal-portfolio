@@ -39,7 +39,7 @@ export default function RacePanel({
             ⚑
           </span>
           <span>
-            Time trials<small>Two courses. Your own pace.</small>
+            Time trials<small>{raceCourses.length} courses. Your own pace.</small>
           </span>
           <span aria-hidden="true">{expanded ? "−" : "+"}</span>
         </button>
@@ -58,9 +58,9 @@ export default function RacePanel({
                 <span>
                   <strong>{item.name}</strong>
                   <small>
-                    {item.gates.length} gates
+                    {item.difficulty} · {item.gates.length} gates
                     {item.rampIds.length
-                      ? ` · ${item.rampIds.length} jumps`
+                      ? ` · ${item.rampIds.length} ${item.rampIds.length === 1 ? "jump" : "jumps"}`
                       : " · open water"}
                   </small>
                 </span>

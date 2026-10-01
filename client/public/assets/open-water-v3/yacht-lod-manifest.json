@@ -1,0 +1,235 @@
+{
+  "source": "client/public/open-water/yacht.glb",
+  "sourceSha256": "a830f17af48c90fb0a830a1f0a8b50858199726647450948043c8e7887daca0a",
+  "target": "client/public/assets/open-water-v3/yacht-low.glb",
+  "bytes": 2027248,
+  "triangles": 59109,
+  "originalTriangles": 160180,
+  "maximumRelativePrimitiveError": 0.014949564822018147,
+  "meshes": [
+    {
+      "name": "transform4_blinn5_0",
+      "material": "blinn5",
+      "before": 118,
+      "after": 118,
+      "relativeError": 0
+    },
+    {
+      "name": "transform5_blinn2_0",
+      "material": "blinn2",
+      "before": 10091,
+      "after": 4609,
+      "relativeError": 0.010721095837652683
+    },
+    {
+      "name": "transform5_blinn2_0_1",
+      "material": "blinn2",
+      "before": 11455,
+      "after": 3206,
+      "relativeError": 0.00038547354051843286
+    },
+    {
+      "name": "transform5_blinn2_0_2",
+      "material": "blinn2",
+      "before": 11030,
+      "after": 3086,
+      "relativeError": 0.0005457950755953789
+    },
+    {
+      "name": "transform5_blinn2_0_3",
+      "material": "blinn2",
+      "before": 5273,
+      "after": 1474,
+      "relativeError": 0.006851659156382084
+    },
+    {
+      "name": "transform6_blinn1_0",
+      "material": "blinn1",
+      "before": 9107,
+      "after": 3624,
+      "relativeError": 0.009431268088519573
+    },
+    {
+      "name": "transform7_phongE2_0",
+      "material": "phongE2",
+      "before": 10814,
+      "after": 3672,
+      "relativeError": 0.014795081689953804
+    },
+    {
+      "name": "transform7_phongE2_0_1",
+      "material": "phongE2",
+      "before": 10743,
+      "after": 4311,
+      "relativeError": 0.012297290377318859
+    },
+    {
+      "name": "transform7_phongE2_0_2",
+      "material": "phongE2",
+      "before": 625,
+      "after": 175,
+      "relativeError": 0.0104529345408082
+    },
+    {
+      "name": "transform8_fiancate_0",
+      "material": "fiancate",
+      "before": 10802,
+      "after": 3247,
+      "relativeError": 0.014103736728429794
+    },
+    {
+      "name": "transform8_fiancate_0_1",
+      "material": "fiancate",
+      "before": 3198,
+      "after": 894,
+      "relativeError": 0.0014330071862787008
+    },
+    {
+      "name": "transform9_coperta1_0",
+      "material": "coperta1",
+      "before": 10863,
+      "after": 3106,
+      "relativeError": 0.014949564822018147
+    },
+    {
+      "name": "transform9_coperta1_0_1",
+      "material": "coperta1",
+      "before": 3754,
+      "after": 1051,
+      "relativeError": 0.008188779465854168
+    },
+    {
+      "name": "transform10_nero1_0",
+      "material": "nero1",
+      "before": 10045,
+      "after": 4347,
+      "relativeError": 0.013362403959035873
+    },
+    {
+      "name": "transform10_nero1_0_1",
+      "material": "nero1",
+      "before": 9690,
+      "after": 4003,
+      "relativeError": 0.01191678922623396
+    },
+    {
+      "name": "transform11_lambert2_0",
+      "material": "lambert2",
+      "before": 8035,
+      "after": 5481,
+      "relativeError": 0.012001830153167248
+    },
+    {
+      "name": "transform11_lambert2_0_1",
+      "material": "lambert2",
+      "before": 3251,
+      "after": 2842,
+      "relativeError": 0.008481397293508053
+    },
+    {
+      "name": "transform12_lambert3_0",
+      "material": "lambert3",
+      "before": 3661,
+      "after": 1814,
+      "relativeError": 0.014469495043158531
+    },
+    {
+      "name": "transform13_blinn6_0",
+      "material": "blinn6",
+      "before": 1373,
+      "after": 623,
+      "relativeError": 0.011152653023600578
+    },
+    {
+      "name": "transform14_blinn7_0",
+      "material": "blinn7",
+      "before": 185,
+      "after": 87,
+      "relativeError": 0.009649675339460373
+    },
+    {
+      "name": "transform15_blinn8_0",
+      "material": "blinn8",
+      "before": 11857,
+      "after": 3316,
+      "relativeError": 0.00011794151942012832
+    },
+    {
+      "name": "transform15_blinn8_0_1",
+      "material": "blinn8",
+      "before": 3312,
+      "after": 927,
+      "relativeError": 0.003646684344857931
+    },
+    {
+      "name": "transform17_blinn9_0",
+      "material": "blinn9",
+      "before": 662,
+      "after": 184,
+      "relativeError": 0.0046526119112968445
+    },
+    {
+      "name": "transform17_blinn10_0",
+      "material": "blinn10",
+      "before": 649,
+      "after": 181,
+      "relativeError": 0.004950927570462227
+    },
+    {
+      "name": "transform17_blinn11_0",
+      "material": "blinn11",
+      "before": 1501,
+      "after": 420,
+      "relativeError": 0.008667600341141224
+    },
+    {
+      "name": "transform17_blinn12_0",
+      "material": "blinn12",
+      "before": 621,
+      "after": 172,
+      "relativeError": 0.009645838290452957
+    },
+    {
+      "name": "transform17_phongE4_0",
+      "material": "phongE4",
+      "before": 966,
+      "after": 270,
+      "relativeError": 0.0021351666655391455
+    },
+    {
+      "name": "transform18_nero1_0",
+      "material": "nero1",
+      "before": 2248,
+      "after": 629,
+      "relativeError": 0.004265558440238237
+    },
+    {
+      "name": "transform3_chiglia1_0",
+      "material": "chiglia1",
+      "before": 4180,
+      "after": 1169,
+      "relativeError": 0.0007151241879910231
+    },
+    {
+      "name": "transform19_lambert1_0",
+      "material": "lambert1",
+      "before": 2,
+      "after": 2,
+      "relativeError": 0
+    },
+    {
+      "name": "transform20_blinn13_0",
+      "material": "blinn13",
+      "before": 8,
+      "after": 8,
+      "relativeError": 0
+    },
+    {
+      "name": "transform21_blinn1_0",
+      "material": "blinn1",
+      "before": 61,
+      "after": 61,
+      "relativeError": 0
+    }
+  ]
+}

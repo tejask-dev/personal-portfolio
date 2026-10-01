@@ -22,7 +22,7 @@ const baseURL = (process.env.QA_URL || "http://127.0.0.1:4173").replace(
   "",
 );
 const browser = await chromium.launch({ channel: "chrome", headless: true });
-const versionSuffix = process.env.QA_RUN_LABEL === "v2" ? "-v2" : "";
+const versionSuffix = "-v4";
 const screenshotDirectory = path.join(
   repository,
   `design/previews${versionSuffix}`,
@@ -75,7 +75,7 @@ try {
     });
     const page = await context.newPage();
     try {
-      const response = await page.goto(baseURL, { waitUntil: "load" });
+      const response = await page.goto(`${baseURL}/`, { waitUntil: "load" });
       assert.equal(response.status(), 200);
       await page.locator(".static-portfolio").waitFor({ state: "visible" });
       assert.equal(await page.title(), "Tejass Kaushik | Open Water");
@@ -83,7 +83,7 @@ try {
       for (const expected of [
         "Tejass Kaushik",
         "Founding Software Engineer at Anticipation Labs",
-        "Western University Computer Science and Ivey AEO",
+        "I study Computer Science at Western University and hold Ivey AEO status.",
         "tejas.kaushik@outlook.com",
       ])
         assert.ok(text.includes(expected));

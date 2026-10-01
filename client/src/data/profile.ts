@@ -4,30 +4,34 @@ export const profile = {
   email: "tejas.kaushik@outlook.com",
   location: "Windsor, Ontario, Canada",
   education: "Western University Computer Science and Ivey AEO",
-  headline: "Building Anticipy. Previously CTO at Stellar Learning.",
+  headline: "I build products from interface to infrastructure.",
   intro:
-    "Founding Software Engineer at Anticipation Labs, building Anticipy. Former CTO at Stellar Learning. Western University Computer Science and Ivey AEO.",
+    "Founding Software Engineer at Anticipation Labs, working across connected apps, AI workflows, and mobile/wearable validation. Former CTO at Stellar Learning. Western University Computer Science and Ivey AEO.",
   socials: {
     linkedin: "https://www.linkedin.com/in/tejasskaushik/",
     github: "https://github.com/tejask-dev",
     instagram: "https://www.instagram.com/tejass_kaushik007/",
   },
   /**
-   * Proof strip: max four metrics, every value verified.
-   * Public figures are kept conservative and checked against first-party
-   * sources before being surfaced in the active homepage.
+   * Source distinctions must survive every display. Organization figures are
+   * reported by Stellar; research recognition
+   * belongs to the team. These are not interchangeable personal metrics.
    */
   proof: [
     { value: "40,000+", label: "learners reported by Stellar Learning" },
-    { value: "3", label: "client projects delivered through my web venture" },
-    { value: "1st", label: "nationally, Youreka Canada research symposium" },
+    {
+      value: "1st",
+      label: "national recognition for the Youreka research team",
+    },
   ],
   // Kept as structured source data for legacy components and future pages.
   tagline: "Building Anticipy at Anticipation Labs.",
   metrics: [
     { value: "40,000+", label: "Learners reported by Stellar Learning" },
-    { value: "3", label: "Client projects delivered" },
-    { value: "1st", label: "National Youreka research winner" },
+    {
+      value: "1st",
+      label: "National recognition for the Youreka research team",
+    },
   ],
   focusAreas: [
     "Applied AI products",

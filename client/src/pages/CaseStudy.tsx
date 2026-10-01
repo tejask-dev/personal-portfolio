@@ -1,19 +1,20 @@
 import { useEffect, useRef, type CSSProperties } from "react";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { Link, useRoute } from "wouter";
-import { getCaseStudy } from "@/data/projects";
+import { caseStudies, getCaseStudy } from "@/data/projects";
+import { profile } from "@/data/profile";
 import { useSeo } from "@/lib/seo";
+import "./portfolio-v3.css";
+import { AnticipyDeepDive } from "@/components/portfolio-v4/Flagship";
 
 export default function CaseStudy() {
   const [, params] = useRoute("/case-studies/:slug");
   const study = params?.slug ? getCaseStudy(params.slug) : undefined;
   const headingRef = useRef<HTMLHeadingElement>(null);
-
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "instant" });
     headingRef.current?.focus({ preventScroll: true });
   }, [params?.slug]);
-
   useSeo(
     study
       ? {
@@ -30,153 +31,238 @@ export default function CaseStudy() {
         },
   );
 
-  if (!study) {
+  if (!study)
     return (
-      <main className="case-page case-empty" id="main">
-        <div className="case-shell">
-          <p className="section-label">404 / Case study</p>
+      <main className="case-page portfolio-v3 pv-empty" id="main">
+        <div className="pv-shell">
+          <p className="pv-eyebrow">404 / Case study</p>
           <h1 ref={headingRef} tabIndex={-1}>
             This case study could not be found.
           </h1>
-          <Link className="text-link" href="/#work">
-            <ArrowLeft size={17} /> Open the work index
+          <Link className="pv-text-link" href="/#work">
+            <ArrowLeft size={18} /> Open the work index
           </Link>
         </div>
       </main>
     );
-  }
 
+  const next =
+    caseStudies[(caseStudies.indexOf(study) + 1) % caseStudies.length];
   return (
-    <div className="case-page">
+    <div className="case-page portfolio-v3 pv-case">
       <a className="skip-link" href="#main">
         Skip to case study
       </a>
-      <nav className="case-nav" aria-label="Case study navigation">
-        <Link href="/#voyage">
-          <ArrowLeft size={17} /> Return to water
+      <nav className="pv-case-nav" aria-label="Case study navigation">
+        <Link className="pv-wordmark" href="/">
+          Tejass Kaushik<span> / Open Water</span>
         </Link>
-        <Link className="wordmark" href="/">
-          Tejass Kaushik<span>.</span>
-        </Link>
-        <Link className="case-index-link" href="/#work">
-          Work index <ArrowUpRight size={15} />
-        </Link>
+        <div>
+          <Link href="/#voyage">Return to water</Link>
+          <Link href="/#work">Work index</Link>
+          <Link href="/#about">About</Link>
+          <a href={`mailto:${profile.email}`}>
+            Contact <ArrowUpRight size={15} aria-hidden="true" />
+          </a>
+        </div>
       </nav>
-
       <main id="main">
-        <header className="case-hero case-shell">
-          <p className="section-label">{study.kicker}</p>
-          {study.status && <p className="case-status">{study.status}</p>}
+        <header className="pv-case-hero pv-shell">
+          <div className="pv-case-breadcrumb">
+            <Link href="/#work">
+              <ArrowLeft size={16} aria-hidden="true" /> All projects
+            </Link>
+            <span>{study.kicker}</span>
+          </div>
+          <p className="pv-stage">{study.status}</p>
           <h1 ref={headingRef} tabIndex={-1}>
             {study.title}
           </h1>
-          <p className="case-thesis">{study.thesis}</p>
-
-          <div className="case-metrics" aria-label="Project context">
-            {study.metrics.map((metric) => (
-              <div key={metric.label}>
-                <strong>{metric.value}</strong>
-                <span>{metric.label}</span>
-              </div>
-            ))}
-          </div>
+          <p className="pv-case-thesis">{study.thesis}</p>
+          <dl className="pv-case-facts">
+            <div>
+              <dt>My role</dt>
+              <dd>{study.role}</dd>
+            </div>
+            <div>
+              <dt>Period</dt>
+              <dd>{study.period}</dd>
+            </div>
+            <div>
+              <dt>Focus</dt>
+              <dd>{study.stack.slice(0, 3).join(" · ")}</dd>
+            </div>
+          </dl>
+          <p className="pv-case-summary">{study.summary}</p>
         </header>
-
-        <figure className="case-artifact case-shell">
+        {study.slug === "anticipy" ? <AnticipyDeepDive /> : <>
+        <figure className="pv-case-artifact pv-shell" id="artifact">
+          <div className="pv-artifact-label">
+            <span>{study.artifactLabel}</span>
+            <span aria-hidden="true">
+              Field note / {study.kicker.split(" / ")[0]}
+            </span>
+          </div>
           <div
-            className={`case-image-wrap${study.imageTreatment ? ` case-image-wrap--${study.imageTreatment}` : ""}`}
+            className={`pv-case-image pv-case-image--${study.imageTreatment ?? "cover"}`}
           >
             <img
               src={study.image}
               alt={study.imageAlt}
               loading="eager"
               decoding="async"
-              width={study.imageTreatment === "illustration" ? 1440 : undefined}
-              height={study.imageTreatment === "illustration" ? 900 : undefined}
               style={
                 { viewTransitionName: "project-artifact" } as CSSProperties
               }
             />
           </div>
-          {study.imageCaption && (
-            <figcaption className="case-image-caption">
-              {study.imageCaption}
-            </figcaption>
-          )}
+          <figcaption>
+            <p>{study.imageCaption}</p>
+            {study.artifactSource && (
+              <a
+                href={study.artifactSource.href}
+                target="_blank"
+                rel="noreferrer"
+              >
+                {study.artifactSource.label}
+                <ArrowUpRight size={16} aria-hidden="true" />
+              </a>
+            )}
+          </figcaption>
         </figure>
-
-        <article className="case-story case-shell">
-          <aside aria-label="Project details">
-            <p className="section-label">The work</p>
-            <dl>
-              <div>
-                <dt>Role</dt>
-                <dd>{study.role}</dd>
-              </div>
-              <div>
-                <dt>Period</dt>
-                <dd>{study.period}</dd>
-              </div>
-              <div>
-                <dt>Focus</dt>
-                <dd>{study.stack.join(", ")}</dd>
-              </div>
-            </dl>
+        <article className="pv-case-reading pv-shell">
+          <aside className="pv-reading-index" aria-label="On this page">
+            <p className="pv-eyebrow">In this case</p>
+            <nav>
+              <a href="#context">Context</a>
+              <a href="#contribution">My contribution</a>
+              <a href="#decision">{study.decision.label.split(" / ")[0]}</a>
+              <a href="#outcome">Outcome & limits</a>
+              <a href="#sources">Sources</a>
+            </nav>
+            <p>{study.stack.join(" / ")}</p>
           </aside>
-
-          <div className="case-sections">
-            <div>
-              <p className="case-summary">{study.summary}</p>
-            </div>
-            {study.sections.map((section) => (
-              <section key={section.heading}>
-                <h2>{section.heading}</h2>
-                {section.body.map((paragraph) => (
-                  <p key={paragraph}>{paragraph}</p>
-                ))}
-              </section>
-            ))}
-
-            <section className="case-lesson">
-              <span>A working principle</span>
-              <p>{study.lesson}</p>
+          <div className="pv-case-prose">
+            <section id="context">
+              <p className="pv-eyebrow">01 / Context</p>
+              <h2>{study.sections[0].heading}</h2>
+              {study.sections[0].body.map((p) => (
+                <p key={p}>{p}</p>
+              ))}
             </section>
-
-            {study.links.length > 0 && (
-              <div
-                className="case-links"
+            <section id="contribution">
+              <p className="pv-eyebrow">02 / Scope</p>
+              <h2>My part in the work.</h2>
+              <ul className="pv-contributions">
+                {study.contributions.map((p) => (
+                  <li key={p}>{p}</li>
+                ))}
+              </ul>
+              <div className="pv-team-context">
+                <h3>Team & project context</h3>
+                <p>{study.teamContext}</p>
+              </div>
+            </section>
+            <section className="pv-decision" id="decision">
+              <p className="pv-eyebrow">03 / {study.decision.label}</p>
+              <h2>{study.decision.title}</h2>
+              {study.decision.label.includes("team context") && (
+                <p>This section describes the team’s product context; my own scope is listed under My contribution.</p>
+              )}
+              {study.decision.body.map((p) => (
+                <p key={p}>{p}</p>
+              ))}
+              {study.decision.source && (
+                <a
+                  className="pv-text-link"
+                  href={study.decision.source}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Inspect the source{" "}
+                  <ArrowUpRight size={17} aria-hidden="true" />
+                </a>
+              )}
+            </section>
+            <section id="outcome">
+              <p className="pv-eyebrow">04 / Outcome & limits</p>
+              {study.sections.slice(1).map((section) => (
+                <div key={section.heading}>
+                  <h2>{section.heading}</h2>
+                  {section.body.map((p) => (
+                    <p key={p}>{p}</p>
+                  ))}
+                </div>
+              ))}
+              <dl className="pv-context-facts">
+                {study.metrics.map((metric) => (
+                  <div key={metric.label}>
+                    <dt>{metric.label}</dt>
+                    <dd>{metric.value}</dd>
+                  </div>
+                ))}
+              </dl>
+            </section>
+            <div className="pv-takeaway">
+              <span className="pv-eyebrow">What I carry forward</span>
+              <p>{study.lesson}</p>
+            </div>
+            <section id="sources">
+              <p className="pv-eyebrow">05 / Follow the evidence</p>
+              <h2>Sources & context.</h2>
+              <p className="pv-evidence-note">{study.evidenceNote}</p>
+              <ul
+                className="pv-source-list"
                 aria-label="Project sources and links"
               >
                 {study.links.map((link) => (
-                  <a
-                    href={link.href}
-                    target="_blank"
-                    rel="noreferrer"
-                    key={link.href}
-                  >
-                    {link.label}
-                    <ArrowUpRight size={18} aria-hidden="true" />
-                  </a>
+                  <li key={link.href}>
+                    <a href={link.href} target="_blank" rel="noreferrer">
+                      {link.label}
+                      <ArrowUpRight size={17} aria-hidden="true" />
+                    </a>
+                    {link.note && <p>{link.note}</p>}
+                  </li>
                 ))}
-              </div>
-            )}
+              </ul>
+            </section>
           </div>
         </article>
-
-        <section className="case-next">
-          <div className="case-shell">
-            <p className="section-label section-label-light">
-              Open Water / Keep exploring
+        </>}
+        <section className="pv-case-contact">
+          <div className="pv-shell">
+            <p className="pv-eyebrow">A next conversation</p>
+            <h2>
+              Have something
+              <br />
+              <em>in mind?</em>
+            </h2>
+            <p>
+              I’d like to hear what you’re building and where I could
+              contribute.
             </p>
-            <Link href="/#voyage">
-              Return to water <ArrowUpRight aria-hidden="true" />
-            </Link>
-            <Link className="case-next-index" href="/#work">
-              Or go straight to the work index{" "}
+            <a
+              className="pv-button"
+              href={`mailto:${profile.email}?subject=${encodeURIComponent(`Engineering opportunity — ${study.title}`)}`}
+            >
+              Contact about opportunities{" "}
               <ArrowUpRight size={20} aria-hidden="true" />
-            </Link>
+            </a>
+            <a className="pv-email" href={`mailto:${profile.email}`}>
+              {profile.email}
+            </a>
           </div>
         </section>
+        <footer className="pv-case-end pv-shell">
+          <Link href="/#voyage">
+            <ArrowLeft size={18} aria-hidden="true" /> Return to water
+          </Link>
+          <Link href={`/case-studies/${next.slug}`}>
+            <span>Next case</span>
+            <strong>{next.title}</strong>
+            <ArrowUpRight size={22} aria-hidden="true" />
+          </Link>
+        </footer>
       </main>
     </div>
   );

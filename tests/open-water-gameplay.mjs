@@ -20,7 +20,8 @@ const baseURL = (process.env.QA_URL || "http://127.0.0.1:4173").replace(
   /\/$/,
   "",
 );
-const artifactDirectory = path.join(repository, "design/previews-v2");
+const qaDirectory = path.resolve(repository, process.env.QA_OUTPUT || "design/open-water-v4/implementation-qa");
+const artifactDirectory = path.join(qaDirectory, "gameplay");
 await mkdir(artifactDirectory, { recursive: true });
 const browser = await chromium.launch({ channel: "chrome", headless: true });
 const report = {
@@ -29,6 +30,7 @@ const report = {
   browser: `Google Chrome ${browser.version()}`,
   scope:
     "Local preview with actual Playwright keyboard events and read-only DOM telemetry. No simulation setters, synthetic completion, real-device, or field-performance claim.",
+  entryAssets:[...(await (await fetch(baseURL)).text()).matchAll(/(?:src|href)="([^"?]*\/assets\/[^"?]+\.(?:js|css))"/g)].map(match=>match[1]),
   checks: [],
   courses: [],
   screenshots: [],
@@ -39,6 +41,7 @@ const racing = ["racing", "running"];
 const finished = ["finished", "complete", "completed"];
 
 async function check(name, operation) {
+  if(process.env.QA_ONLY&&!new RegExp(process.env.QA_ONLY,"i").test(name))return;
   try {
     const details = await operation();
     report.checks.push({ name, status: "pass", details });
@@ -66,6 +69,7 @@ async function observe(page) {
       airborne: data.airborne === "true",
       jumpCount: Number(data.jumpCount),
       state: data.state,
+      vessel: data.vessel,
     };
   });
 }
@@ -85,36 +89,43 @@ async function ready(width = 1440, height = 960) {
   );
   return page;
 }
+async function openPlayground(page) {
+  const take=page.locator("#take-helm");
+  if(await take.isVisible())await take.click();
+  await page.locator(".exp-discovery-rail").getByRole("button",{name:/Playground/}).click();
+  await page.locator("dialog[open]").waitFor();
+}
 async function start(page, course) {
-  const button = page.getByRole("button", {
-    name: `Start ${course.name}`,
-    exact: true,
-  });
-  const trials = page.getByRole("button", { name: /^Time trials/ });
-  if (!(await trials.isVisible()) && !(await button.isVisible()))
-    await page
-      .getByRole("button", { name: "Take the helm", exact: true })
-      .click();
-  if (!(await button.isVisible())) await trials.click();
-  await button.click();
-  await page.waitForFunction(
-    () =>
-      document.querySelector(".ow-experience")?.dataset.racePhase ===
-      "countdown",
-  );
+  if(!(await page.locator("dialog[open]").getByRole("button",{name:`Start ${course.name}`,exact:true}).isVisible()))await openPlayground(page);
+  await page.locator("dialog[open]").getByRole("button",{name:`Start ${course.name}`,exact:true}).click();
+  await page.waitForFunction(()=>document.querySelector(".ow-experience")?.dataset.racePhase==="countdown");
   await page.waitForTimeout(150);
 }
+async function map(page){
+  const button=page.locator(".exp-nav").getByRole("button",{name:/^Map/});
+  // The phone opening prioritizes Work and Contact; Map appears after entering
+  // the expedition. Follow that actual user path before checking its targets.
+  if(!(await button.isVisible()))await page.locator("#take-helm").click();
+  await button.click();
+}
+async function closePanel(page){await page.locator("dialog[open]").getByRole("button",{name:/^Close /}).click();}
+async function bounded(control,width,height,minimum=44){
+  await control.scrollIntoViewIfNeeded();const box=await control.boundingBox();
+  assert.ok(box&&box.x>=-.5&&box.y>=-.5&&box.x+box.width<=width+.5&&box.y+box.height<=height+.5,`Clipped control ${JSON.stringify(box)}`);
+  assert.ok(box.width>=minimum-.5&&box.height>=minimum-.5,`Target smaller than ${minimum}px ${JSON.stringify(box)}`);return box;
+}
+
 async function screenshot(page, filename) {
   await page.screenshot({
     path: path.join(artifactDirectory, filename),
     fullPage: false,
   });
-  report.screenshots.push(`design/previews-v2/${filename}`);
+  report.screenshots.push(path.relative(repository, path.join(artifactDirectory, filename)));
 }
 
 const courses = world.raceCourses || world.courses || [];
 try {
-  assert.ok(courses.length >= 2, "Public race course definitions are missing");
+  assert.equal(courses.length, 5, "The five public race courses must all be available");
   for (const [width, height] of [
     [320, 740],
     [390, 844],
@@ -125,72 +136,16 @@ try {
     await check(`race controls reflow ${width}×${height}`, async () => {
       const page = await ready(width, height);
       try {
-        const chartToggle = page.getByRole("button", {
-          name: /^The archipelago/,
-        });
-        const chartWasCollapsed =
-          (await chartToggle.getAttribute("aria-expanded")) === "false";
-        if (chartWasCollapsed) await chartToggle.click();
-        const pins = await page.locator(".ow-map-pin").evaluateAll((elements) =>
-          elements.map((element) => {
-            const r = element.getBoundingClientRect();
-            return {
-              x: r.x,
-              y: r.y,
-              width: r.width,
-              height: r.height,
-              name: element.getAttribute("aria-label"),
-            };
-          }),
-        );
-        assert.equal(
-          pins.length,
-          4,
-          "Chart does not expose all four destination controls",
-        );
-        for (let a = 0; a < pins.length; a++) {
-          assert.ok(
-            pins[a].width >= 44 && pins[a].height >= 44,
-            "Chart target smaller than 44px",
-          );
-          for (let b = a + 1; b < pins.length; b++)
-            assert.ok(
-              pins[a].x + pins[a].width <= pins[b].x + 0.5 ||
-                pins[b].x + pins[b].width <= pins[a].x + 0.5 ||
-                pins[a].y + pins[a].height <= pins[b].y + 0.5 ||
-                pins[b].y + pins[b].height <= pins[a].y + 0.5,
-              `Overlapping chart targets ${pins[a].name} and ${pins[b].name}`,
-            );
-        }
-        if (chartWasCollapsed) await chartToggle.click();
-        await page
-          .getByRole("button", { name: "Take the helm", exact: true })
-          .click();
-        await page.getByRole("button", { name: /^Time trials/ }).click();
-        await page.waitForTimeout(700);
-        const dimensions = await page.evaluate(() => ({
-          viewport: document.documentElement.clientWidth,
-          document: document.documentElement.scrollWidth,
-        }));
-        assert.ok(
-          dimensions.document <= dimensions.viewport + 1,
-          "Course menu caused horizontal overflow",
-        );
-        for (const course of courses) {
-          const box = await page
-            .getByRole("button", { name: `Start ${course.name}`, exact: true })
-            .boundingBox();
-          assert.ok(
-            box &&
-              box.x >= 0 &&
-              box.y >= 0 &&
-              box.x + box.width <= width + 1 &&
-              box.y + box.height <= height,
-            `Start ${course.name} control clipped`,
-          );
-        }
-        if (width === 390 || width === 1440)
-          await screenshot(page, `race-menu-${width}.png`);
+        await map(page);
+        const targets=page.locator("dialog[open] .exp-map-destinations").getByRole("button",{name:"Sail there",exact:true});
+        assert.equal(await targets.count(),4,"Four direct destination controls missing");
+        for(const target of await targets.all())await bounded(target,width,height);
+        await closePanel(page);
+        await openPlayground(page);
+        const dimensions=await page.evaluate(()=>({viewport:document.documentElement.clientWidth,document:document.documentElement.scrollWidth}));
+        assert.ok(dimensions.document<=dimensions.viewport+1,"Course menu horizontal overflow");
+        for(const course of courses)await bounded(page.locator("dialog[open]").getByRole("button",{name:`Start ${course.name}`,exact:true}),width,height);
+        if(width===390||width===1440)await screenshot(page,`race-menu-${width}.png`);
         await start(page, courses[1]);
         const exit = await page
           .getByRole("button", { name: "Free sail", exact: true })
@@ -228,12 +183,12 @@ try {
         const first = await observe(page);
         assert.equal(first.checkpoint, 0);
         assert.equal(
-          await page.locator(".ow-map-pin[disabled]").count(),
-          4,
-          "Chart can cancel a countdown implicitly",
+          await page.locator(".exp-discovery-rail button:disabled").count(),
+          2,
+          "Competing activity can cancel a countdown implicitly",
         );
         await page
-          .getByRole("button", { name: "Motion on", exact: true })
+          .getByRole("button", { name: "Pause", exact: true })
           .click();
         const paused = await observe(page);
         await page.waitForTimeout(1000);
@@ -249,7 +204,7 @@ try {
           "Race clock continued while paused",
         );
         await page
-          .getByRole("button", { name: "Motion paused", exact: true })
+          .getByRole("button", { name: "Resume", exact: true })
           .click();
         await page.waitForFunction(() =>
           ["racing", "running"].includes(
@@ -257,16 +212,16 @@ try {
           ),
         );
         assert.equal(
-          await page.locator(".ow-map-pin[disabled]").count(),
-          4,
-          "Chart can cancel an active race implicitly",
+          await page.locator(".exp-discovery-rail button:disabled").count(),
+          2,
+          "Competing activity can cancel an active race implicitly",
         );
         assert.match(
           await page.getByRole("timer").getAttribute("aria-label"),
           /^Elapsed time [0-9]{2}:[0-9]{2}\.[0-9]{2}$/,
         );
         await page
-          .getByRole("button", { name: "Work index", exact: true })
+          .locator(".exp-nav").getByRole("button", { name: /^Work/ })
           .click();
         await page.getByRole("dialog").waitFor({ state: "visible" });
         await page.waitForTimeout(200);
@@ -306,9 +261,39 @@ try {
     },
   );
 
+  await check("Low-detail largest circuit stays within rendering budgets", async () => {
+    const page = await ready(390, 844);
+    try {
+      const largest = courses.reduce((chosen, course) => course.gates.length > chosen.gates.length ? course : chosen);
+      await start(page, largest);
+      await page.waitForFunction(() => document.querySelector("#voyage")?.dataset.racePhase === "racing");
+      const samples = [];
+      // A short observation of published renderer statistics, not a frame-rate
+      // or thermal benchmark. Waiting through countdown excludes old boot data.
+      for (let index = 0; index < 4; index++) {
+        await page.waitForTimeout(500);
+        samples.push(await page.locator("#voyage").evaluate(element => ({
+          quality: element.dataset.quality,
+          draws: Number(element.dataset.renderDraws),
+          triangles: Number(element.dataset.renderTriangles),
+        })));
+      }
+      for (const sample of samples) {
+        assert.equal(sample.quality, "low");
+        assert.ok(sample.draws > 0 && sample.draws <= 80, `Low draw budget: ${JSON.stringify(sample)}`);
+        assert.ok(sample.triangles > 0 && sample.triangles <= 180000, `Low triangle budget: ${JSON.stringify(sample)}`);
+      }
+      await screenshot(page, `${largest.id}-low-budget.png`);
+      return { course: largest.id, gateCount: largest.gates.length, samples, limits: { draws: 80, triangles: 180000 } };
+    } finally { await page.context().close(); }
+  });
+
   for (const course of courses)
     await check(`manual keyboard completion: ${course.name}`, async () => {
       const page = await ready();
+      const mooring = value => ({ vessel: value.vessel, x: value.x, z: value.z, heading: value.heading });
+      const originalMooring = mooring(await observe(page));
+      assert.equal(originalMooring.vessel, "superyacht");
       const trace = [];
       const keys = new Set();
       async function press(next) {
@@ -340,7 +325,7 @@ try {
             document.querySelector(".ow-experience")?.dataset.racePhase,
           ),
         );
-        await page.locator(".ow-helm-focus").focus();
+        await page.locator("#yacht-controls").focus();
         const deadline = Date.now() + 240000;
         let previous,
           previousAt,
@@ -425,7 +410,7 @@ try {
           course.gates.length,
           "Finished without every ordered checkpoint",
         );
-        if (course.id.includes("jump")) {
+        if (course.gates.some(gate => gate.minLift)) {
           assert.ok(
             result.airborneObserved,
             "Jump course finished without observed airborne state",
@@ -434,7 +419,7 @@ try {
             result.landingObserved,
             "Jump course finished without an observed landing",
           );
-          assert.ok(result.final.jumpCount > 0, "No jump was recorded");
+          assert.equal(result.final.jumpCount, course.gates.filter(gate => gate.minLift).length, "The actual ramp launches must match the course's airborne gates");
         }
         const hud = await page.locator(".ow-experience").innerText();
         assert.match(
@@ -459,25 +444,30 @@ try {
           `Elapsed time ${clock}`,
         );
         const announcement = await page
-          .locator('.ow-status-text[role="status"]')
+          .locator('.sr-only[role="status"]')
           .innerText();
         result.finishAnnouncement = announcement;
         assert.ok(
-          announcement.includes(clock) && /Course complete/i.test(announcement),
-          "Live finish announcement omits the actual time",
+          announcement.includes(clock) && announcement.includes(course.name) && /\bcomplete\b/i.test(announcement),
+          "Live finish announcement omits the named course or actual time",
         );
         assert.match(
           announcement,
           /Session best/i,
           "Finish announcement omits session best",
         );
-        assert.equal(
-          await page.locator(".ow-map-pin:not([disabled])").count(),
-          4,
-          "Completed race did not restore chart destinations",
-        );
+        await map(page);
+        assert.equal(await page.locator("dialog[open] .exp-map-destinations button:not([disabled])").filter({hasText:"Sail there"}).count(),4,"Completed race did not restore destination controls");
+        await closePanel(page);
         result.finishAnnouncement = announcement;
         result.timerAccessibleName = `Elapsed time ${clock}`;
+        await page.getByTestId("voyage-fleet").click();
+        await page.getByTestId("vessel-superyacht").click();
+        await page.waitForFunction(() => document.querySelector("#voyage")?.dataset.vessel === "superyacht");
+        const returned = await observe(page);
+        assert.deepEqual(mooring(returned), originalMooring, "A completed circuit must retain the exact original superyacht mooring");
+        assert.equal(returned.speed, 0);
+        result.returnedMooring = mooring(returned);
         return {
           phase: result.final.phase,
           elapsed: result.final.elapsed,
@@ -485,6 +475,7 @@ try {
           jumps: result.final.jumpCount,
           airborneObserved: result.airborneObserved,
           landingObserved: result.landingObserved,
+          originalMooringRestored: true,
         };
       } finally {
         await press(new Set());
@@ -504,7 +495,7 @@ try {
     failed: report.checks.filter((item) => item.status === "fail").length,
   };
   await writeFile(
-    path.join(repository, "design/gameplay-results-v2.json"),
+    path.join(qaDirectory, process.env.QA_REPORT_NAME || "gameplay-results.json"),
     `${JSON.stringify(report, null, 2)}\n`,
   );
   console.log(JSON.stringify(report.summary));

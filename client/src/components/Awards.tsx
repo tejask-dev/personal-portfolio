@@ -23,7 +23,6 @@ const recognition = [
   'CCC Senior distinction: 30/75, top 350 worldwide',
   'Waterloo Catalyst Early Entrepreneurs stream',
   'Harvard Ventures-TECH Summer Program',
-  'Summer Company Program approval through Small Business & Entrepreneurship Centre',
   'OSLC Spirit Leader selection',
   'Ethics Bowl Canada regional competition, 2nd place',
 ];
