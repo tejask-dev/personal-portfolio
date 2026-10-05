@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type MutableRefObject } from "react";
+import { docuBridgeSource, docuBridgeStages } from "@/data/docuBridgeWalkthrough";
 import { selectedWork } from "@/data/selectedWork";
 import {
   encounters,
@@ -21,34 +22,8 @@ export type SceneBridge = {
 };
 const nativeHref = (path: string) =>
   `${import.meta.env.BASE_URL}${path.replace(/^\//, "")}`;
-const source =
-  "https://github.com/tejask-dev/Docubridge-Intership/blob/a6c9d2b4e81b9fa3bc6d61d9958f03936174ee2f/Backend/app.py";
-const stages = [
-  {
-    name: "Input",
-    eyebrow: "01 / A spreadsheet",
-    title: "Give the data a way in.",
-    body: "The prototype accepts an uploaded spreadsheet, stores its reference and returns sheet metadata. No files are uploaded here: this is a walkthrough of the public source.",
-    lines: "L533-L584",
-    code: ["File reference", "Available sheets"],
-  },
-  {
-    name: "Analysis",
-    eyebrow: "02 / A parsed table",
-    title: "Make the work inspectable.",
-    body: "The analysis path creates a dataframe and analyzer, gathers the analysis, then creates charts. Each stage leaves a structure the interface can work with.",
-    lines: "L641-L662",
-    code: ["Parsed dataframe", "Analysis methods", "Chart generation"],
-  },
-  {
-    name: "Output",
-    eyebrow: "03 / An explicit response",
-    title: "Return more than an answer.",
-    body: "The response names four top-level fields. Chart data can be retrieved separately. These are source-defined keys, not computed results from a running backend.",
-    lines: "L664-L669",
-    code: ["analysis", "charts", "columns", "numeric_columns"],
-  },
-];
+const source = docuBridgeSource;
+const stages = docuBridgeStages;
 export type PanelProps = {
   panelEntry: number;
   state: Expedition;
@@ -166,17 +141,13 @@ function WaterMap({
         fill="#8ecdc0"
         stroke="#24777a"
       />
-      <text x="146" y="208">
-        Crown Reef
-      </text>
+      <text x="170" y="188" textAnchor="middle">R</text>
       <path
         d="m162 114 4-16h5l4 16ZM161 115h15"
         stroke="currentColor"
         fill="#f6f1e7"
       />
-      <text x="118" y="91">
-        Lighthouse
-      </text>
+      <text x="168" y="88" textAnchor="middle">L</text>
       {destinations.map((d) => {
         const p = map(d.x, d.z);
         return (
@@ -185,9 +156,7 @@ function WaterMap({
             <text x={p.x} y={p.y + 4} textAnchor="middle">
               {d.number}
             </text>
-            <text x={p.x + 16} y={p.y + 4}>
-              {d.project}
-            </text>
+
           </g>
         );
       })}
@@ -202,9 +171,7 @@ function WaterMap({
       <text x="365" y="31">
         N ↑
       </text>
-      <text x="18" y="360">
-        FICTIONAL WATERS / NO REQUIRED ROUTE
-      </text>
+
     </svg>
   );
 }
@@ -272,7 +239,7 @@ export default function ExpeditionPanels(p: PanelProps) {
   useEffect(() => {
     if (!trace || quiet || panel !== "artifact") return;
     const id = window.setTimeout(() => {
-      if (stage < 2) setStage((s) => s + 1);
+      if (stage < stages.length - 1) setStage((s) => s + 1);
       else setTrace(false);
     }, 850);
     return () => clearTimeout(id);
@@ -441,8 +408,8 @@ export default function ExpeditionPanels(p: PanelProps) {
       {panel === "map" && (
         <>
           <p className="exp-lead">
-            A small world, with plenty of ways through. Your work and contact
-            routes are always direct.
+            A small world, with plenty of ways through. Projects and contact
+            routes open directly.
           </p>
           <div className="exp-map-layout">
             <div>
@@ -452,13 +419,14 @@ export default function ExpeditionPanels(p: PanelProps) {
                 mode={p.state.mode}
                 onTravel={p.onTravel}
               />
+              <p className="exp-map-legend"><strong>R</strong> Crown Reef · <strong>L</strong> Lighthouse<br/>Numbered destinations below. Every project opens directly.</p>
               <div className="exp-map-destinations">
                 {destinations.map((d) => (
                   <div key={d.id}>
                     <span>
                       {d.number} / {d.project}
                     </span>
-                    <button onClick={() => p.onRead(d.href)}>Read ↗</button>
+                    <button onClick={() => p.onRead(d.href)} aria-label={`Read ${d.project}`}>Read ↗</button>
                     <button
                       disabled={racing || p.state.mode !== "surface" || quiet}
                       onClick={() => p.onTravel(d.id)}
@@ -839,7 +807,7 @@ export default function ExpeditionPanels(p: PanelProps) {
               >
                 <span>0{i + 1}</span>
                 <strong>{s.name}</strong>
-                <span aria-hidden="true">{i < 2 ? "→" : "↗"}</span>
+                <span aria-hidden="true">{i < stages.length - 1 ? "→" : "↗"}</span>
               </button>
             ))}
           </div>

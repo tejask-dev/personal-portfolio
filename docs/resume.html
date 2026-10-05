@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tejass Kaushik — Resume</title>
+    <meta name="description" content="Tejass Kaushik: Founding Software Engineer at Anticipation Labs, former CTO at Stellar Learning, and Western University Computer Science student with Ivey AEO." />
+    <meta name="theme-color" content="#f4f2e8" />
+    <link rel="canonical" href="https://tejass-kaushik.vercel.app/resume" />
+    <style>
+      :root { color-scheme: light; --paper: #f4f2e8; --ink: #163f42; --muted: #405b5b; --rule: #aabeba; }
+      * { box-sizing: border-box; }
+      html { background: var(--paper); color: var(--ink); font-family: Arial, Helvetica, sans-serif; }
+      body { margin: 0; font-size: 16px; line-height: 1.55; }
+      a { color: inherit; text-underline-offset: .2em; text-decoration-thickness: 1px; }
+      a:hover { text-decoration-thickness: 2px; }
+      :focus-visible { outline: 3px solid #14676a; outline-offset: 5px; border-radius: 2px; }
+      .skip-link { position: absolute; top: 12px; left: 12px; padding: 12px; background: white; z-index: 2; transform: translateY(-180%); }
+      .skip-link:focus { transform: none; }
+      .toolbar { max-width: 960px; margin: auto; padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; border-bottom: 1px solid var(--rule); }
+      .toolbar div { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+      .toolbar a, .toolbar button { display: inline-flex; align-items: center; min-height: 44px; padding: 8px 12px; font: inherit; font-size: 14px; }
+      .toolbar button { border: 1px solid var(--ink); background: transparent; color: inherit; cursor: pointer; }
+      .toolbar .download { background: var(--ink); color: var(--paper); text-decoration: none; }
+      main { max-width: 900px; margin: 0 auto; padding: 44px 48px 40px; }
+      .eyebrow { margin: 0 0 8px; font-size: 12px; letter-spacing: .15em; text-transform: uppercase; }
+      h1 { font-family: Georgia, "Times New Roman", serif; font-size: clamp(36px, 6vw, 52px); font-weight: normal; line-height: 1.08; margin: 0 0 16px; letter-spacing: -.04em; }
+      .contact { display: flex; flex-wrap: wrap; gap: 4px 20px; list-style: none; padding: 0; margin: 0; font-size: 14px; overflow-wrap: anywhere; }
+      .contact a { display: inline-block; padding: 5px 0; }
+      .contact li + li { margin-top: 0; }
+      .summary { margin: 19px 0 0; color: var(--muted); max-width: 72ch; }
+      section { margin-top: 26px; }
+      h2 { font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: .13em; margin: 0 0 16px; padding-bottom: 8px; border-bottom: 1px solid var(--rule); }
+      article + article { margin-top: 22px; }
+      .entry-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 8px 20px; }
+      h3 { font-size: 17px; line-height: 1.3; margin: 0; }
+      .dates { margin: 0; color: var(--muted); font-size: 13px; white-space: nowrap; }
+      .role { font-size: 14px; font-weight: bold; margin: 4px 0 8px; }
+      ul { padding-left: 19px; margin: 8px 0 0; }
+      li + li { margin-top: 5px; }
+      .entry-text { margin: 8px 0 0; }
+      .education-note { margin: 5px 0 0; }
+      .tools { margin: 0; }
+      .updated { margin: 28px 0 0; font-size: 12px; color: var(--muted); }
+      @media (max-width: 600px) {
+        .toolbar { padding: 12px 16px; }
+        .toolbar div { gap: 8px; }
+        main { padding: 30px 24px; }
+        .entry-heading { display: block; }
+        .dates { margin-top: 5px; }
+        .contact { gap: 0 18px; }
+        .contact a { min-height: 44px; padding: 10px 0; }
+        h3 { font-size: 18px; }
+      }
+      @page { size: Letter; margin: .48in .55in; }
+      @media print {
+        html { background: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        body { font-size: 10pt; line-height: 1.33; }
+        .toolbar, .skip-link { display: none; }
+        main { max-width: none; padding: 0; margin: 0; }
+        .eyebrow { font-size: 8pt; margin-bottom: 5px; }
+        h1 { font-size: 30pt; margin-bottom: 8px; }
+        .contact { font-size: 9pt; gap: 2px 16px; }
+        .contact a { padding: 0; }
+        .summary { margin-top: 12px; max-width: none; }
+        section { margin-top: 17px; }
+        h2 { font-size: 8.5pt; margin-bottom: 10px; padding-bottom: 5px; }
+        article { break-inside: avoid; }
+        article + article { margin-top: 13px; }
+        h3 { font-size: 11pt; }
+        .dates { font-size: 9pt; }
+        .role { font-size: 9.5pt; margin: 3px 0 5px; }
+        ul { margin-top: 5px; padding-left: 15px; }
+        li + li { margin-top: 3px; }
+        .entry-text { margin-top: 5px; }
+        .updated { margin-top: 15px; font-size: 8pt; }
+      }
+    </style>
+  </head>
+  <body>
+    <a class="skip-link" href="#resume">Skip to resume</a>
+    <nav class="toolbar" aria-label="Resume actions">
+      <a href="/">← Open Water portfolio</a>
+      <div>
+        <button type="button" id="print-resume">Print resume</button>
+        <a class="download" href="/Tejass-Kaushik-Resume.pdf" download>Download PDF</a>
+      </div>
+    </nav>
+    <main id="resume" tabindex="-1">
+      <header>
+        <p class="eyebrow">Software engineering · Product development</p>
+        <h1>Tejass Kaushik</h1>
+        <ul class="contact" aria-label="Contact and portfolio">
+          <li><a href="mailto:tejas.kaushik@outlook.com">tejas.kaushik@outlook.com</a></li>
+          <li><a href="https://github.com/tejask-dev">github.com/tejask-dev</a></li>
+          <li><a href="https://tejass-kaushik.vercel.app/">tejass-kaushik.vercel.app</a></li>
+          <li><a href="https://www.linkedin.com/in/tejasskaushik/">linkedin.com/in/tejasskaushik</a></li>
+        </ul>
+        <p class="summary">Founding Software Engineer at Anticipation Labs and former CTO at Stellar Learning. I work across connected software, AI workflows, learning products, and hands-on release validation.</p>
+      </header>
+
+      <section aria-labelledby="experience-heading">
+        <h2 id="experience-heading">Experience</h2>
+        <article>
+          <div class="entry-heading">
+            <h3><a href="https://anticipy.ai/">Anticipation Labs · Anticipy</a></h3>
+            <p class="dates">Aug 2026 – Present</p>
+          </div>
+          <p class="role">Founding Software Engineer</p>
+          <ul>
+            <li>Set requirements and acceptance criteria for connected-app reliability, private AI workflows, and native-client validation; personally tested phones and prototype hardware.</li>
+            <li>Directed substantial Claude and Codex implementation and review on the team’s existing foundations. A connector navigation correction shipped; the private AI preparation prototype was validated locally.</li>
+            <li>Prepared the responsive Fellowship recruiting experience and application navigation. <strong>Fellowship coming soon.</strong></li>
+          </ul>
+        </article>
+        <article>
+          <div class="entry-heading">
+            <h3><a href="https://stellarlearning.app/">Stellar Learning</a></h3>
+            <p class="dates">Aug 2025 – Jul 2026</p>
+          </div>
+          <p class="role">Chief Technology Officer; previously Deputy CTO</p>
+          <ul>
+            <li>Developed the IB Diploma question-generation and practice harnesses.</li>
+            <li>Improved the AP question and lesson harnesses within a volunteer-built education platform.</li>
+          </ul>
+        </article>
+        <article>
+          <div class="entry-heading">
+            <h3>DocuBridge</h3>
+            <p class="dates">Jul 2025 – Aug 2025</p>
+          </div>
+          <p class="role">Software Engineering Intern</p>
+          <ul>
+            <li>Developed a Python/Flask and React prototype for exploring Excel and CSV uploads through worksheet selection, charts, summaries, and natural-language questions.</li>
+          </ul>
+        </article>
+      </section>
+
+      <section aria-labelledby="research-heading">
+        <h2 id="research-heading">Research</h2>
+        <article>
+          <div class="entry-heading">
+            <h3><a href="https://yourekacanada.org/youreka-journal-2025">Youreka Canada</a></h3>
+            <p class="dates">2025</p>
+          </div>
+          <p class="role">Co-author · Global health research</p>
+          <p class="entry-text">Co-authored a study of adolescent fertility and pediatric HIV treatment coverage across 34 Sub-Saharan African countries. Published in the 2025 Youreka Canada Journal and recognized there as the national first-place study, alongside Liyona Wang, Shikai Jin, and Elijah Murtagh.</p>
+        </article>
+      </section>
+
+      <section aria-labelledby="education-heading">
+        <h2 id="education-heading">Education</h2>
+        <div class="entry-heading">
+          <h3>Western University</h3>
+          <p class="dates">Sep 2026 – Expected 2030</p>
+        </div>
+        <p class="education-note">B.Sc. in Computer Science · Ivey Advanced Entry Opportunity (AEO)</p>
+      </section>
+
+      <section aria-labelledby="tools-heading">
+        <h2 id="tools-heading">Selected tools</h2>
+        <p class="tools">Python · TypeScript · React · Flask · Pandas · Git</p>
+      </section>
+      <p class="updated">Updated 2 October 2026 · Project details and evidence at <a href="https://tejass-kaushik.vercel.app/">Open Water</a>.</p>
+    </main>
+    <script>
+      document.getElementById("print-resume").addEventListener("click", () => window.print());
+    </script>
+  </body>
+</html>

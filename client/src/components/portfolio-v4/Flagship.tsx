@@ -1,26 +1,14 @@
 import { useState } from "react";
 import { Link } from "wouter";
 import { ArrowUpRight, ArrowRight, Check, RotateCcw } from "lucide-react";
-import { anticipyWebsite, anticipyNarrative, careerJourney, connectorSteps, contributions, anticipyArtifact, illustrativeBrief, illustrativeNote, leadStories } from "./content";
+import { anticipyPreview, anticipySnapshot, anticipyWebsite, anticipyNarrative, careerJourney, connectorSteps, contributions, anticipyArtifact, illustrativeBrief, illustrativeNote, leadStories } from "./content";
 import "./portfolio-v4.css";
-
-function SystemDrawing() {
-  return <svg className="pv4-system-drawing" viewBox="0 0 480 300" role="img" aria-label="Explanatory diagram connecting apps, AI workflows, and device validation through a shared user journey.">
-    <defs><pattern id="pv4-dot-grid" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r=".8" fill="currentColor" opacity=".22"/></pattern></defs>
-    <rect width="480" height="300" fill="url(#pv4-dot-grid)"/>
-    <g fill="none" stroke="currentColor"><circle cx="240" cy="148" r="70" opacity=".28"/><circle cx="240" cy="148" r="103" strokeDasharray="2 7" opacity=".32"/><path d="M105 84 210 134M376 84 270 134M240 169v67" strokeWidth="1.4"/><circle cx="240" cy="148" r="24"/><path d="m231 149 6 6 13-16" strokeWidth="2"/></g>
-    <g fill="currentColor" fontFamily="Arial, sans-serif" fontSize="11" letterSpacing="1.3"><text x="56" y="60">CONNECTED APPS</text><text x="326" y="60">AI WORKFLOWS</text><text x="184" y="266">DEVICE VALIDATION</text></g>
-    <g fill="#153e45" stroke="currentColor"><rect x="87" y="74" width="36" height="28" rx="5"/><rect x="358" y="73" width="36" height="28" rx="5"/><rect x="228" y="221" width="24" height="32" rx="5"/></g>
-    <g fill="none" stroke="currentColor"><path d="M96 84h18m-18 7h12M368 86h16m-8-7v14M236 243h8"/></g>
-    <text x="240" y="193" textAnchor="middle" fill="currentColor" fontFamily="Arial, sans-serif" fontSize="10" letterSpacing="1">ONE USER JOURNEY</text>
-  </svg>;
-}
 
 export function AnticipyFeature() {
   return <section className="pv4-feature" aria-labelledby="anticipy-feature-title" id="current-work">
     <div className="pv-shell pv4-feature-grid">
-      <div className="pv4-feature-copy"><p className="pv-eyebrow">Currently / Anticipation Labs</p><h2 id="anticipy-feature-title">An idea is only<br/><em>the beginning.</em></h2><p className="pv4-feature-lead">Building Anticipy across connected apps, AI workflows, and prototype hardware.</p><p>My work spans the experience on screen, the systems behind it, and the device in your hand. Here are the decisions, the collaboration, and the evidence along the way.</p><div className="pv4-feature-actions"><Link className="pv4-feature-link" href="/case-studies/anticipy" id="read-anticipy-feature">Explore my work at Anticipy <ArrowUpRight size={20}/></Link><a className="pv4-product-link" href={anticipyWebsite} target="_blank" rel="noopener noreferrer">Visit Anticipy <span>anticipy.ai</span><ArrowUpRight size={17} aria-hidden="true"/></a></div></div>
-      <div className="pv4-feature-field"><SystemDrawing/><p className="pv4-diagram-note">Explanatory system map / a team-built product</p><dl className="pv4-feature-facts"><div><dt>My role</dt><dd>Founding Software Engineer</dd></div><div><dt>Working across</dt><dd>Software · AI · prototype devices</dd></div><div><dt>How I work</dt><dd>AI-assisted engineering + hands-on validation</dd></div></dl></div>
+      <div className="pv4-feature-copy"><p className="pv-eyebrow">Current work / Anticipy</p><h2 id="anticipy-feature-title" tabIndex={-1}>A browser journey,<br/><em>repaired.</em></h2><p className="pv4-feature-lead">{anticipyPreview.intro}</p><p>{anticipyPreview.part}</p><div className="pv4-feature-actions"><Link className="pv4-feature-link" href="/case-studies/anticipy" id="read-anticipy-feature">Read the Anticipy case <ArrowUpRight size={20}/></Link><a className="pv4-product-link" href={anticipyWebsite} target="_blank" rel="noopener noreferrer">Visit Anticipy <span>anticipy.ai</span><ArrowUpRight size={17} aria-hidden="true"/></a></div></div>
+      <div className="pv4-feature-field"><p className="pv4-diagram-note">One repair / the observed change</p><ol className="pv4-before-after"><li><span>Before</span><p>{anticipyPreview.before}</p></li><li><span>After · deployed</span><p>{anticipyPreview.after}</p></li></ol><p className="pv4-follow-through">{anticipyPreview.followThrough}</p><p className="pv4-attribution">{anticipyPreview.attribution}</p></div>
     </div>
   </section>;
 }
@@ -52,7 +40,8 @@ function PrivacyWalkthrough() {
 
 export function AnticipyDeepDive() {
   return <div className="pv4-case-body pv-shell">
-    <section id="context" className="pv4-case-context"><div><p className="pv-eyebrow">The product / the work around it</p><h2>A useful journey<br/><em>crosses boundaries.</em></h2></div><p>{anticipyNarrative.context}<a className="pv4-product-link" href={anticipyWebsite} target="_blank" rel="noopener noreferrer">Visit Anticipy <span>anticipy.ai</span><ArrowUpRight size={17} aria-hidden="true"/></a></p></section>
+    <section id="context" className="pv4-case-context"><div><p className="pv-eyebrow">The product / the work around it</p><h2>From intention<br/><em>to action.</em></h2></div><p>{anticipyNarrative.context}<a className="pv4-product-link" href={anticipyWebsite} target="_blank" rel="noopener noreferrer">Visit Anticipy <span>anticipy.ai</span><ArrowUpRight size={17} aria-hidden="true"/></a></p></section>
+    <section className="pv4-snapshot" aria-label="Anticipy work at a glance">{anticipySnapshot.map(item => <a key={item.id} href={`#${item.id}`}><span>{item.title}</span><h3>{item.result}</h3><small>{item.status}</small><ArrowRight size={18} aria-hidden="true"/></a>)}</section>
     <figure className="pv4-product-artifact" id="artifact"><div className="pv-artifact-label"><span>Main website / Anticipy</span><a href={anticipyArtifact.source} target="_blank" rel="noreferrer">Visit anticipy.ai ↗</a></div><picture><source media="(max-width: 600px)" srcSet={`${import.meta.env.BASE_URL}${anticipyArtifact.mobile}`}/><img src={`${import.meta.env.BASE_URL}${anticipyArtifact.desktop}`} alt={anticipyArtifact.alt} width="1440" height="960" loading="lazy" decoding="async"/></picture><figcaption>{anticipyArtifact.caption}</figcaption></figure>
     <section id="contribution" className="pv4-collaboration" aria-labelledby="collaboration-title"><h2 id="collaboration-title">My part, and the collaboration.</h2><div>{[["My contribution", anticipyNarrative.personal], ["AI-assisted engineering", anticipyNarrative.assistance], ["Team foundation", anticipyNarrative.team]].map(([title, body]) => <section key={title}><h3>{title}</h3><p>{body}</p></section>)}</div></section>
     <nav className="pv4-story-index" aria-label="Three engineering stories">{leadStories.map((story) => <a key={story.id} href={`#${story.id}`}><span>{story.number} / {story.category}</span><strong>{story.title}</strong><ArrowRight size={18}/></a>)}</nav>

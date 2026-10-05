@@ -2,9 +2,12 @@ import { useEffect, useRef, type CSSProperties } from "react";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { Link, useRoute } from "wouter";
 import { caseStudies, getCaseStudy } from "@/data/projects";
+import { voyage } from "@/features/open-water/voyage";
 import { profile } from "@/data/profile";
 import { useSeo } from "@/lib/seo";
+import { socialMetadata } from "@/lib/socialMetadata";
 import "./portfolio-v3.css";
+import DocuBridgeWorkbench from "@/components/editorial/DocuBridgeWorkbench";
 import { AnticipyDeepDive } from "@/components/portfolio-v4/Flagship";
 
 export default function CaseStudy() {
@@ -19,7 +22,7 @@ export default function CaseStudy() {
     study
       ? {
           title: `${study.title} | Work by Tejass Kaushik`,
-          description: study.summary,
+          description: socialMetadata(`/case-studies/${study.slug}`).description,
           path: `/case-studies/${study.slug}`,
         }
       : {
@@ -49,7 +52,13 @@ export default function CaseStudy() {
   const next =
     caseStudies[(caseStudies.indexOf(study) + 1) % caseStudies.length];
   return (
-    <div className="case-page portfolio-v3 pv-case">
+    <div className="case-page portfolio-v3 pv-case" onClickCapture={(event) => {
+      const link = (event.target as HTMLElement).closest<HTMLAnchorElement>('a[href]');
+      // An explicit reading destination supersedes saved back-navigation focus.
+      if (link && !event.metaKey && !event.ctrlKey && !event.shiftKey && /\/#(?:work|about|voyage|contact)$/.test(link.getAttribute("href") ?? "")) {
+        voyage.returnPending = false;
+      }
+    }}>
       <a className="skip-link" href="#main">
         Skip to case study
       </a>
@@ -59,7 +68,7 @@ export default function CaseStudy() {
         </Link>
         <div>
           <Link href="/#voyage">Return to water</Link>
-          <Link href="/#work">Work index</Link>
+          <Link href="/#work">Selected work</Link>
           <Link href="/#about">About</Link>
           <a href={`mailto:${profile.email}`}>
             Contact <ArrowUpRight size={15} aria-hidden="true" />
@@ -172,6 +181,7 @@ export default function CaseStudy() {
               {study.decision.body.map((p) => (
                 <p key={p}>{p}</p>
               ))}
+              {study.slug === "docubridge" && <DocuBridgeWorkbench />}
               {study.decision.source && (
                 <a
                   className="pv-text-link"

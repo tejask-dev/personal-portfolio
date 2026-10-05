@@ -16,7 +16,7 @@ export const diveChapters = [
     id: "fieldwork", depth: "14", label: "The living reef", eyebrow: "03 / Closer to the details",
     title: ["Follow the curiosity.", "Check the evidence."],
     body: "From leading technology at Stellar Learning to research and hands-on device testing, I like getting close enough to understand what really works.",
-    note: "Build. Test. Learn. Repeat.", href: "#journey", link: "Follow my background",
+    note: "Build. Test. Learn. Repeat.", href: "#about", link: "Follow my background",
   },
   {
     id: "depth", depth: "24", label: "A deeper look", eyebrow: "04 / The work, in context",
@@ -28,5 +28,5 @@ export const diveChapters = [
 
 const esc = (value: string) => value.replace(/[&<>"']/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]!);
 export function scrollDiveStaticHtml(base = "/") {
-  return `<section class="sd-descent sd-static" id="descent" aria-label="Beneath the surface: a field expedition"><div class="sd-static-heading"><span>Open Water / A deeper look</span><a href="#current-work">Skip to the work ↓</a></div><ol class="sd-stories">${diveChapters.map(chapter => `<li class="sd-chapter" id="dive-${chapter.id}"><div class="sd-copy"><p class="sd-eyebrow">${chapter.depth} m / ${esc(chapter.eyebrow)}</p><h2>${esc(chapter.title[0])}<br/><em>${esc(chapter.title[1])}</em></h2><p class="sd-description">${esc(chapter.body)}</p><a class="sd-story-link" href="${chapter.href.startsWith("/") ? esc(base + chapter.href.slice(1)) : esc(chapter.href)}">${esc(chapter.link)} ↗</a></div></li>`).join("")}</ol></section>`;
+  return `<section class="sd-descent sd-static" id="descent" aria-label="Beneath the surface: a field expedition"><div class="sd-static-heading"><span>Open Water / A deeper look</span><a href="#current-work">Back to the work ↑</a></div><ol class="sd-stories">${diveChapters.map(chapter => `<li class="sd-chapter" id="dive-${chapter.id}"><div class="sd-copy"><p class="sd-eyebrow">${chapter.depth} m / ${esc(chapter.eyebrow)}</p><h2>${esc(chapter.title[0])}<br/><em>${esc(chapter.title[1])}</em></h2><p class="sd-description">${esc(chapter.body)}</p><a class="sd-story-link" href="${chapter.href.startsWith("/") ? esc(base + chapter.href.slice(1)) : esc(chapter.href)}">${esc(chapter.link)} ↗</a></div></li>`).join("")}</ol></section>`;
 }

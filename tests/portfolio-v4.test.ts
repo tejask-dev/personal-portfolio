@@ -1,6 +1,5 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { readFile } from "node:fs/promises";
 import { anticipyNarrative, careerJourney, contributions, leadStories } from "../client/src/components/portfolio-v4/content.ts";
 import { anticipyStaticHtml, careerStaticHtml, flagshipStaticHtml } from "../client/src/components/portfolio-v4/staticHtml.ts";
 import { caseStudyContent } from "../client/src/data/caseStudyContent.ts";
@@ -57,18 +56,4 @@ test("the complete career journey preserves five deep links for root and subpath
   }
 });
 
-test("live and static homepages tell the flagship and career story before the work index", async () => {
-  const variants = [
-    ["../client/src/pages/Home.tsx", ["<OpenWaterExperience", "<AnticipyFeature", "<CareerJourney", 'id="work"', 'id="about"', 'id="contact"']],
-    ["../scripts/prerender.ts", ['id="voyage"', "${flagshipStaticHtml(base)}", "${careerStaticHtml(base)}", 'id="work"', 'id="about"', 'id="contact"']],
-  ] as const;
-  for (const [file, sequence] of variants) {
-    const source = await readFile(new URL(file, import.meta.url), "utf8");
-    let previous = -1;
-    for (const marker of sequence) {
-      const position = source.indexOf(marker);
-      assert.ok(position > previous, `${file}: ${marker} must follow the preceding homepage section`);
-      previous = position;
-    }
-  }
-});
+// Homepage ordering is exercised by portfolio-editorial-browser.mjs against the actual rendered reading path.

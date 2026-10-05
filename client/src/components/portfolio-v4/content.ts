@@ -14,14 +14,14 @@ export const anticipyWebsite = "https://anticipy.ai/";
 
 export const anticipyNarrative = {
   title: "Engineering Anticipy across apps, AI, and prototype hardware.",
-  summary: "My contribution spans connected-app reliability, private AI workflows, native-client validation, and wearable bring-up. I set priorities and acceptance criteria, directed AI-assisted implementation and review, coordinated releases, and personally tested phones and prototype hardware.",
+  summary: "I set repair priorities and acceptance criteria across connected apps, private AI workflows, and prototype devices. My work combines AI-assisted engineering, release coordination, and hands-on phone and hardware testing.",
   context: "Anticipy is an AI wearable being built to turn spoken intentions into actions through connected software, with the person's approval. Making that useful involves the whole journey: authorization, clear permissions, dependable software, and the device in someone's hand.",
   personal: "I set requirements and repair priorities, defined privacy and release conditions, coordinated implementation and reviews, and supplied hands-on phone and hardware observations.",
-  assistance: "Claude and Codex contributed substantially to implementation, investigations, tests, documentation, and reviews under my direction. The selected work-email prototype was implemented with Codex and bounded agents.",
+  assistance: "Claude and Codex contributed substantially to implementation, investigations, tests, documentation, and reviews under my direction. The selected work-email prototype was implemented with Codex.",
   team: "The existing product, workflow and memory engines, native apps, browser engine, and hardware designs were team foundations. My contribution extended that work; it was not a solo product build.",
-  company: "Alongside engineering, I supported early operations, the Fellowship recruiting experience, and investor outreach and introductions to angels and venture investors. Company travel was part of that broader contribution.",
+  company: "Alongside engineering, I supported early operations, recruiting, company travel, and investor introductions. This is my account of that supporting work; it is not a funding claim.",
   evidence: "This account draws on my project records and first-hand involvement. The engineering outcomes below describe recorded checkpoints, not fresh tests or broad customer adoption. Internal records stay private; the links here provide public product context.",
-  statusSummary: "The connector navigation correction shipped. Fellowship coming soon; the recruiting experience is not fully published yet. The private AI flow was locally validated; its separate hosted account preview had processing disabled. Native artifacts received bounded device checks, while wearable qualification remained in progress.",
+  statusSummary: "Released native builds received bounded phone and Mac checks. For the wearable prototypes, installation and recovery were established; pairing, audio, and transcript readiness still needed qualification.",
   sources: [
     { label: "Anticipy", href: anticipyWebsite, note: "Public product context; not a claim of authorship of the entire product." },
     { label: "Anticipation Labs", href: "https://www.anticipationlabs.com/", note: "The team behind Anticipy." },
@@ -86,7 +86,7 @@ export const contributions: Contribution[] = [
 
 export const careerJourney = [
   { period: "Current", title: "Anticipation Labs", role: "Founding Software Engineer", body: "Connected apps, private AI workflows, release verification, and hands-on mobile/wearable validation. I direct AI-assisted engineering alongside the team's existing product work.", slug: "anticipy" },
-  { period: "2025–2026", title: "Stellar Learning", role: "Former CTO / technology lead", body: "Platform architecture and product development across web, mobile, and AI-enabled learning, alongside coordination within a volunteer organization.", slug: "stellar-learning" },
+  { period: "2025–2026", title: "Stellar Learning", role: "Former CTO / technology lead", body: "Developed IB Diploma question-generation and practice harnesses, and improved AP question and lesson harnesses within a volunteer-built platform.", slug: "stellar-learning" },
   { period: "Summer 2025", title: "DocuBridge", role: "Software engineering intern", body: "A spreadsheet-analysis prototype connecting uploaded data with natural-language questions, charts, and summaries.", slug: "docubridge" },
   { period: "2024–2025", title: "Youreka Canada", role: "Co-author and student researcher", body: "A 34-country study published in the 2025 journal and recognized there as the national first-place team study.", slug: "global-health-research" },
   { period: "2025–2026", title: "Soma", role: "Backend and model-integration contributor", body: "A team-built health-education experiment that closed in 2026. A place to reflect on implementation, ownership, and sustained value.", slug: "soma-ai" },
@@ -103,4 +103,19 @@ export const illustrativeBrief = [
   { text: "Review the launch checklist on Thursday.", source: "Review the launch checklist on Thursday." },
   { text: "Mira owns the draft.", source: "Mira owns the draft." },
   { text: "A launch decision is still open.", source: "No launch decision has been made." },
+] as const;
+
+/** Compact evidence used before the product imagery in both reading layers. */
+export const anticipyPreview = {
+  intro: "A successful server response still left the browser stranded at consent.",
+  part: "I prioritized the repair, supplied phone observations, and required browser-tested release evidence. The decision was to preserve consent and expiry while retrying the saved authorization attempt.",
+  before: "Server reports success. Browser stays at consent.",
+  after: "Browser reaches the provider sign-in screen.",
+  attribution: "Claude and Codex contributed implementation and review on the team’s existing product.",
+  followThrough: "I later reported one successful Gmail read-and-summary task. Broader connector acceptance remained separate.",
+} as const;
+export const anticipySnapshot = [
+  { id: "connector-journey", title: "Connected apps", result: "Repaired the browser path from consent to provider sign-in.", status: "Navigation correction deployed" },
+  { id: "private-preparation", title: "Private AI", result: "One selected source, explicit consent, citations, cancellation, and spending limits.", status: "Local prototype · account preview processing disabled" },
+  { id: "privacy-boundary", title: "Browser privacy", result: "Required protected-value checks on what actually reaches the model.", status: "Validated within defined browser fixtures" },
 ] as const;

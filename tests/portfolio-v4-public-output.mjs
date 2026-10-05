@@ -86,9 +86,8 @@ if (!sourceOnly) {
   report.generated = await scan(generatedFiles, "generated output");
   const home = await readFile(path.join(output, "index.html"), "utf8");
   assert.match(home, /id="current-work"/, "Output must include the V4 flagship, not an older homepage");
-  assert.match(home, /id="journey"/);
-  const sectionOrder = ["voyage", "current-work", "journey", "work", "about", "contact"].map(id => home.indexOf(`id="${id}"`));
-  assert.ok(sectionOrder.every((position, index) => position >= 0 && (index === 0 || position > sectionOrder[index - 1])), "Generated homepage must preserve opening, flagship, career, work, about, contact order");
+  const sectionOrder = ["hero-title", "current-work", "work", "voyage", "about", "engineering-notes", "contact"].map(id => home.indexOf(`id="${id}"`));
+  assert.ok(sectionOrder.every((position, index) => position >= 0 && (index === 0 || position > sectionOrder[index - 1])), "Generated homepage must preserve the editorial reading order with optional world after the work");
   assert.match(home, /original Open Water art, created with Codex and Claude assistance/);
   assert.match(home, /Earlier edition \/ V3 vessel attribution/);
   for (const study of caseStudyContent) {

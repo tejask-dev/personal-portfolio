@@ -13,3 +13,7 @@
 Fellowship coming soon. Its experience is not fully published; no Fellowship screenshots or destination are included.
 
 The portfolio's connector, brief, and privacy walkthroughs are original explanatory illustrations with fictional data. They do not connect accounts, call models, or reproduce private product screens.
+
+## Research evidence summary
+
+`research-evidence.svg` is original typographic artwork summarizing facts from the final 2025 Youreka Canada Journal, PDF pages 4–5. Source: https://yourekacanada.org/youreka-journal-2025 and its linked final journal. Checked 2 October 2026. The published author line uses Tejas Kaushik. No journal page, figure, or article text is reproduced; publication reuse permission has not been established.

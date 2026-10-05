@@ -1,3 +1,6 @@
+/* Reading content must retain its styles in prerendered, no-JavaScript pages. */
+@import './components/editorial/workbench.css';
+
 @font-face {
   font-family: 'Aspekta';
   src: url('/fonts/Aspekta-400.woff2') format('woff2');

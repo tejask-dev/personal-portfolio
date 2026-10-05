@@ -206,12 +206,12 @@
   background: currentColor;
   margin-right: 12px;
 }
-.exp-intro h1 {
+.exp-intro h2 {
   font: 300 clamp(72px, 8.6vw, 137px)/0.8 var(--serif);
   letter-spacing: -0.075em;
   margin: 14px 0 33px;
 }
-.exp-intro h1 em {
+.exp-intro h2 em {
   font-weight: 300;
   letter-spacing: -0.07em;
   color: #2d7977;
@@ -1182,7 +1182,7 @@
   .exp-intro {
     max-width: none;
   }
-  .exp-intro h1 {
+  .exp-intro h2 {
     font-size: 150px;
   }
   .exp-invitation {
@@ -1195,7 +1195,7 @@
   .exp-intro {
     padding-block: 28px;
   }
-  .exp-intro h1 {
+  .exp-intro h2 {
     font-size: 100px;
     margin-block: 8px 23px;
   }
@@ -1217,7 +1217,7 @@
     width: 45%;
     padding-inline: 35px;
   }
-  .exp-intro h1 {
+  .exp-intro h2 {
     font-size: 100px;
   }
   .exp-statement {
@@ -1314,15 +1314,15 @@
     font-size: 9px;
     margin-bottom: 18px;
   }
-  .exp-intro h1 {
+  .exp-intro h2 {
     font-size: 96px;
     line-height: 0.86;
     margin: 0 0 22px;
   }
-  .exp-intro h1 br {
+  .exp-intro h2 br {
     display: none;
   }
-  .exp-intro h1 em {
+  .exp-intro h2 em {
     display: inline-block;
   }
   .exp-role {
@@ -1786,7 +1786,7 @@
   .exp-intro {
     padding-inline: 20px;
   }
-  .exp-intro h1 {
+  .exp-intro h2 {
     font-size: 81px;
   }
   .exp-nav {
@@ -1835,7 +1835,7 @@
   .exp-intro {
     padding-block: 24px;
   }
-  .exp-intro h1 {
+  .exp-intro h2 {
     font-size: 84px;
     margin-bottom: 20px;
   }
@@ -2100,7 +2100,7 @@
 }
 
 /* Observation cards leave the subject visible; the field guide remains modal. */
-.exp-intro h1 {
+.exp-intro h2 {
   font-size: clamp(66px, 6.4vw, 106px);
   line-height: 0.95;
 }
@@ -2199,12 +2199,12 @@
   .exp-intro {
     padding: 24px 26px 18px;
   }
-  .exp-intro h1 {
+  .exp-intro h2 {
     font-size: 68px !important;
     line-height: 0.94;
     margin-bottom: 16px;
   }
-  .exp-intro h1 br {
+  .exp-intro h2 br {
     display: block;
   }
   .exp-intro .exp-kicker {
@@ -2412,3 +2412,10 @@
  .exp-active:not(.exp-at-lighthouse) .exp-discovery-rail button:last-child{border-bottom:0}
  .exp-region-label{display:none}
 }
+
+/* The chart uses short markers; full labels live in a readable HTML legend. */
+.exp-world-map text{font:600 15px 'Aspekta',Arial,sans-serif}
+.exp-map-legend{font-size:14px;line-height:1.7;margin:14px 0}
+.exp-map-destinations>div{font-size:14px;min-height:54px;flex-wrap:wrap}
+.exp-map-destinations button{font-size:14px;min-height:44px;padding:8px}
+.exp-map-destinations span{min-width:120px}

@@ -4,7 +4,7 @@ export const profile = {
   email: "tejas.kaushik@outlook.com",
   location: "Windsor, Ontario, Canada",
   education: "Western University Computer Science and Ivey AEO",
-  headline: "I build products from interface to infrastructure.",
+  headline: "I build AI products across apps and devices.",
   intro:
     "Founding Software Engineer at Anticipation Labs, working across connected apps, AI workflows, and mobile/wearable validation. Former CTO at Stellar Learning. Western University Computer Science and Ivey AEO.",
   socials: {

@@ -79,7 +79,7 @@ async function makePage(options = {}) {
   await instrument(page);
   return { context, page, errors, requests };
 }
-async function boot(page, { hero = true, hash = "" } = {}) {
+async function boot(page, { hero = true, hash = "#voyage" } = {}) {
   const response = await page.goto(`${url.replace(/#.*$/, "")}${hash}`);
   assert.equal(response.status(), 200);
   await section(page).waitFor();
@@ -226,7 +226,7 @@ try {
       assert.equal(new Set(stages.map(s => s.canvasSHA256)).size, 4, "Camera checkpoints have identical visual output");
       for (const stage of stages) { assert.ok(stage.frames.descent > 5); assert.equal(stage.frames.voyage, 0, "Offscreen game still continuously renders"); }
       await wheelTo(page, .1); const reversed = await cameraState(page); assert.ok(reversed.cameraY > 0);
-      const returnLink = page.locator(".sd-expedition-mark"); await returnLink.click(); await page.waitForFunction(() => scrollY < 1); await delay(200);
+      const returnLink = page.locator(".sd-expedition-mark"); await returnLink.click(); await page.waitForFunction(() => Math.abs(document.querySelector("#voyage").getBoundingClientRect().top - parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop)) < 2); await delay(200);
       const returned = await frameWindow(page); assert.ok(returned.voyage > 5); assert.equal(returned.descent, 0);
       const overlap = await page.evaluate(() => {
         const frames = window.__scrollDiveQA.frames; let run = 0, maxRun = 0;
@@ -240,7 +240,7 @@ try {
         const frames = await frameWindow(page, 600);
         const resources = await page.evaluate(() => ({ contexts: window.__scrollDiveQA.contexts, handles: window.__scrollDiveQA.resources }));
         cycles.push({ cycle, frames, resources });
-        await returnLink.click(); await page.waitForFunction(() => scrollY < 1); await delay(200);
+        await returnLink.click(); await page.waitForFunction(() => Math.abs(document.querySelector("#voyage").getBoundingClientRect().top - parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop)) < 2); await delay(200);
       }
       const baseline = cycles[0].resources, final = cycles.at(-1).resources;
       assert.equal(final.contexts, baseline.contexts, "Re-entering the retained story created additional WebGL contexts");
@@ -292,7 +292,7 @@ try {
       await page.emulateMedia({ reducedMotion: "no-preference" });
       await page.waitForFunction(() => !document.querySelector("#descent").classList.contains("sd-reduced"));
       await wheelTo(page, .1);
-      await page.locator(".sd-bottom").getByRole("link", { name: "Skip to the work", exact: false }).click();
+      await page.locator(".sd-bottom").getByRole("link", { name: "Back to the work", exact: false }).click();
       await page.waitForFunction(() => location.hash === "#current-work");
       await page.locator('.sd-masthead a[href="#contact"]').click(); await page.waitForFunction(() => location.hash === "#contact");
       assert.ok(await page.locator('#contact a[href^="mailto:"]').count());
@@ -337,15 +337,20 @@ try {
     } finally { await context.close(); }
   });
 
-  await check("JavaScript-disabled prerender contains all four chapters and native links without a scroll spacer", async () => {
+  await check("JavaScript-disabled field guide stays optional and retains native project links", async () => {
     const { page, context } = await makePage({ javaScriptEnabled: false, viewport: { width: 390, height: 844 } });
     try {
-      await page.goto(url); await page.locator("#descent.sd-static").waitFor();
-      const layout = await compactLayout(page), widths = await overflow(page);
-      assert.equal(await canvas(page).count(), 0);
-      await page.locator('#dive-fieldwork a').click(); assert.equal(new URL(page.url()).hash, "#journey");
-      await snapshot(page, "static-story-native-link");
-      return { layout, widths, nativeLink: "#journey" };
+      await page.goto(url);
+      const guide = page.locator("#voyage.eh-ocean-guide");
+      assert.equal(await guide.getAttribute("open"), null);
+      await guide.locator("summary").click();
+      await page.locator("#descent").waitFor();
+      assert.equal(await page.locator("canvas").count(), 0);
+      assert.ok(await guide.locator('a[href="/case-studies/anticipy"]').count());
+      await page.locator('#descent a[href="#work"]').click();
+      assert.equal(new URL(page.url()).hash, "#work");
+      await snapshot(page, "static-guide-native-link");
+      return { widths: await overflow(page), nativeLink: "#work", optionalGuide: true };
     } finally { await context.close(); }
   });
 

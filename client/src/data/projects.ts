@@ -2,7 +2,7 @@ import { anticipyArtifact } from "../components/portfolio-v4/content";
 import somaImage from "../assets/SomaAI.png";
 import stellarImage from "../assets/Stellar/stellar-current.png";
 import docubridgeImage from "../assets/Docubridge.png";
-import researchImage from "../assets/Youreka/Research Paper.png";
+
 import { caseStudyContent, type CaseStudyContent } from "./caseStudyContent";
 
 export type { CaseStudySection } from "./caseStudyContent";
@@ -12,7 +12,7 @@ const images: Record<CaseStudyContent["imageAsset"], string> = {
   anticipy: `${import.meta.env.BASE_URL}${anticipyArtifact.desktop}`,
   stellar: stellarImage,
   soma: somaImage,
-  research: researchImage,
+  research: `${import.meta.env.BASE_URL}portfolio/research-evidence.svg`,
   docubridge: docubridgeImage,
 };
 

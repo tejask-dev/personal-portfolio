@@ -61,7 +61,7 @@ try {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto(origin);
     await page.locator("#current-work").scrollIntoViewIfNeeded();
-    assert.equal(await page.locator(".pv4-career-list li").count(), 5);
+    for (const slug of ["anticipy", "stellar-learning", "docubridge", "global-health-research", "soma-ai"]) assert.ok(await page.locator(`a[href="/case-studies/${slug}"]`).count(), `Direct reading link: ${slug}`);
     await assertContact("Home");
     assert.equal(await page.locator('#contact a[href="mailto:tejas.kaushik@outlook.com"]').count(), 2);
     for (const [name, width, height] of [["desktop", 1440, 1000], ["phone", 390, 844], ["phone-landscape", 844, 390]]) {
@@ -75,5 +75,5 @@ try {
   }
   assert.deepEqual(errors, []);
   await context.close();
-  console.log(`V4 portfolio: 12 notes, 3 interactive stories, consent/revocation/cancel, sources, 3 viewports, and accessibility passed.${process.env.PORTFOLIO_QA_CASE_ONLY === "1" ? " Home graphics and career UI excluded in case-only mode." : " Home career links passed."}`);
+  console.log(`V4 portfolio: 12 notes, 3 interactive stories, consent/revocation/cancel, sources, 3 viewports, and accessibility passed.${process.env.PORTFOLIO_QA_CASE_ONLY === "1" ? " Home graphics and career UI excluded in case-only mode." : " All five direct project links passed."}`);
 } finally { await browser.close(); }

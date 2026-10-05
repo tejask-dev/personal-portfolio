@@ -1146,7 +1146,7 @@ export default function OpenWaterExperience({ presentationPaused = false }: { pr
                   : "INTRO"
       }
     >
-      <nav className="exp-nav" aria-label="Primary navigation">
+      <nav className="exp-nav" aria-label="Ocean navigation">
         <a
           className="exp-brand"
           href="#top"
@@ -1174,7 +1174,7 @@ export default function OpenWaterExperience({ presentationPaused = false }: { pr
             </button>
           )}
           <button id="open-work-index" onClick={() => openPanel("work")}>
-            Work <Arrow />
+            Project guide <Arrow />
           </button>
           {active ? <>
             <button onClick={() => read("/case-studies/anticipy")}>Anticipy</button>
@@ -1288,62 +1288,15 @@ export default function OpenWaterExperience({ presentationPaused = false }: { pr
               <span />
               Open Water / a portfolio to explore
             </p>
-            <h1>
-              Tejass
-              <br />
-              <em>Kaushik.</em>
-            </h1>
-            <p className="exp-role">
-              <strong>Software engineer. Curious by nature.</strong>
-            </p>
-            <p className="exp-statement">
-              I build products from interface
-              <br className="exp-wide-break" /> to infrastructure.
-            </p>
-            <p className="exp-context">
-              Founding Software Engineer, Anticipation Labs.
-              <br />
-              Building{" "}
-              <a
-                href={nativeHref("/case-studies/anticipy")}
-                onClick={(e) => {
-                  if (!e.metaKey && !e.ctrlKey) {
-                    e.preventDefault();
-                    read("/case-studies/anticipy");
-                  }
-                }}
-              >
-                Anticipy
-              </a>
-              {" across connected apps, AI workflows, and mobile/wearable validation."}
-              <br />Former CTO at{" "}
-              <a
-                href={nativeHref("/case-studies/stellar-learning")}
-                onClick={(e) => {
-                  if (!e.metaKey && !e.ctrlKey) {
-                    e.preventDefault();
-                    read("/case-studies/stellar-learning");
-                  }
-                }}
-              >
-                Stellar Learning.
-              </a>
-            </p>
+            <h2>Open<br /><em>Water.</em></h2>
+            <p className="exp-role"><strong>A few minutes out at sea.</strong></p>
+            <p className="exp-statement">Captain a yacht.<br />Find another way through.</p>
+            <p className="exp-context">Four underwater regions, a lighthouse, and a dolphin with very firm opinions about being a shark.</p>
             <div className="exp-opening-actions">
-              <button
-                className="exp-primary"
-                onClick={() => openPanel("radio")}
-              >
-                Contact about opportunities <Arrow />
-              </button>
-              <a className="exp-text-link" href="#work">
-                View the work <span>↓</span>
-              </a>
+              <button className="exp-primary" onClick={() => openPanel("map")}>Explore the map <Arrow /></button>
+              <a className="exp-text-link" href="#work" onClick={() => pauseTravel()}>Back to selected work <span>↑</span></a>
             </div>
-            <p className="exp-opening-proof">
-              Previously helping build a platform with 40,000+ learners,
-              reported by Stellar Learning.
-            </p>
+            <p className="exp-opening-proof">Play is optional. Every project opens directly from the guide.</p>
             <button
               className="exp-opening-settings"
               onClick={() => openPanel("settings")}
@@ -1364,15 +1317,15 @@ export default function OpenWaterExperience({ presentationPaused = false }: { pr
               <Arrow />
             </button>
             <button className="exp-invite-reef" onClick={dive}>
-              Or explore below the surface ↓
+              Dive into the interactive reef ↓
             </button>
           </div>
           <div className="exp-location-tag">
             <span>A field expedition</span>
             <p>
-              Find your bearings.
+              Reefs, caves, and
               <br />
-              Find something worth building.
+              room to wander.
             </p>
           </div>
           <div className="exp-opening-bottom">
@@ -1381,7 +1334,7 @@ export default function OpenWaterExperience({ presentationPaused = false }: { pr
               {quiet ? "Quiet view" : "Motion on"} ·{" "}
               {sound ? "Sound on" : "Sound off"}
             </button>
-            <a href="#descent">Scroll below the surface ↓</a>
+            <a href="#descent">Scenic scroll dive ↓</a>
           </div>
         </>
       )}
@@ -1776,6 +1729,19 @@ export default function OpenWaterExperience({ presentationPaused = false }: { pr
         ref={dialog}
         className={`exp-dialog ${state.panel === "photo" ? "exp-photo-dialog" : ""}`}
         aria-labelledby="exp-panel-title"
+        onKeyDown={(event) => {
+          if (event.key !== "Tab") return;
+          const controls = Array.from(event.currentTarget.querySelectorAll<HTMLElement>(
+            'a[href], button, input, select, textarea, [tabindex]',
+          )).filter(el => el.tabIndex >= 0 && !el.matches(":disabled") && el.getClientRects().length && !el.closest("[inert]"));
+          const first = controls[0], last = controls.at(-1);
+          if (!first) { event.preventDefault(); return; }
+          if (event.shiftKey && document.activeElement === first) {
+            event.preventDefault(); last?.focus();
+          } else if (!event.shiftKey && document.activeElement === last) {
+            event.preventDefault(); first.focus();
+          }
+        }}
         onCancel={(e) => {
           e.preventDefault();
           closePanel();
@@ -1796,7 +1762,7 @@ export default function OpenWaterExperience({ presentationPaused = false }: { pr
                   {state.mode !== "surface" ? "Return to boat" : "Return"} ↖
                 </button>
               )}
-              <button onClick={() => openPanel("work")}>Work</button>
+              <button onClick={() => openPanel("work")}>Project guide</button>
               <button onClick={() => openPanel("radio")}>Contact</button>
               <button onClick={() => openPanel("map")}>Map</button>
               <button

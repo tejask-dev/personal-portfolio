@@ -88,7 +88,7 @@ export const caseStudyContent: CaseStudyContent[] = [
     },
     sections: [
       {
-        heading: "A useful journey",
+        heading: "From intention",
         body: [anticipyNarrative.context],
       },
       {
@@ -121,27 +121,23 @@ export const caseStudyContent: CaseStudyContent[] = [
     role: "Former CTO / technology lead",
     period: "2025–2026",
     status: "Former role · live platform",
-    thesis: "Leading technology for free exam preparation.",
-    summary:
-      "I served as CTO and technology lead at Stellar Learning, helping translate a volunteer team's product goals into technical work. The platform brings free AP, IB, SAT and competitive-math preparation into one study experience.",
-    shortDescription:
-      "Technology leadership inside a volunteer-built exam-preparation platform.",
-    proof: "40,000+ learners reported by Stellar Learning",
+    thesis: "Question generation and practice for IB and AP.",
+    summary: "As CTO at Stellar Learning, I developed the IB Diploma question-generation and practice harnesses. I also improved the question and lesson harnesses for AP, within a volunteer-built education platform.",
+    shortDescription: "IB Diploma question generation and practice; improvements to AP question and lesson systems.",
+    proof: "Built IB generation + practice harnesses · improved AP question + lesson harnesses",
     contributions: [
-      "Platform architecture and product development across web, mobile, and AI-enabled learning.",
-      "Contributing to practice systems and the Nova AI tutoring experience.",
-      "Technical priorities and coordination within a distributed volunteer organization.",
+      "Developed the question-generating harness for the IB Diploma Programme.",
+      "Developed the IB Diploma practice harness.",
+      "Improved the AP question and lesson harnesses.",
     ],
-    teamContext:
-      "Stellar reports 40,000+ learners, 80+ courses and 130+ volunteers. Those figures describe the organization's platform and collective work, not learners I personally acquired.",
-    evidenceNote:
-      "Role and contribution are my account. Organization figures were checked on Stellar's public homepage on 29 September 2026.",
+    teamContext: "Stellar is a volunteer-built platform. Its reported 40,000+ learners, 80+ courses and 130+ volunteers describe the organization, not my individual impact.",
+    evidenceNote: "The harness work is my account, clarified on 2 October 2026. The public platform supports the product context and organization figures; source code and measured learning or accuracy improvements are not presented here.",
     decision: {
-      label: "Product constraint / team context",
-      title: "Free access is part of the brief.",
+      label: "Engineering scope / curriculum systems",
+      title: "Build the generation and the practice path.",
       body: [
-        "Stellar presents lessons, practice and exam preparation as a free service. That commitment defines the product context in which the team works.",
-        "My role was to help translate product goals into technical priorities within a volunteer organization. The platform's reach belongs to the collective effort; it is not an individual engineering result.",
+        "For IB Diploma, my work covered both generating questions and the practice harness that students use. For AP, I improved the existing question and lesson harnesses.",
+        "The concrete contribution is those systems. I have not published a before-and-after accuracy benchmark or measured learning outcome, so I do not attach an improvement percentage to this work.",
       ],
       source: "https://stellarlearning.app/",
     },
@@ -160,7 +156,7 @@ export const caseStudyContent: CaseStudyContent[] = [
     imageAlt:
       "Stellar Learning homepage showing its free exam-preparation platform.",
     imageCaption:
-      "The public Stellar Learning homepage. Shown as platform context, not as a claim of personal ownership of every feature. Organization figures checked 29 September 2026.",
+      "The public Stellar Learning homepage. Shown as platform context, not as a claim of personal ownership of every feature. Organization figures checked 2 October 2026.",
     artifactSource: {
       label: "Visit the live platform",
       href: "https://stellarlearning.app/",
@@ -175,8 +171,7 @@ export const caseStudyContent: CaseStudyContent[] = [
       {
         heading: "The platform, and my part in it",
         body: [
-          "I have since stepped down from the CTO role. Stellar's reported 40,000+ learners, 80+ courses and 130+ volunteers remain useful context for the organization I worked within.",
-          "These are organization-reported figures, not audited usage, learning gains or a measure of my individual impact.",
+          "I have since stepped down from the CTO role. My contribution spans IB question generation and practice, plus improvements to AP question and lesson systems. The live platform shows the broader team’s education work.",
         ],
       },
     ],
@@ -186,7 +181,7 @@ export const caseStudyContent: CaseStudyContent[] = [
       {
         label: "Stellar Learning",
         href: "https://stellarlearning.app/",
-        note: "Source for the product description and organization-reported figures; checked 29 September 2026.",
+        note: "Source for the product description and organization-reported figures; checked 2 October 2026.",
       },
     ],
     flagship: true,
@@ -205,13 +200,12 @@ export const caseStudyContent: CaseStudyContent[] = [
       "A published study, a team award, and a careful reading of what the data supports.",
     proof: "Co-author · national first-place study, 2025 Youreka Journal",
     contributions: [
-      "Co-author and student researcher on the four-person study.",
-      "Co-author of the paper included in the 2025 Youreka Canada Journal.",
+      "Co-authored the published study with Liyona Wang, Shikai Jin and Elijah Murtagh.",
     ],
     teamContext:
       "The study and national first-place recognition belong to the research team: Liyona Wang, Shikai Jin, Elijah Murtagh and me. The analysis compared country-level indicators across 34 countries.",
     evidenceNote:
-      "The final journal identifies the authors and team recognition. The image below is an earlier manuscript excerpt, not the final published author page.",
+      "The final journal identifies the four authors and first-place recognition on PDF page 4; the study’s 34-country sample is described on page 5. The visual here is an original evidence summary, not a reproduction of the journal.",
     decision: {
       label: "Research interpretation / team study",
       title: "Keep the claim at the level of the data.",
@@ -233,12 +227,12 @@ export const caseStudyContent: CaseStudyContent[] = [
       "Research communication",
     ],
     imageAsset: "research",
-    artifactLabel: "Original manuscript excerpt",
+    artifactLabel: "Published study / evidence summary",
     imageTreatment: "paper",
     imageAlt:
-      "Title and author line from the original research manuscript on adolescent fertility and pediatric antiretroviral treatment access.",
+      "Original summary of the final journal: four co-authors, a 34-country sample and national first-place team recognition.",
     imageCaption:
-      "Original manuscript excerpt, preceding the final journal and its author listing. The linked 2025 journal is the source for publication, authorship and the team's national first-place recognition.",
+      "Original evidence summary linked to the final 2025 Youreka Canada Journal, PDF pages 4–5. The published author line spells my name “Tejas.” No journal page or figure is reproduced.",
     artifactSource: {
       label: "Read the final journal",
       href: "https://drive.google.com/file/d/1lTrTsLfvYSEkUlYoGWTSYcoekdeiJqu4/view",

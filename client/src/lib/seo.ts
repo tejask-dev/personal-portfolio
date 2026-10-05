@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { socialMetadata } from "./socialMetadata";
 
 import { SITE_URL, DEFAULT_TITLE, DEFAULT_DESCRIPTION } from "./siteMetadata";
 export {
@@ -59,6 +60,12 @@ export function useSeo({
     const fullTitle = title ?? DEFAULT_TITLE;
     const desc = description ?? DEFAULT_DESCRIPTION;
     const url = `${SITE_URL}${path}`;
+    const social = socialMetadata(path);
+    setMeta('meta[property="og:type"]', "property", "og:type", social.type);
+    setMeta('meta[property="og:image"]', "property", "og:image", social.image);
+    setMeta('meta[property="og:image:alt"]', "property", "og:image:alt", social.alt);
+    setMeta('meta[name="twitter:image"]', "name", "twitter:image", social.image);
+    setMeta('meta[name="twitter:image:alt"]', "name", "twitter:image:alt", social.alt);
 
     document.title = fullTitle;
     setMeta('meta[name="description"]', "name", "description", desc);
