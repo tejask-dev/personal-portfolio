@@ -215,6 +215,12 @@ try {
 
   for (const suffix of ['/#work', '/#contact', '/case-studies/stellar-learning']) {
     await scenario(`deep link ${suffix}`, {}, async ({ page, requests }) => {
+      if (!suffix.includes('#')) {
+        await page.route('**/CaseStudy-*.js', async route => {
+          await new Promise(resolve => setTimeout(resolve, 800));
+          await route.continue();
+        });
+      }
       await page.goto(origin + suffix, { waitUntil: 'domcontentloaded' }); await hydrated(page);
       assert.equal(await page.locator('.pathway-entry[open]').count(), 0, 'deep links bypass intro');
       assertNoWorld(requests, 'professional deep links do not load the optional world');
@@ -225,7 +231,11 @@ try {
           const bounds = section?.getBoundingClientRect();
           return bounds && bounds.top < innerHeight && bounds.bottom > 0;
         }, id);
-      } else assert.match(await page.locator('main').innerText(), /Stellar Learning/);
+      } else {
+        // Hydration removes static HTML before the lazy case-study chunk resolves.
+        await page.locator('.pv-case h1').waitFor();
+        assert.match(await page.locator('main').innerText(), /Stellar Learning/);
+      }
       return { route: suffix };
     });
   }
@@ -274,7 +284,10 @@ try {
       for (const [slug, expected] of cases) {
         const response = await page.goto(`${origin}/case-studies/${slug}`, { waitUntil: 'domcontentloaded' });
         assert.equal(response?.status(), 200);
-        if (javaScriptEnabled) await hydrated(page);
+        if (javaScriptEnabled) {
+          await hydrated(page);
+          await page.locator('.pv-case h1').waitFor();
+        }
         const text = await page.locator('main').innerText();
         for (const pattern of expected) assert.match(text, pattern, `${slug}: owner detail ${pattern}`);
         if (slug === 'soma-ai') assert.doesNotMatch(text, /repeat value|clear ownership|sustainable reason|satisfaction of building/i, 'invented prior closure rationale is removed');
