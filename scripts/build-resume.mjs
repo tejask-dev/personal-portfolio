@@ -1,36 +1,27 @@
 import assert from "node:assert/strict";
-import { writeFile } from "node:fs/promises";
+import { copyFile, mkdtemp, readFile, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { chromium } from "playwright";
+import { execFileSync } from "node:child_process";
 
-// The standalone HTML is the single source for the screen and print editions.
-// Run from any directory: node /path/to/repository/scripts/build-resume.mjs
-const source = new URL("../client/public/resume.html", import.meta.url);
-const destination = new URL("../client/public/Tejass-Kaushik-Resume.pdf", import.meta.url);
-const browser = await chromium.launch({ channel: "chrome", headless: true });
-
+// Compile the editable Jake-format source. Website builds use the checked-in PDF.
+// Requires Tectonic and Poppler (pdfinfo); see resume/README.md.
+const source = fileURLToPath(new URL("../resume/Tejass-Kaushik-Resume.tex", import.meta.url));
+const destination = fileURLToPath(new URL("../client/public/Tejass-Kaushik-Resume.pdf", import.meta.url));
+const work = await mkdtemp(join(tmpdir(), "open-water-resume-"));
 try {
-  const page = await browser.newPage({ viewport: { width: 1024, height: 1200 } });
-  // Self-contained styles and system fonts keep generation offline and repeatable.
-  await page.route(/^https?:\/\//, route => route.abort());
-  await page.goto(source.href, { waitUntil: "load" });
-  await page.emulateMedia({ media: "print" });
-  await page.evaluate(() => document.fonts.ready);
-  assert.equal(await page.title(), "Tejass Kaushik — Resume");
-  assert.equal(await page.locator("main h1").count(), 1);
-  const pdf = await page.pdf({
-    format: "Letter",
-    preferCSSPageSize: true,
-    printBackground: true,
-    tagged: true,
-    outline: true,
-    displayHeaderFooter: false,
-  });
-  // Chromium emits a separate /Type /Page dictionary for each physical page.
-  const pages = [...pdf.toString("latin1").matchAll(/\/Type\s*\/Page\b/g)].length;
-  assert.equal(pages, 1, `Resume must fit on one page; generated ${pages}.`);
-  await writeFile(destination, pdf);
-  console.log(`Generated one-page resume: ${fileURLToPath(destination)}`);
+  execFileSync(process.env.TECTONIC_BIN || "tectonic", ["--untrusted", "--outdir", work, source], { stdio: "inherit" });
+  const compiled = join(work, "Tejass-Kaushik-Resume.pdf");
+  const info = execFileSync(process.env.PDFINFO_BIN || "pdfinfo", [compiled], { encoding: "utf8" });
+  assert.match(info, /^Pages:\s+1\s*$/m, "Resume must fit on one page.");
+  assert.match(info, /^Page size:\s+612 x 792 pts/m, "Resume must use US Letter.");
+  assert.match(info, /^Encrypted:\s+no\s*$/m, "Resume must allow text extraction.");
+  const pdf = await readFile(compiled);
+  assert.ok(pdf.length > 1000 && pdf.length < 2_000_000, "Unexpected resume PDF size.");
+  // A failed compilation/check leaves the previous download intact.
+  await copyFile(compiled, destination);
+  console.log(`Generated one-page Jake-format resume: ${destination}`);
 } finally {
-  await browser.close();
+  await rm(work, { recursive: true, force: true });
 }

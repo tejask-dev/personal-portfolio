@@ -1,0 +1,216 @@
+% Adapted for Tejass Kaushik, 12 October 2026. Layout by Jake Gutierrez.
+% Upstream: https://github.com/jakegut/resume (commit 3e64a933141a7cda3a328f0743f73a201628a4ba).
+% MIT License
+%
+% Copyright (c) 2020 Jake Gutierrez
+%
+% Permission is hereby granted, free of charge, to any person obtaining a copy
+% of this software and associated documentation files (the "Software"), to deal
+% in the Software without restriction, including without limitation the rights
+% to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+% copies of the Software, and to permit persons to whom the Software is
+% furnished to do so, subject to the following conditions:
+%
+% The above copyright notice and this permission notice shall be included in all
+% copies or substantial portions of the Software.
+%
+% THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+% IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+% FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+% AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+% LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+% OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+% SOFTWARE.
+
+%-------------------------
+% Resume in Latex
+% Author : Jake Gutierrez
+% Based off of: https://github.com/sb2nov/resume
+% License : MIT
+%------------------------
+
+\documentclass[letterpaper,11pt]{article}
+
+\usepackage{latexsym}
+\usepackage[empty]{fullpage}
+\usepackage{titlesec}
+\usepackage{marvosym}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{verbatim}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\usepackage[english]{babel}
+\usepackage{tabularx}
+\usepackage{iftex}
+\ifXeTeX
+  \usepackage{fontspec}
+  \defaultfontfeatures{RawFeature={-kern,-liga}}
+  \setmainfont{lmroman10-regular.otf}[BoldFont=lmroman10-bold.otf,ItalicFont=lmroman10-italic.otf,BoldItalicFont=lmroman10-bolditalic.otf,SmallCapsFont=lmromancaps10-regular.otf]
+\fi
+\hypersetup{pdftitle={Tejass Kaushik - Resume},pdfauthor={Tejass Kaushik},pdfsubject={Software engineering, research and education}}
+\ifdefined\pdfglyphtounicode
+  \input{glyphtounicode}
+\fi
+
+
+%----------FONT OPTIONS----------
+% sans-serif
+% \usepackage[sfdefault]{FiraSans}
+% \usepackage[sfdefault]{roboto}
+% \usepackage[sfdefault]{noto-sans}
+% \usepackage[default]{sourcesanspro}
+
+% serif
+% \usepackage{CormorantGaramond}
+% \usepackage{charter}
+
+
+\pagestyle{fancy}
+\fancyhf{} % clear all header and footer fields
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% Adjust margins
+\addtolength{\oddsidemargin}{-0.5in}
+\addtolength{\evensidemargin}{-0.5in}
+\addtolength{\textwidth}{1in}
+\addtolength{\topmargin}{-.5in}
+\addtolength{\textheight}{1.0in}
+
+\urlstyle{same}
+
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in}
+
+% Sections formatting
+\titleformat{\section}{
+  \vspace{-4pt}\scshape\raggedright\large
+}{}{0em}{}[\color{black}\titlerule \vspace{-5pt}]
+
+% Emit Unicode mappings; parsing must still be checked in the actual exported PDF.
+\ifdefined\pdfgentounicode
+  \pdfgentounicode=1
+\fi
+
+%-------------------------
+% Custom commands
+\newcommand{\resumeItem}[1]{
+  \item\small{
+    {#1 \vspace{-2pt}}
+  }
+}
+
+\newcommand{\resumeSubheading}[4]{
+  \vspace{-2pt}\item
+    \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
+      \textbf{#1} & #2 \\
+      \textit{\small#3} & \textit{\small #4} \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeSubSubheading}[2]{
+    \item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \textit{\small#1} & \textit{\small #2} \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeProjectHeading}[2]{
+    \item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \small#1 & #2 \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeSubItem}[1]{\resumeItem{#1}\vspace{-4pt}}
+
+\renewcommand\labelitemii{$\vcenter{\hbox{\tiny$\bullet$}}$}
+
+\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=0.15in, label={}]}
+\newcommand{\resumeSubHeadingListEnd}{\end{itemize}}
+\newcommand{\resumeItemListStart}{\begin{itemize}}
+\newcommand{\resumeItemListEnd}{\end{itemize}\vspace{-5pt}}
+
+%-------------------------------------------
+%%%%%%  RESUME STARTS HERE  %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{document}
+
+\begin{center}
+    \textbf{\Huge \scshape Tejass Kaushik} \\ \vspace{2pt}
+    \small \href{mailto:tejas.kaushik@outlook.com}{\underline{tejas.kaushik@outlook.com}} $|$
+    \href{https://github.com/tejask-dev}{\underline{github.com/tejask-dev}} \\ \vspace{2pt}
+    \small \href{https://tejass-kaushik.vercel.app/}{\underline{tejass-kaushik.vercel.app}} $|$
+    \href{https://www.linkedin.com/in/tejasskaushik/}{\underline{linkedin.com/in/tejasskaushik}}
+\end{center}
+
+\section{Education}
+\resumeSubHeadingListStart
+    \resumeSubheading
+      {Western University}{Sep. 2026 -- Expected 2030}
+      {B.Sc. in Computer Science; Ivey Advanced Entry Opportunity (AEO)}{}
+\resumeSubHeadingListEnd
+
+\section{Experience}
+\resumeSubHeadingListStart
+    \resumeSubheading
+      {Founding Software Engineer}{Aug. 2026 -- Present}
+      {\href{https://anticipy.ai/}{Anticipation Labs / Anticipy}}{}
+      \resumeItemListStart
+        \resumeItem{Required a browser test when Anticipy's consent page blocked provider sign-in despite server success. The Claude/Codex repair reached Google and Notion sign-in screens.}
+        \resumeItem{Defined consent, citation, spending and deletion requirements for a private AI work-preparation prototype, validated locally. The hosted account preview kept AI processing disabled.}
+        \resumeItem{Tested native apps on phones and operated prototype wearables through USB, reset and recovery. Firmware installation and recovery were verified; audio and pairing qualification remained incomplete.}
+        \resumeItem{Directed substantial Claude and Codex implementation and review on the team's existing code; set priorities and checked results against release criteria.}
+      \resumeItemListEnd
+
+    \resumeSubheading
+      {Chief Technology Officer; previously Deputy CTO}{Aug. 2025 -- Jul. 2026}
+      {\href{https://stellarlearning.app/}{Stellar Learning}}{}
+      \resumeItemListStart
+        \resumeItem{Helped change IB question generation when AP prompts did not fit the curriculum, using my own IB studies to assess the questions. They seemed more accurate after the changes; that was my observation, not a measured benchmark.}
+        \resumeItem{Worked on IB practice systems and improved AP question and lesson harnesses. Teammates and AI tools handled much of the algorithm development and API prompting. Some IB features shipped; much remained unfinished.}
+      \resumeItemListEnd
+
+    \resumeSubheading
+      {Software Engineering Intern}{Jul. 2025 -- Aug. 2025}
+      {DocuBridge $|$ \href{https://github.com/tejask-dev/Docubridge-Intership}{https://github.com/tejask-dev/Docubridge-Intership}}{}
+      \resumeItemListStart
+        \resumeItem{Developed a Python/Flask and React prototype for exploring Excel and CSV uploads through charts, summaries and natural-language questions.}
+        \resumeItem{The prototype links worksheet selection to analysis and questions, with Pandas processing the data and Plotly rendering the charts.}
+      \resumeItemListEnd
+\resumeSubHeadingListEnd
+
+\section{Research}
+\resumeSubHeadingListStart
+    \resumeSubheading
+      {Co-author / Student Researcher}{2025}
+      {Youreka Canada $|$ \href{https://yourekacanada.org/youreka-journal-2025}{https://yourekacanada.org/youreka-journal-2025}}{}
+      \resumeItemListStart
+        \resumeItem{Handled much of the writing, analysis and coordination for a study of adolescent fertility and pediatric HIV treatment coverage across 34 Sub-Saharan African countries; coded the graphs in R, with AI helping me research sources and learn R.}
+        \resumeItem{Published in the 2025 Youreka Canada Journal as the national first-place team study, co-authored with Liyona Wang, Shikai Jin and Elijah Murtagh.}
+      \resumeItemListEnd
+\resumeSubHeadingListEnd
+
+\section{Projects}
+\resumeSubHeadingListStart
+    \resumeProjectHeading
+      {\textbf{\href{https://tejass-kaushik.vercel.app/}{Open Water portfolio}} $|$ React, TypeScript, Three.js}{\href{https://github.com/tejask-dev/personal-portfolio}{https://github.com/tejask-dev/personal-portfolio}}
+      \resumeItemListStart
+        \resumeItem{Designed a portfolio with yacht exploration, underwater regions and a plain reading path. Directed Claude and Codex implementation, with project stories, keyboard controls and reduced-motion options.}
+      \resumeItemListEnd
+\resumeSubHeadingListEnd
+
+\section{Technical Skills}
+\begin{itemize}[leftmargin=0.15in, label={}]
+  \small{\item{
+    \textbf{Languages}{: Python, TypeScript, R} \\
+    \textbf{Frameworks and Libraries}{: React, Flask, Pandas, Plotly} \\
+    \textbf{Tools and Practice}{: Git, browser and device testing, API integration, AI-assisted development}
+  }}
+\end{itemize}
+
+\end{document}

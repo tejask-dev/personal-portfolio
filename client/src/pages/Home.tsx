@@ -6,6 +6,7 @@ import { voyage } from "@/features/open-water/voyage";
 import { useSeo } from "@/lib/seo";
 import { AnticipyFeature } from "@/components/portfolio-v4/Flagship";
 import EngineeringNotes from "@/components/editorial/EngineeringNotes";
+import PathwayEntry, { hasEnteredPortfolio, rememberEntry, type Pathway } from "@/components/entry/PathwayEntry";
 import "./portfolio-v3.css";
 import "./editorial-home.css";
 import portrait from "@/assets/Professional photo shoot seteve jobs kinda photo must use.jpeg";
@@ -102,6 +103,11 @@ function WorldReady({ onReady }: { onReady: () => void }) {
 
 export default function Home() {
   useSeo({ path: "/" });
+  const [entry, setEntry] = useState<"intro" | "choice" | null>(() =>
+    (!window.location.hash || window.location.hash === "#top") && window.scrollY === 0 && !voyage.returnPending && !hasEnteredPortfolio() ? "intro" : null,
+  );
+  const [arrived, setArrived] = useState(false);
+  const dismissedChoice = useRef(false);
   const [copyStatus, setCopyStatus] = useState("");
   const [descentOwnsScene, setDescentOwnsScene] = useState(false);
   const [worldOpen, setWorldOpen] = useState(() => {
@@ -137,6 +143,8 @@ export default function Home() {
     return () => window.removeEventListener("hashchange", onHashChange);
   }, []);
   useEffect(() => {
+    if (entry) return;
+    if (dismissedChoice.current) { dismissedChoice.current = false; return; }
     const target = window.location.hash.slice(1);
     if ((needsOcean(target) || (worldOpen && voyage.returnPending)) && !worldReady) return;
     const frame = requestAnimationFrame(() => {
@@ -156,7 +164,7 @@ export default function Home() {
         const fallback = needsOcean(target) ? document.getElementById("ocean-load-error") : null;
         const section = document.getElementById(target) ?? fallback;
         section?.scrollIntoView({ behavior: "instant" });
-        const heading = fallback ?? (target === "voyage"
+        const heading = fallback ?? (target === "top" ? document.getElementById("hero-title") : target === "voyage"
           ? document.getElementById(voyage.sailing || voyage.expedition.mode !== "surface" ? "yacht-controls" : "take-helm")
           : document.getElementById(`${target}-title`) ?? section);
         if (heading && heading.tabIndex < 0) heading.tabIndex = -1;
@@ -164,7 +172,7 @@ export default function Home() {
       } else window.scrollTo({ top: 0, behavior: "instant" });
     });
     return () => cancelAnimationFrame(frame);
-  }, [worldOpen, worldReady, navigation]);
+  }, [worldOpen, worldReady, navigation, entry]);
   const closeWorld = () => {
     worldWasOpened = false;
     restoreOpenFocus.current = true;
@@ -175,9 +183,29 @@ export default function Home() {
     setWorldOpen(false);
     if (needsOcean(window.location.hash.slice(1))) history.replaceState(null, "", "#ocean-title");
   };
+  const choosePathway = (pathway: Pathway) => {
+    rememberEntry();
+    setEntry(null);
+    voyage.returnPending = false;
+    restoreOpenFocus.current = false;
+    if (pathway === "interactive") {
+      setWorldOpen(true);
+      history.replaceState(null, "", "#voyage");
+    } else {
+      worldWasOpened = false;
+      voyage.paused = true;
+      voyage.expedition.userPaused = true;
+      setWorldOpen(false);
+      setWorldReady(false);
+      setDescentOwnsScene(false);
+      setArrived(true);
+      history.replaceState(null, "", "#top");
+    }
+    setNavigation(value => value + 1);
+  };
   return (
     <div
-      className="open-water-page"
+      className={`open-water-page${arrived ? " entry-reading-arrival" : ""}`}
       id="top"
       onClickCapture={(event) => {
         const link = (event.target as HTMLElement).closest<HTMLAnchorElement>(
@@ -199,6 +227,10 @@ export default function Home() {
           <Sailmark />
           Tejass Kaushik
         </a>
+        <button className="eh-pathway-button" type="button" onClick={() => setEntry("choice")}>
+          <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="8" stroke="currentColor"/><path d="m13 6-2 6-4 2 2-6 4-2Z" stroke="currentColor"/></svg>
+          Choose interactions
+        </button>
         <nav aria-label="Primary">
           <a href="#work">Selected work</a>
           <Link id="nav-anticipy" href="/case-studies/anticipy">Anticipy</Link>
@@ -209,11 +241,11 @@ export default function Home() {
       <main id="main">
         <section className="portfolio-v3 eh-hero pv-shell" aria-labelledby="hero-title">
           <p className="pv-eyebrow">Tejass Kaushik / Software engineer</p>
-          <h1 id="hero-title">{profile.headline}</h1>
+          <h1 id="hero-title" tabIndex={-1}>{profile.headline}</h1>
           <p className="eh-hero-role">{profile.intro}</p>
           <p className="eh-hero-proof">
-            At Anticipy, I made the real browser journey the acceptance test
-            for connecting an app—not just a successful server response.
+            At Anticipy, I required the connection test to reach the provider’s
+            sign-in screen in the actual browser.
           </p>
           <div className="eh-hero-actions">
             <a className="pv-button" href="#work">
@@ -348,7 +380,7 @@ export default function Home() {
                       Close Open Water
                     </button>
                     <WorldReady onReady={opened} />
-                    <OpenWaterExperience presentationPaused={descentOwnsScene} />
+                    <OpenWaterExperience presentationPaused={descentOwnsScene || entry !== null} />
                     <ScrollDive onSceneActive={setDescentOwnsScene} />
                   </div>
                 </Suspense>
@@ -388,13 +420,11 @@ export default function Home() {
                   Ivey AEO status.
                 </p>
                 <p>
-                  I work with AI tools as part of the engineering process: set
-                  the problem, make the acceptance criteria concrete, review
-                  the result, and test what a person will actually
-                  experience—sometimes in a browser, sometimes on a phone
-                  with a prototype pendant on the bench.
+                  I use AI tools to help build software. I set the problem and
+                  acceptance criteria, review the changes, and test them in
+                  the browser or on a phone and prototype pendant.
                 </p>
-                <p>I also love water, boats, and yachts—hence Open Water.</p>
+                <p>I love boats and yachts, so I wanted an ocean in my portfolio.</p>
                 <p className="eh-about-links">
                   <a className="pv-text-link" href={`${import.meta.env.BASE_URL}resume.html`}>
                     View my resume <Arrow />
@@ -530,6 +560,10 @@ export default function Home() {
           </p>
         </details>
       </details>
+      {entry && <PathwayEntry animate={entry === "intro"} onChoose={choosePathway} onDismiss={() => {
+        if (entry === "intro") choosePathway("reading");
+        else { dismissedChoice.current = true; setEntry(null); }
+      }} />}
     </div>
   );
 }

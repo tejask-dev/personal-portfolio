@@ -213,10 +213,10 @@ export default function CaseStudy() {
                 ))}
               </dl>
             </section>
-            <div className="pv-takeaway">
+            {study.lesson && <div className="pv-takeaway">
               <span className="pv-eyebrow">What I carry forward</span>
               <p>{study.lesson}</p>
-            </div>
+            </div>}
             <section id="sources">
               <p className="pv-eyebrow">05 / Follow the evidence</p>
               <h2>Sources & context.</h2>

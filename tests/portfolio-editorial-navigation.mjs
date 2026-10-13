@@ -8,6 +8,8 @@ try {
   const errors=[]; page.on('pageerror',e=>errors.push(e.message));
   await page.route('**/OpenWaterExperience-*.js', async route => { await new Promise(r=>setTimeout(r,500)); await route.continue(); });
   await page.goto(base);
+  await page.locator('.pathway-entry').getByRole('button',{name:/Read the portfolio/}).click();
+  await page.locator('.pathway-entry').waitFor({state:'detached'});
   const headerAnticipy=page.locator('.eh-header').getByRole('link',{name:'Anticipy',exact:true});
   await headerAnticipy.click();await page.waitForURL('**/case-studies/anticipy');await page.goBack();
   await page.waitForFunction(()=>document.activeElement?.id==='nav-anticipy');
@@ -41,7 +43,7 @@ try {
   assert.deepEqual(errors,[]);await context.close();
   const failure=await browser.newContext();const broken=await failure.newPage();
   await broken.route('**/OpenWaterExperience-*.js',route=>route.abort('failed'));
-  await broken.goto(base);await broken.locator('#open-ocean').click();
+  await broken.goto(base+'#work');await broken.locator('#open-ocean').click();
   await broken.getByText('Open Water couldn’t load.').waitFor();
   await broken.locator('.eh-ocean-fallback a[href="#work"]').click();
   assert.ok(await broken.locator('#read-docubridge').count());

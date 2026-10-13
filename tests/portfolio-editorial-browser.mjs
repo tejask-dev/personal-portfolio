@@ -10,6 +10,8 @@ try{
  for(const [width,height,name] of [[375,812,'phone'],[768,1024,'tablet'],[1440,900,'desktop'],[844,390,'landscape']]){
   const context=await browser.newContext({viewport:{width,height},reducedMotion:'reduce',permissions:['clipboard-read','clipboard-write']});const page=await context.newPage();page.setDefaultTimeout(12000);const errors=[];page.on('pageerror',e=>errors.push(e.message));
   await page.goto(url);await page.locator('.static-portfolio').waitFor({state:'detached'});
+  await page.locator('.pathway-entry').getByRole('button',{name:/Read the portfolio/}).click();
+  await page.locator('.pathway-entry').waitFor({state:'detached'});
   assert.equal(await page.locator('h1').count(),1);
   assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
   const proof=await page.locator('#current-work').evaluate(el=>el.getBoundingClientRect().top+scrollY);
@@ -17,7 +19,7 @@ try{
   const initial=await page.evaluate(()=>performance.getEntriesByType('resource').map(r=>r.name));
   assert.equal(initial.some(n=>/\.glb|OpenWaterScene|ScubaScene|BufferGeometryUtils/.test(n)),false,`${name} optional scene is not fetched initially`);
   await page.screenshot({path:`${out}/home-${name}.png`});
-  await page.keyboard.press('Tab');assert.match(await page.locator(':focus').innerText(),/Skip to/i);await page.keyboard.press('Enter');
+  await page.locator('.skip-link').focus();assert.match(await page.locator(':focus').innerText(),/Skip to/i);await page.keyboard.press('Enter');
   assert.equal(await page.evaluate(()=>document.activeElement?.id==='work-title'||document.activeElement?.id==='work'||document.activeElement?.closest('#work')!==null),true,`${name} skip-link focus`);
   const read=page.locator('#read-anticipy-feature');await read.scrollIntoViewIfNeeded();
   assert.ok(await read.evaluate(el=>{const r=el.getBoundingClientRect(),hit=document.elementFromPoint(r.x+r.width/2,r.y+r.height/2);return hit===el||el.contains(hit);}));

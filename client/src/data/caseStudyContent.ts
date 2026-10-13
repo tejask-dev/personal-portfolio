@@ -30,7 +30,7 @@ export type CaseStudyContent = {
   imageTreatment?: "cover" | "paper" | "illustration";
   artifactSource?: { label: string; href: string };
   sections: CaseStudySection[];
-  lesson: string;
+  lesson?: string;
   links: { label: string; href: string; note?: string }[];
   flagship: boolean;
 };
@@ -50,19 +50,19 @@ export const caseStudyContent: CaseStudyContent[] = [
       "Connected apps, private AI workflows, and prototype hardware—with the decisions and evidence behind each.",
     proof: "Deployed connector repair · locally validated AI prototype · hands-on device testing",
     contributions: [
-      "Product priorities and acceptance criteria across connected apps, privacy, and private AI workflows.",
-      "Direction of AI-assisted implementation, independent review, and release verification.",
-      "Hands-on phone and prototype wearable testing, alongside the Fellowship experience and early operations.",
+      "Set product priorities and acceptance criteria for connected apps, privacy and private AI workflows.",
+      "Directed AI-assisted implementation, independent review and release checks.",
+      "Hands-on phone and prototype wearable testing, alongside the upcoming Fellowship experience and early operations.",
     ],
     teamContext:
       anticipyNarrative.team,
     evidenceNote: anticipyNarrative.evidence,
     decision: {
       label: "Browser journey / engineering decision",
-      title: "A connection must finish the journey.",
+      title: "Getting past the consent page.",
       body: [
-        "A successful server redirect still left a person stranded before provider sign-in. The repair preserved consent and expiry while allowing the browser to finish the path and retry the saved authorization attempt.",
-        "I prioritized the failure, supplied device observations, and required browser-tested release evidence. Claude and Codex contributed diagnosis, implementation, and review. The deployed correction was verified through provider sign-in screens; this does not establish every connector or write action.",
+        "The server reported a successful redirect, but the browser was still stuck before the provider's sign-in page. The fix kept the existing consent and expiry, let the browser finish the path, and allowed a retry of the saved authorization attempt.",
+        "I made this failure a priority, shared what I saw on my phone, and required a browser test before release. Claude and Codex did the diagnosis, fix and review. The deployed fix was checked through the provider sign-in screens. That doesn't show every connector or write action works.",
       ],
       source: anticipyWebsite,
     },
@@ -98,8 +98,7 @@ export const caseStudyContent: CaseStudyContent[] = [
         ],
       },
     ],
-    lesson:
-      "A green check, a deployed artifact, and a useful experience are different kinds of evidence. Good engineering follows the journey far enough to know which one it has.",
+    lesson: "Hard work pays off. Working on Anticipy gave me the opportunity to go to Stan Launchpad, and I went. That was great.",
     links: [
       {
         label: "Anticipy",
@@ -120,26 +119,26 @@ export const caseStudyContent: CaseStudyContent[] = [
     kicker: "02 / Education platform",
     role: "Former CTO / technology lead",
     period: "2025–2026",
-    status: "Former role · live platform",
+    status: "Former role · IB partly shipped",
     thesis: "Question generation and practice for IB and AP.",
-    summary: "As CTO at Stellar Learning, I developed the IB Diploma question-generation and practice harnesses. I also improved the question and lesson harnesses for AP, within a volunteer-built education platform.",
+    summary: "At Stellar Learning, I worked on IB Diploma question generation and practice. I helped decide how to make the algorithm better, and I improved the AP question and lesson harnesses too. My teammates and AI tools handled a lot of the actual algorithm development and API prompting.",
     shortDescription: "IB Diploma question generation and practice; improvements to AP question and lesson systems.",
-    proof: "Built IB generation + practice harnesses · improved AP question + lesson harnesses",
+    proof: "IB curriculum adaptation · generation and practice systems · AP improvements",
     contributions: [
-      "Developed the question-generating harness for the IB Diploma Programme.",
-      "Developed the IB Diploma practice harness.",
-      "Improved the AP question and lesson harnesses.",
+      "Worked on the IB Diploma question-generation and practice systems.",
+      "Helped decide how to change the algorithm when the AP approach did not fit the IB curriculum.",
+      "Improved the AP question and lesson harnesses, with teammates and AI tools contributing much of the implementation."
     ],
-    teamContext: "Stellar is a volunteer-built platform. Its reported 40,000+ learners, 80+ courses and 130+ volunteers describe the organization, not my individual impact.",
-    evidenceNote: "The harness work is my account, clarified on 2 October 2026. The public platform supports the product context and organization figures; source code and measured learning or accuracy improvements are not presented here.",
+    teamContext: "Stellar’s reported 40,000+ learners, 80+ courses and 130+ volunteers describe the organization, not my individual impact.",
+    evidenceNote: "My account of the work, collaboration and unfinished IB scope was updated on 12 October 2026. The improvement in question accuracy is my observation, not a measured benchmark. Organization figures were checked on 2 October 2026.",
     decision: {
-      label: "Engineering scope / curriculum systems",
-      title: "Build the generation and the practice path.",
-      body: [
-        "For IB Diploma, my work covered both generating questions and the practice harness that students use. For AP, I improved the existing question and lesson harnesses.",
-        "The concrete contribution is those systems. I have not published a before-and-after accuracy benchmark or measured learning outcome, so I do not attach an improvement percentage to this work.",
+      "label": "The challenge / adapting to IB",
+      "title": "The AP approach did not work for IB.",
+      "body": [
+        "We tried to copy the AP prompting and algorithms over to IB, and it didn't work. I was doing IB myself. The questions didn't seem accurate enough for the IB curriculum, so I decided the approach needed to change.",
+        "I was still learning the technical side, and it was really difficult. The algorithm broke a lot, and so did the connectors. After I worked on the algorithm, with teammates and AI tools doing much of the development, the questions seemed much more accurate. That surprised me. I don't have a before-and-after benchmark, so that's my observation."
       ],
-      source: "https://stellarlearning.app/",
+      "source": "https://stellarlearning.app/"
     },
     metrics: [
       { value: "40,000+", label: "learners, reported by Stellar" },
@@ -163,20 +162,19 @@ export const caseStudyContent: CaseStudyContent[] = [
     },
     sections: [
       {
-        heading: "A shared place to prepare",
-        body: [
-          "Stellar brings lessons, practice, mock exams, flashcards and an AI tutor into one study system. It serves students preparing for several exam formats, with a team of volunteers contributing to the experience.",
-        ],
+        "heading": "A shared place to prepare",
+        "body": [
+          "Stellar brings lessons, practice, mock exams, flashcards and an AI tutor into one study system. It serves students preparing for several exam formats, with a team of volunteers contributing to the experience."
+        ]
       },
       {
-        heading: "The platform, and my part in it",
-        body: [
-          "I have since stepped down from the CTO role. My contribution spans IB question generation and practice, plus improvements to AP question and lesson systems. The live platform shows the broader team’s education work.",
-        ],
-      },
+        "heading": "Some shipped; much remained unfinished.",
+        "body": [
+          "Some of the IB work shipped, but a lot remained unfinished. I've since stepped down as CTO."
+        ]
+      }
     ],
-    lesson:
-      "Technical leadership means making the next piece of work clear enough for other people to contribute.",
+    lesson: "I'd do a lot of things differently at Stellar. Next time, I'd seek out help from people who really know the technical environment.",
     links: [
       {
         label: "Stellar Learning",
@@ -194,24 +192,23 @@ export const caseStudyContent: CaseStudyContent[] = [
     period: "2024–2025",
     status: "Published · team recognition",
     thesis: "What a 34-country study can tell us about treatment access.",
-    summary:
-      "With Liyona Wang, Shikai Jin and Elijah Murtagh, I co-authored a study of adolescent fertility and pediatric HIV treatment coverage in Sub-Saharan Africa. It appears in the 2025 Youreka Canada Journal as the national first-place study.",
+    summary: "I did much of the writing and data analysis for our paper on adolescent fertility and pediatric HIV treatment coverage in Sub-Saharan Africa, and managed a lot of the work. I coded the graphs in R. My co-authors were Liyona Wang, Shikai Jin and Elijah Murtagh. Our study appears in the 2025 Youreka Canada Journal as the national first-place study.",
     shortDescription:
       "A published study, a team award, and a careful reading of what the data supports.",
     proof: "Co-author · national first-place study, 2025 Youreka Journal",
     contributions: [
-      "Co-authored the published study with Liyona Wang, Shikai Jin and Elijah Murtagh.",
+      "Handled much of the paper’s writing, data analysis and coordination.",
+      "Coded graphs in R while learning how to use it for the research.",
+      "Helped lead revisions to our hypotheses when the initial tests did not support them."
     ],
-    teamContext:
-      "The study and national first-place recognition belong to the research team: Liyona Wang, Shikai Jin, Elijah Murtagh and me. The analysis compared country-level indicators across 34 countries.",
-    evidenceNote:
-      "The final journal identifies the four authors and first-place recognition on PDF page 4; the study’s 34-country sample is described on page 5. The visual here is an original evidence summary, not a reproduction of the journal.",
+    teamContext: "The paper and first-place recognition belong to all four of us: Liyona Wang, Shikai Jin, Elijah Murtagh and me. An AI tool helped me research many sources, and AI also helped me learn R.",
+    evidenceNote: "The final journal identifies the four authors and first-place recognition on PDF page 4; the 34-country sample is described on page 5. My account of the writing, analysis, R work and AI assistance was added on 12 October 2026; the journal does not establish the division of work.",
     decision: {
       label: "Research interpretation / team study",
       title: "Keep the claim at the level of the data.",
       body: [
         "The paper reports a weak negative association: r = −0.3464. Higher adolescent fertility was associated with lower pediatric treatment coverage in this sample.",
-        "Country-level correlation cannot establish why an individual child receives treatment. Aggregated estimates, missing-country exclusions and mixed observation years limit the inference. The result is an association, not a causal explanation.",
+        "A country-level correlation can't tell us why any one child gets treatment. We used aggregated estimates, excluded countries with missing data, and compared observations from different years. Those choices limit what we can conclude. The result shows an association; it doesn't establish a cause.",
       ],
       source:
         "https://drive.google.com/file/d/1lTrTsLfvYSEkUlYoGWTSYcoekdeiJqu4/view",
@@ -222,9 +219,10 @@ export const caseStudyContent: CaseStudyContent[] = [
       { value: "2025", label: "Youreka Canada Journal" },
     ],
     stack: [
+      "R",
       "Public health data",
       "Correlation analysis",
-      "Research communication",
+      "Research communication"
     ],
     imageAsset: "research",
     artifactLabel: "Published study / evidence summary",
@@ -239,21 +237,27 @@ export const caseStudyContent: CaseStudyContent[] = [
     },
     sections: [
       {
-        heading: "The research question",
-        body: [
-          "Our team asked whether adolescent fertility rates were associated with pediatric antiretroviral treatment coverage across Sub-Saharan Africa. We paired country-level indicators for 34 countries to examine that relationship.",
-        ],
+        "heading": "The research question",
+        "body": [
+          "Our team asked whether adolescent fertility rates were associated with pediatric antiretroviral treatment coverage across Sub-Saharan Africa. We paired country-level indicators for 34 countries to examine that relationship."
+        ]
       },
       {
-        heading: "A result with limits",
-        body: [
-          "The study compares 2022 treatment coverage with fertility observations from 2016 to 2022. Countries with missing indicators were excluded; estimated and aggregated values do not capture every local circumstance.",
-          "The 2025 Youreka Canada Journal includes the paper and identifies it as the national first-place study. That is recognition of the team's research, not evidence of clinical or policy impact.",
-        ],
+        "heading": "Learning R while doing the research",
+        "body": [
+          "Learning R and getting the graphs to work was hard. My code broke and didn't work for a long time. AI helped me get it working, and I was surprised by how well it was able to teach me.",
+          "Our first hypotheses didn't hold up when we tested them, so we changed them. That was a team effort, but I helped lead a lot of it."
+        ]
       },
+      {
+        "heading": "A result with limits",
+        "body": [
+          "The study compares 2022 treatment coverage with fertility observations from 2016 to 2022.",
+          "Our study was published in the 2025 Youreka Canada Journal and received national first-place recognition as a team."
+        ]
+      }
     ],
-    lesson:
-      "The useful result is the one you can explain with its uncertainty intact.",
+    lesson: "I'd tackle research differently next time. I did a lot of the work myself, and I'd learn how to delegate tasks properly.",
     links: [
       {
         label: "2025 Youreka Canada Journal",
@@ -277,25 +281,25 @@ export const caseStudyContent: CaseStudyContent[] = [
     status: "Prototype",
     thesis: "From uploaded spreadsheets to inspectable answers.",
     summary:
-      "During my software engineering internship, I developed a prototype for exploring uploaded Excel and CSV data through charts, summaries and natural-language questions.",
+      "During my internship at DocuBridge, I developed a prototype where you could upload an Excel or CSV file, explore charts and summaries, and ask questions about the data.",
     shortDescription:
       "An Excel and CSV analysis prototype connecting a Python backend to a React interface.",
     proof:
       "Public backend source · upload, sheet selection, analysis and questions",
     contributions: [
-      "Development of the spreadsheet-analysis prototype during my internship.",
-      "Connecting data analysis and generated questions with an inspectable interface.",
+      "Developed the spreadsheet-analysis prototype during my internship.",
+      "Connected the data analysis and generated questions to an interface you can inspect.",
     ],
     teamContext:
-      "This case describes an internship prototype. The public repository documents implemented paths, not production adoption, financial accuracy or authorship of every line.",
+      "This was an internship prototype. The public repository shows the implemented paths, not production adoption, financial accuracy or who wrote every line.",
     evidenceNote:
-      "Role and period are my account. Implementation details below are inspectable in the public backend at commit a6c9d2b, checked 29 September 2026.",
+      "Role and period are my account. You can inspect the implementation in the public backend at commit a6c9d2b, checked 29 September 2026.",
     decision: {
       label: "Inspectable implementation choice",
       title: "Select the sheet before asking the question.",
       body: [
         "The upload path lists Excel worksheets and records a selected sheet. The analysis and question paths then load that selected sheet; CSV files take a separate parser path.",
-        "The analysis response also returns column names, numeric columns, summary statistics and charts. It exposes structured data alongside generated answers, giving the interface material a reader can inspect. This is a description of the source, not an accuracy benchmark.",
+        "The analysis also returns column names, numeric columns, summary statistics and charts alongside the generated answers. You can inspect how the code produces them; this isn't an accuracy benchmark.",
       ],
       source:
         "https://github.com/tejask-dev/Docubridge-Intership/blob/a6c9d2b4e81b9fa3bc6d61d9958f03936174ee2f/Backend/app.py#L364-L374",
@@ -332,15 +336,17 @@ export const caseStudyContent: CaseStudyContent[] = [
         ],
       },
       {
+        heading: "Learning the technical skills",
+        body: ["Honestly, one problem I ran into was learning the technical skills I needed to actually build something like this."],
+      },
+      {
         heading: "A prototype with a visible path",
         body: [
-          "The repository preserves upload, worksheet selection, analysis, chart and question endpoints. Those are concrete implementation artifacts that can be inspected independently of this portfolio.",
-          "The work is presented as a prototype. It is not evidence of production reliability, validated forecasts, financial advice or customer savings.",
+          "You can inspect the upload, worksheet selection, analysis, chart and question endpoints in the public repository.",
+          "I built this as a prototype. I don't have evidence of production reliability, accurate forecasts or customer savings, and I don't present it as financial advice.",
         ],
       },
     ],
-    lesson:
-      "An answer becomes more useful when the underlying data and the path to it stay visible.",
     links: [
       {
         label: "Analysis backend · pinned source",
@@ -359,31 +365,30 @@ export const caseStudyContent: CaseStudyContent[] = [
     slug: "soma-ai",
     title: "Soma AI",
     kicker: "05 / Closed experiment",
-    role: "Developer and backend contributor",
+    role: "Backend and model-integration contributor",
     period: "2025–2026",
     status: "Closed in 2026",
-    thesis: "Building an experiment, and knowing when to stop.",
+    thesis: "A health-education experiment that ran into infrastructure limits.",
     summary:
-      "I contributed to the backend and model integration for a team-built teen-health education experiment. Soma closed in 2026; its source and historical interface remain a record of the work.",
+      "I worked on the backend and model integration for Soma, a teen-health education experiment we built as a team. It closed in 2026. You can still see the source and the old interface.",
     shortDescription:
       "Backend and model integration for a team-built health-education experiment that closed.",
     proof: "Flask backend and model integration · closed in 2026",
     contributions: [
-      "Backend development using Python and Flask.",
-      "Model integration supporting the conversational experience.",
-      "Connecting the React experience with the backend conversation flow.",
+      "Worked on the backend using Python and Flask.",
+      "Integrated the model for the conversational experience.",
+      "Connected the React interface with the backend conversation flow.",
     ],
     teamContext:
-      "Soma was a team-built educational experiment. The team reported that more than 300 people tried it. That count is not a measure of active or retained users, clinical value or product-market fit.",
-    evidenceNote:
-      "Role, trial count and closure are the team's and my account. The public source supports the Flask, React and OpenRouter implementation description.",
+      "Our team reported that more than 300 people tried Soma. That tells us people tried it; it doesn't tell us how many kept using it or whether it helped their health.",
+    evidenceNote: "Role, trial count and closure are the team’s and my account. My account of the infrastructure-related closure was added on 12 October 2026. The public source supports the Flask, React and OpenRouter implementation description.",
     decision: {
-      label: "Decision to close / personal reflection",
-      title: "A trial count was not a reason to keep going.",
-      body: [
-        "My account of the closure is that early interest did not become enough repeat value, clear ownership or a sustainable reason to continue. We closed the project in 2026.",
-        "That is a reflection on the experience, not a measured retention study. I distinguish the fact that people tried the product from evidence that it deserved to become an ongoing service.",
-      ],
+      "label": "Why the project ended / my account",
+      "title": "Infrastructure limited what we could continue.",
+      "body": [
+        "We ended Soma because of infrastructure limitations in Sub-Saharan Africa. That is my account of why we stopped.",
+        "The project closed in 2026. Its source and historical interface remain available as a record of the implementation."
+      ]
     },
     metrics: [
       { value: "Closed", label: "project status since 2026" },
@@ -410,13 +415,11 @@ export const caseStudyContent: CaseStudyContent[] = [
       {
         heading: "What remains",
         body: [
-          "The repository contains the Flask backend, OpenRouter connection code and React frontend. It preserves an implementation to inspect, not evidence of a currently operating service.",
-          "The project is closed. Its value in this portfolio is the engineering work and the candid reflection on stopping an experiment, without clinical, privacy or efficacy claims.",
+          "The repository still has the Flask backend, OpenRouter connection and React frontend. You can inspect the work there, but the service is closed.",
+          "The source shows what we built. It doesn't show clinical validation.",
         ],
       },
     ],
-    lesson:
-      "Separate the satisfaction of building something from the evidence for continuing it.",
     links: [
       {
         label: "Soma backend · pinned source",

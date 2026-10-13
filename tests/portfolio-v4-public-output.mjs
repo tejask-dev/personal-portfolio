@@ -56,9 +56,10 @@ assert.equal(profile.email, "tejas.kaushik@outlook.com");
 assert.deepEqual(contributions.map(item => item.id), Array.from({ length: 12 }, (_, index) => `C${index + 1}`));
 assert.equal(leadStories.length, 3);
 assert.equal(caseStudyContent.length, 5);
-assert.match(anticipyNarrative.assistance, /Claude and Codex contributed substantially/);
-assert.match(anticipyNarrative.assistance, /work-email prototype was implemented with Codex/);
-assert.match(anticipyNarrative.team, /team foundations/);
+assert.match(anticipyNarrative.assistance, /Claude and Codex did a lot of the implementation/);
+assert.match(anticipyNarrative.assistance, /I worked with Codex on the selected work-email prototype/);
+assert.match(anticipyNarrative.team, /team had already built the product foundations/);
+assert.match(anticipyNarrative.team, /I didn't build Anticipy on my own/);
 const byId = Object.fromEntries(contributions.map(item => [item.id, item]));
 for (const [id, field, boundary] of [
   ["C1", "result", /deployed.*personally reported/i],
