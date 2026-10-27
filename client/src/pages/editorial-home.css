@@ -4,10 +4,11 @@
 .eh-brand{display:inline-flex;align-items:center;gap:12px;font-size:14px;font-weight:600;letter-spacing:.025em;text-decoration:none;min-height:44px}
 .eh-brand svg{width:27px;height:34px}
 .eh-header nav{display:flex;gap:28px;flex-wrap:wrap}.eh-header nav a{display:inline-flex;align-items:center;min-height:44px;font-size:14px;text-decoration:none}.eh-header nav a:hover{text-decoration:underline;text-underline-offset:5px}
-.portfolio-v3.eh-hero{padding-block:56px 60px;position:relative}
-.portfolio-v3.eh-hero h1{font:300 clamp(42px,5.1vw,72px)/1.08 var(--pv-serif);letter-spacing:-.045em;max-width:20ch;margin:18px 0 24px}
-.eh-hero-role{max-width:77ch;font-size:17px;color:#42636a;line-height:1.6}
+.portfolio-v3.eh-hero{padding-block:var(--ow-space-10);position:relative}
+.portfolio-v3.eh-hero h1{font:300 var(--ow-hero)/var(--ow-leading-title) var(--pv-serif);letter-spacing:var(--ow-tracking-title);max-width:24ch;margin:18px 0 24px}
+.eh-hero-role{max-width:var(--ow-measure);font-size:var(--ow-body);color:var(--ow-muted);line-height:var(--ow-leading-body)}
 .portfolio-v3 .eh-hero-proof{max-width:72ch;font-size:15px;border-left:2px solid #678d86;padding-left:17px;margin:22px 0 25px}
+.eh-hero-actions .pv-button{min-height:var(--ow-action-height);padding:var(--ow-space-4) var(--ow-space-5);font-size:var(--ow-body-mobile)}
 .eh-hero-actions{display:flex;align-items:center;gap:28px;flex-wrap:wrap}
 .eh-header~main .pv-work{padding-block:78px 82px}.eh-header~main .pv-section-heading{margin-bottom:45px}
 .eh-header~main .pv-work-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:48px 32px}

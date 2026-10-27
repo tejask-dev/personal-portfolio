@@ -1,0 +1,53 @@
+/* Open Water: values derived from the shipped ivory/teal editorial identity.
+   New or revised UI uses these roles; legacy scene geometry remains local. */
+:root {
+  --ow-paper: #f6f1e7;
+  --ow-ink: #143b43;
+  --ow-muted: #42636a;
+  --ow-line: #143b432c;
+  --ow-tint: #e9e8da;
+  --ow-action: #184e56;
+  --ow-action-hover: #24505a;
+  --ow-focus: #18586f;
+  --ow-serif: "Spectral", Georgia, serif;
+  --ow-sans: "Aspekta", "Helvetica Neue", Arial, sans-serif;
+  --ow-mono: ui-monospace, "SFMono-Regular", monospace;
+  --ow-caption: 12px;
+  --ow-micro: 11px;
+  --ow-choice-body: 15px;
+  --ow-hero: clamp(44px, 7.2vw, 96px);
+  --ow-action-height: 56px;
+  --ow-small: 14px;
+  --ow-body-mobile: 16px;
+  --ow-body: 17px;
+  --ow-title: 32px;
+  --ow-choice-title: clamp(26px, 8vw, 32px);
+  --ow-display-mobile: 64px;
+  --ow-chooser-mobile: clamp(48px, 16vw, 64px);
+  --ow-display: 96px;
+  --ow-leading-body: 1.65;
+  --ow-leading-title: 1.08;
+  --ow-tracking-title: -.035em;
+  --ow-tracking-label: .12em;
+  --ow-weight-body: 400;
+  --ow-weight-display: 300;
+  --ow-weight-action: 600;
+  --ow-space-1: 4px;
+  --ow-space-2: 8px;
+  --ow-space-3: 12px;
+  --ow-space-4: 16px;
+  --ow-space-5: 24px;
+  --ow-space-6: 32px;
+  --ow-space-7: 48px;
+  --ow-space-8: 64px;
+  --ow-space-10: 96px;
+  --ow-measure: 68ch;
+  --ow-container: 1280px;
+  --ow-gutter: 48px;
+  --ow-focus-width: 2px;
+  --ow-fast: 140ms;
+  --ow-base: 220ms;
+  --ow-ease-out: cubic-bezier(.22, 1, .36, 1);
+}
+@media (max-width: 1000px) { :root { --ow-gutter: 32px; } }
+@media (max-width: 700px) { :root { --ow-gutter: 20px; } }

@@ -1,18 +1,18 @@
 /* The reading layer: warm paper, dark ink, ordinary document flow. */
 .portfolio-v3 {
-  --pv-paper: #f6f1e7;
-  --pv-ink: #143b43;
-  --pv-muted: #42636a;
-  --pv-line: #143b432c;
-  --pv-tint: #e9e8da;
-  --pv-serif: "Spectral", Georgia, serif;
-  --pv-sans: "Aspekta", "Helvetica Neue", Arial, sans-serif;
+  --pv-paper: var(--ow-paper);
+  --pv-ink: var(--ow-ink);
+  --pv-muted: var(--ow-muted);
+  --pv-line: var(--ow-line);
+  --pv-tint: var(--ow-tint);
+  --pv-serif: var(--ow-serif);
+  --pv-sans: var(--ow-sans);
   color: var(--pv-ink);
   background: var(--pv-paper);
   font-family: var(--pv-sans);
-  font-size: 17px;
-  font-weight: 300;
-  line-height: 1.65;
+  font-size: var(--ow-body);
+  font-weight: var(--ow-weight-body);
+  line-height: var(--ow-leading-body);
   color-scheme: light;
 }
 .portfolio-v3 *,
@@ -46,6 +46,9 @@
 }
 .pv-shell {
   width: min(1280px, calc(100% - 96px));
+  margin-inline: auto;
+}
+.portfolio-v3 .pv-case-artifact {
   margin-inline: auto;
 }
 .portfolio-v3 .pv-eyebrow {
