@@ -374,7 +374,7 @@ export default function Home() {
             <p>
               An interactive world and a scrolling dive, built to carry the
               same work differently. Sail the yacht, meet Dakota, or follow
-              a scuba descent through the portfolio.
+              a cinematic descent through the portfolio.
             </p>
             </div>
             {!worldOpen ? (
@@ -530,9 +530,8 @@ export default function Home() {
       <details className="portfolio-v3 pv-world-credits">
         <summary>World credits</summary>
         <p>
-          The scrolling descent, diver, reef, fish and fallback illustration are
-          original Open Water artwork created with Codex assistance. Native scroll
-          animation uses Motion. <a href={`${import.meta.env.BASE_URL}assets/open-water-v5/CREDITS.md`}>Descent sources and license</a>.
+          Underwater film by JUN HO LEE, via Pexels, edited for Open Water with
+          Higgsfield Katana. Native scroll animation uses Motion. <a href={`${import.meta.env.BASE_URL}assets/open-water-v5/CREDITS.md`}>Descent sources and license</a>.
         </p>
         <p>
           The V4 superyacht, tender, Nemo and Dory models, regional reefs, caves,

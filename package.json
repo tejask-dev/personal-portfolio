@@ -90,9 +90,7 @@
     "three": "^0.167.1",
     "tw-animate-css": "^1.2.5",
     "vaul": "^1.1.2",
-    "wouter": "^3.3.5",
-    "zod": "^3.25.76",
-    "zod-validation-error": "^3.4.0"
+    "wouter": "^3.3.5"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.13.0",
@@ -113,5 +111,10 @@
   },
   "engines": {
     "node": ">=22.6.0"
+  },
+  "overrides": {
+    "@tailwindcss/typography": {
+      "postcss-selector-parser": "^6.1.5"
+    }
   }
 }

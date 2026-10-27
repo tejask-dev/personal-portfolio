@@ -1,5 +1,5 @@
 /** Scroll descent browser regressions, using native inputs and read-only telemetry.
- * BASE_URL=http://127.0.0.1:4175/ node tests/open-water-scroll-dive.mjs
+ * BASE_URL=http://127.0.0.1:4186/ node tests/open-water-scroll-dive.mjs
  * QA_ONLY selects named checks; QA_OUTPUT/QA_REPORT_NAME keep separate receipts.
  * Run alone with the team's GPU slot. Phone sizes are emulation, not devices.
  */
@@ -10,24 +10,24 @@ import { mkdir, writeFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import path from "node:path";
 
-const url = process.env.BASE_URL || process.env.QA_URL || "http://127.0.0.1:4175/";
+const url = process.env.BASE_URL || process.env.QA_URL || "http://127.0.0.1:4186/";
 const output = path.resolve(process.env.QA_OUTPUT || "design/open-water-v5-scroll/implementation-qa");
 await mkdir(output, { recursive: true });
 const browser = await chromium.launch({ channel: "chrome", headless: true });
 const report = {
   at: new Date().toISOString(), url, browser: browser.version(),
   build: process.env.QA_BUILD_LABEL || "Build recorded from served entry assets below",
-  scope: "Isolated Chrome; native wheel/keyboard/touch-emulated input, actual canvas screenshots, passive WebGL submission observation and read-only DOM camera telemetry. Failure injection is limited to named cases. No GPU completion-time, physical-device, thermal or screen-reader-user claim.",
+  scope: "Isolated Chrome; native wheel/keyboard/touch-emulated input, actual film screenshots and decoded-frame counts, passive voyage WebGL submission observation and read-only DOM progress. Failure injection is limited to named cases. No GPU completion-time, physical-device, thermal or screen-reader-user claim.",
   checks: [], screenshots: [], completed: false,
 };
 const flush = () => writeFile(path.join(output, path.basename(process.env.QA_REPORT_NAME || "scroll-dive-browser.json")), `${JSON.stringify(report, null, 2)}\n`);
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 const digest = bytes => createHash("sha256").update(bytes).digest("hex");
 const section = page => page.locator("#descent");
-const canvas = page => page.locator("#descent canvas");
+const film = page => page.locator("#descent video");
 // Locator screenshots include overlapping DOM. Hide only decorative/story overlays
-// for the capture itself so changing text cannot impersonate moving WebGL pixels.
-const isolatedCanvas = page => canvas(page).screenshot({ style: ".sd-stories,.sd-masthead,.sd-depth,.sd-bottom,.sd-shade,.sd-grain{visibility:hidden!important}" });
+// for the capture itself so changing text cannot impersonate decoded film pixels.
+const isolatedFilm = page => film(page).screenshot({ style: ".sd-stories,.sd-masthead,.sd-depth,.sd-bottom,.sd-shade,.sd-grain{visibility:hidden!important}" });
 const storyIds = ["surface", "connections", "fieldwork", "depth"];
 const headings = ["There's more beneath the surface.", "Interfaces connect. Systems deliver.", "Follow the curiosity. Check the evidence.", "The depth is in the details."];
 
@@ -85,10 +85,10 @@ async function boot(page, { hero = true, hash = "#voyage" } = {}) {
   await section(page).waitFor();
   if (hero) await page.locator("#voyage.is-ready").waitFor({ timeout: 45000 });
 }
-async function snapshot(page, name, canvasOnly = false) {
+async function snapshot(page, name, filmOnly = false) {
   const file = path.join(output, `${name}.png`);
-  const bytes = canvasOnly ? await isolatedCanvas(page) : await page.screenshot({ path: file });
-  if (canvasOnly) await writeFile(file, bytes);
+  const bytes = filmOnly ? await isolatedFilm(page) : await page.screenshot({ path: file });
+  if (filmOnly) await writeFile(file, bytes);
   report.screenshots.push(file); return bytes;
 }
 async function dimensions(page) {
@@ -104,13 +104,14 @@ async function wheelTo(page, progress) {
     const actual = await section(page).evaluate(el => ({ y: scrollY, data: { ...el.dataset }, height: el.getBoundingClientRect().height, top: el.getBoundingClientRect().top, viewport: innerHeight, hash: location.hash, focused: document.activeElement?.outerHTML.slice(0, 300), wheelTarget: document.elementFromPoint(innerWidth - 20, innerHeight * .5)?.outerHTML.slice(0, 300) }));
     throw new Error(`Native wheel target ${progress}; before ${JSON.stringify(d)}; requestedY ${target}; after ${JSON.stringify(actual)}; ${error.message}`);
   }
-  await page.waitForTimeout(950); // camera's authored damping and telemetry cadence settle
+  await page.waitForTimeout(950); // native scroll and heading reveal settle
 }
-async function cameraState(page) {
-  return page.getByTestId("scuba-scene-canvas").evaluate(el => {
-    const d = el.dataset;
-    return { progress: +d.progress, depth: +d.depth, cameraY: +d.cameraY, cameraZ: +d.cameraZ, underwater: d.underwater, active: d.active, draws: +d.draws, triangles: +d.triangles };
-  });
+async function filmState(page) {
+  return film(page).evaluate(video => ({
+    time: video.currentTime, paused: video.paused, width: video.videoWidth, height: video.videoHeight,
+    frames: video.getVideoPlaybackQuality().totalVideoFrames,
+    progress: +document.querySelector("#descent").style.getPropertyValue("--dive-progress"),
+  }));
 }
 async function frameWindow(page, milliseconds = 700) {
   const start = await page.evaluate(() => performance.now()); await delay(milliseconds);
@@ -206,47 +207,42 @@ try {
   const html = await (await fetch(url)).text();
   report.entryAssets = [...html.matchAll(/(?:src|href)=["']([^"']+\.(?:js|css))["']/g)].map(match => match[1]);
 
-  await check("native wheel reverses real surface-to-reef camera and transfers continuous rendering", async () => {
+  await check("native wheel reverses reading progress while real film plays and voyage rendering stops", async () => {
     const { page, context, errors } = await makePage();
     try {
       await boot(page); await delay(900);
-      const opening = await frameWindow(page); assert.ok(opening.voyage > 5); assert.equal(opening.descent, 0);
+      assert.equal(await film(page).count(), 0, "Film loaded before reaching the descent");
+      const opening = await frameWindow(page); assert.ok(opening.voyage > 5);
       await wheelTo(page, .02);
-      await page.waitForFunction(() => document.querySelector("#descent")?.dataset.sceneReady === "true", null, { timeout: 45000 });
+      await page.waitForFunction(() => document.querySelector("#descent video")?.readyState >= 2);
+      assert.equal(await page.locator("#descent canvas").count(), 0, "Descent still creates a second 3D scene");
       const stages = [];
       for (const [name, p] of [["surface", .02], ["waterline", .27], ["reef", .57], ["deep", .93]]) {
-        await wheelTo(page, p); const camera = await cameraState(page), bytes = await snapshot(page, `desktop-${name}`), art = await snapshot(page, `canvas-${name}`, true);
-        assert.ok(Number.isFinite(camera.cameraY)); assert.ok(camera.triangles > 1000 && camera.draws > 1, `No substantial real scene ${JSON.stringify(camera)}`);
-        stages.push({ name, requested: p, camera, imageSHA256: digest(bytes), canvasSHA256: digest(art), frames: await frameWindow(page, 550), controls: await hitControls(page, `desktop-${name}`) });
+        await wheelTo(page, p); const before = await filmState(page);
+        const bytes = await snapshot(page, `desktop-${name}`), art = await snapshot(page, `film-${name}`, true);
+        const frames = await frameWindow(page, 550), after = await filmState(page);
+        assert.ok(before.width >= 960 && before.height >= 540 && !before.paused);
+        assert.ok(after.frames > before.frames + 5, "Film is not decoding actual frames");
+        assert.equal(frames.voyage, 0, "Offscreen game still renders");
+        stages.push({ name, progress: before.progress, imageSHA256: digest(bytes), filmSHA256: digest(art), frames, controls: await hitControls(page, name) });
       }
-      assert.ok(stages[0].camera.cameraY > 0, "Opening camera must actually be above the water plane");
-      assert.ok(stages.at(-1).camera.cameraY < -15, "Camera never reaches a substantial underwater depth");
-      assert.equal(stages.at(-1).camera.underwater, "true");
-      for (let i = 1; i < stages.length; i++) assert.ok(stages[i].camera.cameraY < stages[i - 1].camera.cameraY - 1);
-      assert.equal(new Set(stages.map(s => s.canvasSHA256)).size, 4, "Camera checkpoints have identical visual output");
-      for (const stage of stages) { assert.ok(stage.frames.descent > 5); assert.equal(stage.frames.voyage, 0, "Offscreen game still continuously renders"); }
-      await wheelTo(page, .1); const reversed = await cameraState(page); assert.ok(reversed.cameraY > 0);
-      const returnLink = page.locator(".sd-expedition-mark"); await returnLink.click(); await page.waitForFunction(() => Math.abs(document.querySelector("#voyage").getBoundingClientRect().top - parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop)) < 2); await delay(200);
-      const returned = await frameWindow(page); assert.ok(returned.voyage > 5); assert.equal(returned.descent, 0);
-      const overlap = await page.evaluate(() => {
-        const frames = window.__scrollDiveQA.frames; let run = 0, maxRun = 0;
-        for (const f of frames) { run = f.voyage && f.descent ? run + 1 : 0; maxRun = Math.max(maxRun, run); }
-        return { maxConsecutiveSharedFrames: maxRun, sharedFrames: frames.filter(f => f.voyage && f.descent).length };
-      });
-      assert.ok(overlap.maxConsecutiveSharedFrames <= 2, `Concurrent continuous scene loops: ${JSON.stringify(overlap)}`);
+      assert.equal(new Set(stages.map(s => s.filmSHA256)).size, 4, "Film checkpoints have identical pixels");
+      for (let i = 1; i < stages.length; i++) assert.ok(stages[i].progress > stages[i-1].progress + .1);
+      await wheelTo(page, .1); assert.ok((await filmState(page)).progress < .14);
       const cycles = [];
-      for (let cycle = 1; cycle <= 3; cycle++) {
+      for (let cycle = 0; cycle < 3; cycle++) {
+        await page.locator(".sd-expedition-mark").click();
+        await page.waitForFunction(() => document.querySelector("#descent video")?.paused);
+        await delay(300); const paused = await filmState(page);
+        const frames = await frameWindow(page); assert.ok(frames.voyage > 5);
+        assert.equal((await filmState(page)).time, paused.time, "Offscreen film kept advancing");
         await wheelTo(page, .55);
-        const frames = await frameWindow(page, 600);
-        const resources = await page.evaluate(() => ({ contexts: window.__scrollDiveQA.contexts, handles: window.__scrollDiveQA.resources }));
-        cycles.push({ cycle, frames, resources });
-        await returnLink.click(); await page.waitForFunction(() => Math.abs(document.querySelector("#voyage").getBoundingClientRect().top - parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop)) < 2); await delay(200);
+        await page.waitForFunction(() => !document.querySelector("#descent video").paused);
+        cycles.push(await page.evaluate(() => ({ contexts: window.__scrollDiveQA.contexts, resources: window.__scrollDiveQA.resources })));
       }
-      const baseline = cycles[0].resources, final = cycles.at(-1).resources;
-      assert.equal(final.contexts, baseline.contexts, "Re-entering the retained story created additional WebGL contexts");
-      const handleGrowth = Object.fromEntries(Object.keys(baseline.handles).map(kind => [kind, final.handles[kind].live - baseline.handles[kind].live]));
-      assert.ok(Object.values(handleGrowth).every(n => n <= 0), `Live GL handles grow across native re-entry: ${JSON.stringify(handleGrowth)}`);
-      assert.deepEqual(errors, []); return { opening, stages, reversed, returned, overlap, cycles, handleGrowth, measurementBoundary: "Short CPU-side render-submission intervals and live handle counts; not GPU duration, VRAM bytes or sustained thermal acceptance." };
+      assert.equal(cycles[2].contexts, cycles[0].contexts);
+      for (const kind of Object.keys(cycles[0].resources)) assert.ok(cycles[2].resources[kind].live <= cycles[0].resources[kind].live, `GPU handles grew: ${kind}`);
+      assert.deepEqual(errors, []); return { opening, stages, cycles };
     } finally { await context.close(); }
   });
 
@@ -256,10 +252,10 @@ try {
       await boot(page); await wheelTo(page, .35);
       await page.waitForFunction(() => document.querySelector("#descent")?.dataset.sceneReady === "true");
       await page.getByRole("button", { name: "Pause scenery", exact: true }).click(); await delay(700);
-      const before = await cameraState(page), depth = await page.locator(".sd-depth strong").innerText(), image = await isolatedCanvas(page);
-      await wheelTo(page, .64); const after = await cameraState(page), next = await isolatedCanvas(page);
+      const before = await filmState(page), depth = await page.locator(".sd-depth strong").innerText(), image = await isolatedFilm(page);
+      await wheelTo(page, .64); const after = await filmState(page), next = await isolatedFilm(page);
       assert.equal(digest(image), digest(next), "Paused scenery changed pixels while scrolling");
-      assert.equal(after.cameraY, before.cameraY); assert.equal(after.progress, before.progress);
+      assert.equal(after.time, before.time); assert.equal(after.progress, before.progress);
       assert.equal(await page.locator(".sd-depth strong").innerText(), depth, "Depth instrument advanced while scenery was frozen");
       const frames = await frameWindow(page); assert.equal(frames.descent, 0); assert.equal(frames.voyage, 0);
       await readAllCopy(page);
@@ -267,8 +263,8 @@ try {
       assert.equal(translated, 0, "Pause left masked headings hidden");
       await snapshot(page, "paused-copy-readable");
       await page.getByRole("button", { name: "Play scenery", exact: true }).click(); await delay(1000);
-      const resumed = await cameraState(page); assert.ok(resumed.cameraY < before.cameraY - 3);
-      assert.deepEqual(errors, []); return { before, after, resumed, frames, pausedCanvasSHA256: digest(image) };
+      const resumed = await filmState(page); assert.ok(!resumed.paused && resumed.frames > after.frames);
+      assert.deepEqual(errors, []); return { before, after, resumed, frames, pausedFilmSHA256: digest(image) };
     } finally { await context.close(); }
   });
 
@@ -303,37 +299,33 @@ try {
   await check("reduced motion is compact on entry and responds live after real scenery has loaded", async () => {
     const { page, context, errors } = await makePage({ reducedMotion: "reduce" });
     try {
-      await boot(page); const initial = await compactLayout(page); assert.equal(await canvas(page).count(), 0);
+      await boot(page); const initial = await compactLayout(page); assert.equal(await film(page).count(), 0);
       await snapshot(page, "reduced-motion-initial");
       await page.emulateMedia({ reducedMotion: "no-preference" });
       await page.waitForFunction(() => !document.querySelector("#descent").classList.contains("sd-reduced"));
       await wheelTo(page, .55);
-      await page.waitForFunction(() => document.querySelector("#descent")?.dataset.sceneReady === "true"); assert.equal(await canvas(page).count(), 1);
+      await page.waitForFunction(() => document.querySelector("#descent")?.dataset.sceneReady === "true"); assert.equal(await film(page).count(), 1);
       await page.emulateMedia({ reducedMotion: "reduce" });
-      await page.waitForFunction(() => [...document.querySelectorAll("#descent .sd-chapter")].every(chapter => getComputedStyle(chapter).minHeight === "0px") && !document.querySelector("#descent canvas"), null, { timeout: 2000 });
-      const live = await compactLayout(page); assert.equal(await canvas(page).count(), 0);
+      await page.waitForFunction(() => [...document.querySelectorAll("#descent .sd-chapter")].every(chapter => getComputedStyle(chapter).minHeight === "0px") && !document.querySelector("#descent video"), null, { timeout: 2000 });
+      const live = await compactLayout(page); assert.equal(await film(page).count(), 0);
       assert.deepEqual(errors, []); return { initial, live, realSceneRemovedOnPreferenceChange: true };
     } finally { await context.close(); }
   });
 
-  for (const failure of ["unavailable WebGL", "blocked scenery chunk"]) await check(`${failure} retains compact readable narrative and professional links`, async () => {
+  for (const failure of ["blocked film", "invalid film"]) await check(`${failure} retains compact readable narrative and professional links`, async () => {
     const { page, context, errors, requests } = await makePage(); let blocked = 0;
     try {
-      if (failure === "unavailable WebGL") await page.addInitScript(() => {
-        const original = HTMLCanvasElement.prototype.getContext;
-        HTMLCanvasElement.prototype.getContext = function (kind, ...args) { return /^(webgl|webgl2|experimental-webgl)$/.test(String(kind)) ? null : Reflect.apply(original, this, [kind, ...args]); };
+      await page.route(/descent-(?:film|mobile)\.mp4/, route => {
+        blocked++;
+        return failure === "blocked film" ? route.abort("failed") : route.fulfill({ status: 200, contentType: "video/mp4", body: "invalid media" });
       });
-      else await page.route(/\/[^/]*ScubaScene[^/]*\.(?:js|tsx)(?:\?.*)?$/, route => { blocked++; return route.abort("failed"); });
-      await boot(page, { hero: failure !== "unavailable WebGL" });
-      const initial = await dimensions(page);
+      await boot(page); const initial = await dimensions(page);
       await page.mouse.wheel(0, initial.top + .1 * (initial.height - initial.viewport) - initial.current);
-      await page.waitForFunction(() => document.querySelector("#descent")?.dataset.sceneFailed === "true", null, { timeout: 30000 });
-      if (failure !== "unavailable WebGL") assert.ok(blocked > 0, "Failure injection never intercepted the actual scene chunk");
-      const layout = await compactLayout(page); await snapshot(page, failure === "unavailable WebGL" ? "no-webgl-readable" : "chunk-failure-readable");
+      await page.waitForFunction(() => document.querySelector("#descent")?.dataset.sceneFailed === "true");
+      assert.ok(blocked > 0);
+      const layout = await compactLayout(page); await snapshot(page, failure.replaceAll(" ", "-"));
       await page.locator("#dive-link-depth").click(); await page.waitForFunction(() => location.hash === "#current-work");
-      assert.ok(await page.locator('#contact a[href^="mailto:"]').count());
-      assert.deepEqual(errors, [], "Graphics failures should be caught without uncaught page errors");
-      return { layout, interceptedChunkRequests: blocked, expectedGraphicsErrors: errors, failedRequests: requests, professionalDestinationsPresent: true };
+      assert.deepEqual(errors, []); return { layout, interceptedRequests: blocked, requests };
     } finally { await context.close(); }
   });
 
@@ -396,7 +388,7 @@ try {
       assert.deepEqual(axe.violations.map(v => ({ id: v.id, impact: v.impact, nodes: v.nodes.map(n => n.target) })), []);
       await page.getByRole("button", { name: "Pause scenery", exact: true }).click();
       assert.equal(await page.getByRole("button", { name: "Play scenery", exact: true }).getAttribute("aria-pressed"), "true", "Overlapping copy prevented the pause control from activating");
-      await delay(600); const frozen = await isolatedCanvas(page); await delay(400); assert.ok(frozen.equals(await isolatedCanvas(page)));
+      await delay(600); const frozen = await isolatedFilm(page); await delay(400); assert.ok(frozen.equals(await isolatedFilm(page)));
       await page.getByRole("button", { name: "Play scenery", exact: true }).click();
       assert.equal(await page.getByRole("button", { name: "Pause scenery", exact: true }).getAttribute("aria-pressed"), "false", "Overlapping copy prevented resume");
       assert.deepEqual(errors, []); return { viewport, touchScroll: { before, after }, widths, controls, hitTests, axeRulesPassed: axe.passes.length, pausedPixelsStable: true };
