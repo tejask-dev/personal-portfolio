@@ -106,7 +106,9 @@ export function Sailmark() {
 const nativeHref = (href: string) =>
   href.startsWith("/") ? `${import.meta.env.BASE_URL}${href.slice(1)}` : href;
 
-export default function OpenWaterExperience({ presentationPaused = false }: { presentationPaused?: boolean }) {
+export default function OpenWaterExperience({ presentationPaused = false, boarding = false, onBoardingReady }: {
+  presentationPaused?: boolean; boarding?: boolean; onBoardingReady?: (fallback: boolean) => void;
+}) {
   const [, navigate] = useLocation();
   const boat = useRef(voyage.boat),
     race = useRef(voyage.race),
@@ -388,6 +390,35 @@ export default function OpenWaterExperience({ presentationPaused = false }: { pr
     dispatch({ type: "FAIL" });
   }, []);
   const onReady = useCallback(() => setReady(true), []);
+  useEffect(() => {
+    if (!boarding) return;
+    // The chooser owns focus and input until it has revealed the ready vessel.
+    stopped();
+    if (latest.current.mode !== "surface" || isChallengeActivity(latest.current.activity) ||
+        race.current.phase === "countdown" || race.current.phase === "racing") {
+      dispatch({ type: "PAUSE", value: true });
+      return;
+    }
+    boat.current.speed = 0;
+    boat.current.turn = 0;
+    boat.current.target = null;
+    boat.current.route = [];
+    boat.current.arrived = null;
+    setObserved(null);
+    setDeckPanel(null);
+    setDiving(false);
+    dispatch({ type: "SAIL" });
+    setCameraMode("follow");
+    voyage.hasExplored = true;
+  }, [boarding, stopped]);
+  useEffect(() => {
+    if (boarding && active && (failed || (ready && yachtModel !== "loading"))) onBoardingReady?.(failed);
+  }, [boarding, active, ready, failed, yachtModel, onBoardingReady]);
+  useEffect(() => {
+    if (!boarding || (ready && yachtModel !== "loading") || failed) return;
+    const timer = window.setTimeout(onError, 15000);
+    return () => clearTimeout(timer);
+  }, [boarding, ready, yachtModel, failed, onError]);
   const updateTelemetry = useCallback((value: BoatState) => {
     setTelemetry({ ...value });
     if (
@@ -891,6 +922,7 @@ export default function OpenWaterExperience({ presentationPaused = false }: { pr
     document.addEventListener("visibilitychange", visibility);
     window.addEventListener("keyup", release);
     query.addEventListener("change", preference);
+    preference(); // The preference can change while this lazy component is rendering.
     return () => {
       observer.disconnect();
       window.removeEventListener("blur", blur);

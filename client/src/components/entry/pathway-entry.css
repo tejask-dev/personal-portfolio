@@ -20,3 +20,37 @@
 .pe-seascape{container-type:inline-size}.pe-vessel{left:7%;transform:translateX(calc(var(--journey)*45cqw));animation:none;transition:none}.pe-vessel svg{animation:pe-bob 3.5s ease-in-out 1}.pe-wave{animation-duration:3.5s;animation-iteration-count:1;animation-fill-mode:both}.pe-wave-front{animation-delay:0s;animation-duration:4s}.pe-wake{position:absolute;left:8%;top:67%;width:67%;height:42px;opacity:.55}.pe-wake path{stroke:#d5ece0;stroke-width:1;stroke-dasharray:1;stroke-dashoffset:calc(1 - var(--journey))}.pe-shell[data-ready=true] .pe-wave,.pe-shell[data-ready=true] .pe-vessel svg{animation-play-state:paused}.pe-shell[data-intro=false] .pe-wave,.pe-shell[data-intro=false] .pe-vessel svg{animation:none}
 @keyframes pe-line-in{from{transform:translateY(105%)}to{transform:translateY(0)}}@keyframes pe-horizon-in{from{transform:scaleX(0)}to{transform:scaleX(1)}}@keyframes pe-sun-in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 @media(max-width:700px){.pe-vessel{left:0;transform:translateX(calc(var(--journey)*27cqw))}.pe-seascape{opacity:.48}.pe-heading{max-width:none}.pe-heading>p:last-child{max-width:29ch}.pe-wake{top:73%;height:25px}}
+
+/* One continuous push through the original illustration, then a live-world reveal. */
+.pathway-entry[data-boarding=true]{overflow:hidden;background:#f5f0e5}
+.pathway-entry[data-boarding=true] .pe-shell{height:100%;overflow:hidden}
+.pathway-entry[data-boarding=true] .pe-header{position:relative;z-index:5;border-color:transparent;color:#173e43}
+.pathway-entry[data-boarding=true] .pe-header button{background:#173e43;color:#f5f0e5;border-radius:30px;padding-inline:18px}
+.pathway-entry[data-boarding=true] :is(.pe-heading,.pe-choices,.pe-ready,.pe-footer){pointer-events:none;animation:pe-leave .35s ease-in both}
+.pathway-entry[data-boarding=true] .pe-seascape{z-index:3;opacity:1;mask-image:none;animation:pe-board 1.8s cubic-bezier(.65,0,.25,1) both}
+.pathway-entry[data-boarding=true] .pe-bearing{opacity:0}
+.pathway-entry[data-boarding=true] .pe-vessel svg{animation:pe-cast-off 1.8s cubic-bezier(.65,0,.25,1) both}
+.pathway-entry[data-boarding=true] .pe-wake{animation:pe-wake-out 1.6s ease-out both;transform-origin:right}
+.pe-departure{position:fixed;z-index:4;inset:auto 24px max(9vh,36px);text-align:center;color:#fff8e9;pointer-events:none;animation:pe-departure-in .6s .5s both;text-shadow:0 2px 24px #123d46}
+.pe-departure-kicker{font:10px/1.6 monospace;letter-spacing:.24em;text-transform:uppercase}
+.pe-departure h2{font:400 clamp(32px,4.5vw,62px)/1.1 Georgia,serif;letter-spacing:-.035em;margin:16px 0}
+.pe-departure p{font:13px/1.7 Arial,sans-serif;max-width:44ch;margin:0 auto}
+.pe-departure-line{display:block;height:1px;width:140px;background:#f2e7c5a0;margin:24px auto 0;transform-origin:left;animation:pe-horizon-in 1.6s .5s both}
+.pathway-entry[data-revealing=true]{animation:pe-reveal .7s ease-in-out both}
+.pathway-entry[data-revealing=true]::backdrop{background:transparent}
+.pathway-entry[data-still=true][data-boarding=true]{background:#245a60}
+.pathway-entry[data-still=true][data-boarding=true] .pe-shell{background:none}
+.pathway-entry[data-still=true][data-boarding=true] :is(.pe-seascape,.pe-heading,.pe-choices,.pe-ready,.pe-footer){visibility:hidden;animation:none}
+.pathway-entry[data-still=true] .pe-departure{animation:none;inset:45% 24px auto}
+.pathway-entry[data-still=true][data-revealing=true]{animation:pe-reveal .12s linear both}
+@keyframes pe-leave{to{opacity:0;transform:translateY(12px)}}
+@keyframes pe-board{0%{transform:translate(0,0) scale(1)}35%{border-radius:20%}100%{transform:translate(var(--board-x),var(--board-y)) scale(var(--board-scale));border-radius:0}}
+@keyframes pe-cast-off{0%,15%{transform:translateX(0) rotate(0)}100%{transform:translateX(6%) rotate(-3deg)}}
+@keyframes pe-wake-out{to{transform:scaleX(1.6);opacity:0}}
+@keyframes pe-departure-in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pe-reveal{to{opacity:0}}
+@media(max-height:500px){.pe-departure{bottom:25px}.pe-departure h2{font-size:32px;margin:8px 0}.pe-departure-line{margin-top:12px}}
+
+.pathway-entry[data-boarding=true] .pe-vessel{filter:none}
+.pe-departure{isolation:isolate}
+.pe-departure::before{content:'';position:absolute;z-index:-1;inset:-36px -24px -12vh;background:linear-gradient(transparent,#103f4780 32%,#103f47b3);pointer-events:none}

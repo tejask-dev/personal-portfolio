@@ -128,8 +128,8 @@ try {
     const reopen = page.getByRole('button', { name: 'Choose interactions', exact: true });
     await reopen.click();
     await (await choice(page)).getByRole('button', { name: /Take to the water/ }).click();
-    await page.locator('#take-helm').waitFor({ timeout: 30000 });
-    await page.waitForFunction(() => document.activeElement?.id === 'take-helm');
+    await page.locator('#voyage.exp-active').waitFor({ timeout: 30000 });
+    await page.waitForFunction(() => document.activeElement?.id === 'yacht-controls');
     const oceanScroll = await page.evaluate(() => scrollY);
     await reopen.evaluate(button => { button.focus({ preventScroll: true }); button.click(); });
     await choice(page); await page.keyboard.press('Escape');
@@ -203,8 +203,8 @@ try {
     const modal = await choice(page); assertNoWorld(requests, 'world stays unloaded before choice');
     await modal.getByRole('button', { name: /Take to the water/ }).click();
     await page.waitForURL('**/#voyage');
-    await page.locator('#take-helm').waitFor({ timeout: 30000 });
-    await page.waitForFunction(() => document.activeElement?.id === 'take-helm', undefined, { timeout: 30000 });
+    await page.locator('#voyage.exp-active').waitFor({ timeout: 30000 });
+    await page.waitForFunction(() => document.activeElement?.id === 'yacht-controls', undefined, { timeout: 30000 });
     assert.ok(requests.some(url => optionalWorld.test(url)), 'interactive choice loads the lazy world');
     await page.locator('#open-work-index').click();
     const guide = page.locator('dialog[open]'); await guide.waitFor();

@@ -6,7 +6,7 @@ import { voyage } from "@/features/open-water/voyage";
 import { useSeo } from "@/lib/seo";
 import { AnticipyFeature } from "@/components/portfolio-v4/Flagship";
 import EngineeringNotes from "@/components/editorial/EngineeringNotes";
-import PathwayEntry, { hasEnteredPortfolio, rememberEntry, type Pathway } from "@/components/entry/PathwayEntry";
+import PathwayEntry, { hasEnteredPortfolio, rememberEntry, type Pathway, type BoardingStatus } from "@/components/entry/PathwayEntry";
 import "./portfolio-v3.css";
 import "./editorial-home.css";
 import portrait from "@/assets/Professional photo shoot seteve jobs kinda photo must use.jpeg";
@@ -41,13 +41,14 @@ function Sailmark() {
 }
 
 class WorldErrorBoundary extends Component<
-  { children: ReactNode; onReady: () => void },
+  { children: ReactNode; onReady: () => void; onFailure: () => void },
   { failed: boolean }
 > {
   state = { failed: false };
   static getDerivedStateFromError() {
     return { failed: true };
   }
+  componentDidCatch() { this.props.onFailure(); }
   render() {
     if (this.state.failed)
       return (
@@ -107,6 +108,11 @@ export default function Home() {
     (!window.location.hash || window.location.hash === "#top") && window.scrollY === 0 && !voyage.returnPending && !hasEnteredPortfolio() ? "intro" : null,
   );
   const [arrived, setArrived] = useState(false);
+  const [boarding, setBoarding] = useState(false);
+  const [boardingStatus, setBoardingStatus] = useState<BoardingStatus>("loading");
+  const [worldFailed, setWorldFailed] = useState(false);
+  const boardingReady = useCallback((fallback: boolean) => setBoardingStatus(fallback ? "fallback" : "ready"), []);
+  const boardingFailed = useCallback(() => { setWorldFailed(true); setBoardingStatus("fallback"); }, []);
   const dismissedChoice = useRef(false);
   const [copyStatus, setCopyStatus] = useState("");
   const [descentOwnsScene, setDescentOwnsScene] = useState(false);
@@ -121,6 +127,10 @@ export default function Home() {
   const [worldReady, setWorldReady] = useState(false);
   const [navigation, setNavigation] = useState(0);
   const opened = useCallback(() => setWorldReady(true), []);
+  useEffect(() => {
+    const world = document.getElementById("voyage");
+    if (boarding && worldReady && world) window.scrollTo({ top: scrollY + world.getBoundingClientRect().top, behavior: "instant" });
+  }, [boarding, worldReady]);
   const openButton = useRef<HTMLButtonElement>(null);
   const restoreOpenFocus = useRef(false);
   const copyEmail = async () => {
@@ -164,6 +174,7 @@ export default function Home() {
         const fallback = needsOcean(target) ? document.getElementById("ocean-load-error") : null;
         const section = document.getElementById(target) ?? fallback;
         section?.scrollIntoView({ behavior: "instant" });
+        if (target === "voyage" && section) window.scrollTo({ top: scrollY + section.getBoundingClientRect().top, behavior: "instant" });
         const heading = fallback ?? (target === "top" ? document.getElementById("hero-title") : target === "voyage"
           ? document.getElementById(voyage.sailing || voyage.expedition.mode !== "surface" ? "yacht-controls" : "take-helm")
           : document.getElementById(`${target}-title`) ?? section);
@@ -179,13 +190,20 @@ export default function Home() {
     voyage.paused = true;
     voyage.expedition.userPaused = true;
     setWorldReady(false);
+    setWorldFailed(false);
     setDescentOwnsScene(false);
     setWorldOpen(false);
     if (needsOcean(window.location.hash.slice(1))) history.replaceState(null, "", "#ocean-title");
   };
-  const choosePathway = (pathway: Pathway) => {
+  const beginBoarding = () => {
+    setBoardingStatus(worldFailed ? "fallback" : "loading");
+    setBoarding(true);
+    setWorldOpen(true);
+  };
+  const choosePathway = useCallback((pathway: Pathway) => {
     rememberEntry();
     setEntry(null);
+    setBoarding(false);
     voyage.returnPending = false;
     restoreOpenFocus.current = false;
     if (pathway === "interactive") {
@@ -197,12 +215,13 @@ export default function Home() {
       voyage.expedition.userPaused = true;
       setWorldOpen(false);
       setWorldReady(false);
+      setWorldFailed(false);
       setDescentOwnsScene(false);
       setArrived(true);
       history.replaceState(null, "", "#top");
     }
     setNavigation(value => value + 1);
-  };
+  }, []);
   return (
     <div
       className={`open-water-page${arrived ? " entry-reading-arrival" : ""}`}
@@ -369,7 +388,7 @@ export default function Home() {
                 Explore Open Water <Arrow />
               </button>
             ) : (
-              <WorldErrorBoundary onReady={opened}>
+              <WorldErrorBoundary onReady={opened} onFailure={boardingFailed}>
                 <Suspense fallback={<p role="status">Loading Open Water…</p>}>
                   <div className="eh-ocean-mounted">
                     <button
@@ -380,7 +399,7 @@ export default function Home() {
                       Close Open Water
                     </button>
                     <WorldReady onReady={opened} />
-                    <OpenWaterExperience presentationPaused={descentOwnsScene || entry !== null} />
+                    <OpenWaterExperience presentationPaused={descentOwnsScene || entry !== null} boarding={boarding} onBoardingReady={boardingReady} />
                     <ScrollDive onSceneActive={setDescentOwnsScene} />
                   </div>
                 </Suspense>
@@ -560,8 +579,8 @@ export default function Home() {
           </p>
         </details>
       </details>
-      {entry && <PathwayEntry animate={entry === "intro"} onChoose={choosePathway} onDismiss={() => {
-        if (entry === "intro") choosePathway("reading");
+      {entry && <PathwayEntry animate={entry === "intro"} onChoose={choosePathway} onBoard={beginBoarding} boardingStatus={boardingStatus} onDismiss={() => {
+        if (boarding || entry === "intro") choosePathway("reading");
         else { dismissedChoice.current = true; setEntry(null); }
       }} />}
     </div>
