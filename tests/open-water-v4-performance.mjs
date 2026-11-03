@@ -195,7 +195,7 @@ try{
       const {context,page,errors,requests}=await contextFor("low",true);
       try{
         await page.route(/\.(?:glb|gltf)(?:\?|$)/,route=>route.abort("failed"));await boot(page);await travel(page,"crown");
-        await page.locator(".exp-nav").getByRole("button",{name:/^Work/}).click();
+        await page.locator(".exp-nav").getByRole("button",{name:/^Project guide/}).click();
         assert.equal(new Set(await page.locator('dialog[open] a[href*="/case-studies/"]').evaluateAll(a=>a.map(n=>n.getAttribute("href")))).size,5);
         assert.deepEqual(errors,[]);return {expectedNetworkFailures:requests};
       }finally{await context.close();}

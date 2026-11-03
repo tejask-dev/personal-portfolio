@@ -118,7 +118,7 @@ try {
       await page.locator("#yacht-controls").focus(); await page.keyboard.down("w"); await delay(1400); await page.keyboard.up("w");
       const sailed = await until(page, s => Math.hypot(s.x - start.x, s.z - start.z) > 0.5, "Tender input did not move the actual hull");
       assert.notEqual(sailed.race, "finished", "Starting or accelerating must not silently finish a race");
-      await nav(page).getByRole("button", { name: /^Work/ }).click();
+      await nav(page).getByRole("button", { name: /^Project guide/ }).click();
       await delay(150); const reading = await state(page); await delay(450);
       assert.equal((await state(page)).raceElapsed, reading.raceElapsed, "Reading must pause the race clock");
       await closeDialog(page); await delay(250);
@@ -138,16 +138,18 @@ try {
         await screenshot(page, `desktop-${region}`);
       }
       const reefBefore = await state(page);
-      await nav(page).getByRole("button", { name: /^Work/ }).click();
+      await nav(page).getByRole("button", { name: /^Project guide/ }).click();
       await dialog(page).locator('a[href$="/case-studies/anticipy"]').click();
       await page.waitForURL(/\/case-studies\/anticipy/);
-      await page.getByRole("heading", { name: "My part, and the collaboration." }).waitFor();
-      assert.equal(await page.locator(".pv4-contribution-list details").count(), 12);
+      await page.getByRole("heading", { name: "The work behind the promise.", exact: true }).waitFor();
+      assert.deepEqual(await page.locator("#decision .pv4-story").evaluateAll(stories => stories.map(story => story.id)), ["connector-journey", "private-preparation", "privacy-boundary"]);
+      assert.equal(await page.locator("#decision .pv4-demo").count(), 3);
+      assert.equal(await page.locator(".pv4-contribution-index .pv-contributions > li").count(), 5);
       await screenshot(page, "desktop-anticipy-case");
       // The OS preference can change while the ocean is unmounted on a case.
       // Returning must combine that current preference with the saved voyage.
       await page.emulateMedia({ reducedMotion: "reduce" });
-      await page.getByRole("link", { name: "Return to water", exact: true }).first().click();
+      await page.getByRole("link", { name: "Back to Open Water", exact: true }).first().click();
       const restored = await until(page, s => s.mode === "reef" && s.status === "PAUSED", "Case return must restore a paused habitat");
       assert.deepEqual({ region: restored.region, actor: restored.actor, x: restored.rx, y: restored.ry, z: restored.rz }, { region: reefBefore.region, actor: reefBefore.actor, x: reefBefore.rx, y: reefBefore.ry, z: reefBefore.rz });
       await page.getByRole("button", { name: "Quiet view / settings", exact: true }).waitFor();
@@ -172,7 +174,7 @@ try {
     try {
       await boot(page); await page.locator("#exp-resume").click();
       await until(page, s => s.status === "PAUSED", "Pause did not stop the helm");
-      await nav(page).getByRole("button", { name: /^Work/ }).focus();
+      await nav(page).getByRole("button", { name: /^Project guide/ }).focus();
       await page.keyboard.down("w");
       await page.locator("#exp-resume").click();
       await page.waitForFunction(() => document.activeElement?.id === "yacht-controls");
@@ -257,7 +259,7 @@ try {
           await deck(page, "chart");
           assert.equal(await page.getByTestId("region-cathedral").isDisabled(), true, "Travel must respect challenge ownership");
           const frozen = await state(page); await delay(350); assert.deepEqual(await state(page), frozen, "Quiet view cannot secretly advance a game");
-          await nav(page).getByRole("button", { name: /^Work/ }).click(); await closeDialog(page);
+          await nav(page).getByRole("button", { name: /^Project guide/ }).click(); await closeDialog(page);
           assert.equal((await state(page)).activity, "fishing");
           await deck(page, "fishing");
         }
@@ -433,7 +435,7 @@ try {
       assert.ok(blocked > 0, "The intended region module was not actually fault-injected");
       const after = await until(page, s => s.mode === "surface", "Region failure did not restore previous surface");
       assert.deepEqual(anchor(after), before);
-      await nav(page).getByRole("button", { name: /^Work/ }).click();
+      await nav(page).getByRole("button", { name: /^Project guide/ }).click();
       assert.equal(await dialog(page).locator('a[href$="/case-studies/anticipy"]').count(), 1);
       await closeDialog(page); await nav(page).getByRole("button", { name: /^Contact/ }).click();
       assert.ok(await dialog(page).locator('a[href^="mailto:"]').count() > 0);
@@ -461,7 +463,7 @@ try {
       await closeDeck(page); await screenshot(page, "no-webgl-lantern-field-guide");
       await page.getByTestId("voyage-return").click(); await until(page, s => s.mode === "surface", "Fallback return aboard failed");
       assert.deepEqual(anchor(await state(page)), before);
-      await nav(page).getByRole("button", { name: /^Work/ }).click();
+      await nav(page).getByRole("button", { name: /^Project guide/ }).click();
       assert.ok(await dialog(page).locator('a[href*="case-studies/"]').count() >= 5);
       await closeDialog(page); await nav(page).getByRole("button", { name: /^Contact/ }).click();
       assert.ok(await dialog(page).locator('a[href^="mailto:"]').count() > 0);
