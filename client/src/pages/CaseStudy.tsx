@@ -5,6 +5,7 @@ import { caseStudies, getCaseStudy } from "@/data/projects";
 import { voyage } from "@/features/open-water/voyage";
 import { profile } from "@/data/profile";
 import { useSeo } from "@/lib/seo";
+import { isInteractiveReturnFocus } from "@/lib/portfolioReturn";
 import { socialMetadata } from "@/lib/socialMetadata";
 import "./portfolio-v3.css";
 import DocuBridgeWorkbench from "@/components/editorial/DocuBridgeWorkbench";
@@ -21,7 +22,7 @@ export default function CaseStudy() {
   useSeo(
     study
       ? {
-          title: `${study.title} | Work by Tejass Kaushik`,
+          title: `${study.title} | Tejass Kaushik`,
           description: socialMetadata(`/case-studies/${study.slug}`).description,
           path: `/case-studies/${study.slug}`,
         }
@@ -49,6 +50,9 @@ export default function CaseStudy() {
       </main>
     );
 
+  const cameFromWorld = voyage.returnPending && isInteractiveReturnFocus(voyage.returnFocus);
+  const imageDimensions: Record<string, [number, number]> = { stellar: [1440, 1000], docubridge: [1791, 805], soma: [1230, 564], research: [1200, 800] };
+  const numericMetrics = study.metrics.filter(metric => /\d/.test(metric.value));
   const next =
     caseStudies[(caseStudies.indexOf(study) + 1) % caseStudies.length];
   return (
@@ -63,11 +67,11 @@ export default function CaseStudy() {
         Skip to case study
       </a>
       <nav className="pv-case-nav" aria-label="Case study navigation">
-        <Link className="pv-wordmark" href="/">
-          Tejass Kaushik<span> / Open Water</span>
+        <Link className="pv-wordmark" href="/" onClick={() => { voyage.returnPending = false; }}>
+          Tejass Kaushik
         </Link>
         <div>
-          <Link href="/#voyage">Return to water</Link>
+          {cameFromWorld && <Link href="/">Back to Open Water</Link>}
           <Link href="/#work">Selected work</Link>
           <Link href="/#about">About</Link>
           <a href={`mailto:${profile.email}`}>
@@ -116,6 +120,8 @@ export default function CaseStudy() {
             className={`pv-case-image pv-case-image--${study.imageTreatment ?? "cover"}`}
           >
             <img
+              width={imageDimensions[study.imageAsset]?.[0]}
+              height={imageDimensions[study.imageAsset]?.[1]}
               src={study.image}
               alt={study.imageAlt}
               loading="eager"
@@ -144,10 +150,11 @@ export default function CaseStudy() {
             <p className="pv-eyebrow">In this case</p>
             <nav>
               <a href="#context">Context</a>
-              <a href="#contribution">My contribution</a>
-              <a href="#decision">{study.decision.label.split(" / ")[0]}</a>
-              <a href="#outcome">Outcome & limits</a>
-              <a href="#sources">Sources</a>
+              <a href="#contribution">What I built</a>
+              <a href="#decision">The hard part</a>
+              <a href="#outcome">Result</a>
+              <a href="#lesson">What I’d change</a>
+              <a href="#sources">Links</a>
             </nav>
             <p>{study.stack.join(" / ")}</p>
           </aside>
@@ -160,24 +167,17 @@ export default function CaseStudy() {
               ))}
             </section>
             <section id="contribution">
-              <p className="pv-eyebrow">02 / Scope</p>
-              <h2>My part in the work.</h2>
+              <p className="pv-eyebrow">02 / What I built</p>
+              <h2>What I built.</h2>
               <ul className="pv-contributions">
                 {study.contributions.map((p) => (
                   <li key={p}>{p}</li>
                 ))}
               </ul>
-              <div className="pv-team-context">
-                <h3>Team & project context</h3>
-                <p>{study.teamContext}</p>
-              </div>
             </section>
             <section className="pv-decision" id="decision">
-              <p className="pv-eyebrow">03 / {study.decision.label}</p>
+              <p className="pv-eyebrow">03 / The hard part</p>
               <h2>{study.decision.title}</h2>
-              {study.decision.label.includes("team context") && (
-                <p>This section describes the team’s product context; my own scope is listed under My contribution.</p>
-              )}
               {study.decision.body.map((p) => (
                 <p key={p}>{p}</p>
               ))}
@@ -195,7 +195,7 @@ export default function CaseStudy() {
               )}
             </section>
             <section id="outcome">
-              <p className="pv-eyebrow">04 / Outcome & limits</p>
+              <p className="pv-eyebrow">04 / Result</p>
               {study.sections.slice(1).map((section) => (
                 <div key={section.heading}>
                   <h2>{section.heading}</h2>
@@ -204,23 +204,23 @@ export default function CaseStudy() {
                   ))}
                 </div>
               ))}
-              <dl className="pv-context-facts">
-                {study.metrics.map((metric) => (
+              {numericMetrics.length >= 2 && <dl className="pv-context-facts">
+                {numericMetrics.map((metric) => (
                   <div key={metric.label}>
                     <dt>{metric.label}</dt>
                     <dd>{metric.value}</dd>
                   </div>
                 ))}
-              </dl>
+              </dl>}
             </section>
-            {study.lesson && <div className="pv-takeaway">
-              <span className="pv-eyebrow">What I carry forward</span>
+            {study.lesson && <section className="pv-takeaway" id="lesson">
+              <p className="pv-eyebrow">05 / What I’d change</p>
+              <h2>What I’d change.</h2>
               <p>{study.lesson}</p>
-            </div>}
+            </section>}
             <section id="sources">
-              <p className="pv-eyebrow">05 / Follow the evidence</p>
-              <h2>Sources & context.</h2>
-              <p className="pv-evidence-note">{study.evidenceNote}</p>
+              <p className="pv-eyebrow">06 / Links</p>
+              <h2>Explore the project.</h2>
               <ul
                 className="pv-source-list"
                 aria-label="Project sources and links"
@@ -253,9 +253,9 @@ export default function CaseStudy() {
             </p>
             <a
               className="pv-button"
-              href={`mailto:${profile.email}?subject=${encodeURIComponent(`Engineering opportunity — ${study.title}`)}`}
+              href={`mailto:${profile.email}?subject=${encodeURIComponent(`Let’s talk about ${study.title}`)}`}
             >
-              Contact about opportunities{" "}
+              Get in touch{" "}
               <ArrowUpRight size={20} aria-hidden="true" />
             </a>
             <a className="pv-email" href={`mailto:${profile.email}`}>
@@ -264,8 +264,8 @@ export default function CaseStudy() {
           </div>
         </section>
         <footer className="pv-case-end pv-shell">
-          <Link href="/#voyage">
-            <ArrowLeft size={18} aria-hidden="true" /> Return to water
+          <Link href={cameFromWorld ? "/" : "/#work"}>
+            <ArrowLeft size={18} aria-hidden="true" /> {cameFromWorld ? "Back to Open Water" : "All projects"}
           </Link>
           <Link href={`/case-studies/${next.slug}`}>
             <span>Next case</span>

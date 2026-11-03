@@ -1,19 +1,20 @@
 # Resume source
 
-`Tejass-Kaushik-Resume.tex` is the editable source for the downloadable PDF. It adapts [Jake Gutierrez's resume](https://github.com/jakegut/resume), also published as [Jake's Resume on Overleaf](https://www.overleaf.com/latex/templates/jakes-resume/syzfjbzwjncs). Upstream revision: `3e64a933141a7cda3a328f0743f73a201628a4ba`. The original MIT notice is retained in the source and `LICENSE-JAKE`.
+Edit `content.mjs` for public resume content. The generator uses that one source for the accessible HTML page and the downloadable one-page PDF. `template.tex` and `style.css` control their respective layouts; `Tejass-Kaushik-Resume.tex` is generated and can be uploaded directly to Overleaf.
 
-The layout uses a single main column, serif type, ruled section headings and aligned dates. Conditional font handling allows pdfLaTeX on Overleaf and XeTeX/Tectonic locally. Unicode extraction must be checked in the exported PDF; the template alone does not establish ATS compatibility.
+The LaTeX layout adapts [Jake Gutierrez's resume](https://github.com/jakegut/resume), also published as [Jake's Resume on Overleaf](https://www.overleaf.com/latex/templates/jakes-resume/syzfjbzwjncs), revision `3e64a933141a7cda3a328f0743f73a201628a4ba`. Preserve the MIT notice in `template.tex`, the generated source and `LICENSE-JAKE`.
 
-## Build
+## Build and check
 
-Install Tectonic and Poppler (`pdfinfo`), then run:
+Install Tectonic and Poppler (`pdfinfo`, `pdftotext`), then run:
 
 ```sh
 node scripts/build-resume.mjs
+node --test tests/portfolio-resume.mjs
 ```
 
-`TECTONIC_BIN` and `PDFINFO_BIN` may point to existing executables. The compiler may download its TeX packages on first use. The script compiles to a temporary directory, verifies one Letter-size page without encryption, and then replaces `client/public/Tejass-Kaushik-Resume.pdf`. It leaves the previous PDF intact if compilation or validation fails.
+`TECTONIC_BIN`, `PDFINFO_BIN` and `PDFTOTEXT_BIN` can point to existing executables. The script compiles to a temporary directory, checks one Letter-size page without encryption, and verifies every content item in the extracted PDF text before replacing the public HTML and PDF. A failed compile or validation preserves both previous public files. The first compile may download TeX packages.
 
-Normal website builds do not require TeX. They copy the existing PDF into `docs/`. Keep the accessible HTML companion at `client/public/resume.html` synchronized when editing facts or bullets. It provides a reading alternative because this traditional LaTeX export is not a tagged PDF.
+Normal website builds use the checked-in HTML and PDF and do not require TeX. Run the generator whenever content or layout changes. The test checks that both generated text sources are current. Review the rendered PDF and check its links before publishing. This traditional LaTeX PDF is not tagged; the HTML page remains the accessible reading alternative. These checks are not a commercial ATS score.
 
-Preserve personal/team/AI attribution, prototype/release limits and supported dates. Neither model-panel opinions nor local PDF parsing checks are results from a commercial ATS. Review the final page and its extracted text before publishing.
+The Anticipation Labs dates describe company tenure; its role line explicitly distinguishes the current COO role from prior engineering work. No promotion date is inferred. Organization and campaign figures remain attributed to those organizations or campaigns. Unverified MoleculeAI and PromMatch counts, solo-ownership claims, graduation dates, city, and campaign record deltas are omitted.

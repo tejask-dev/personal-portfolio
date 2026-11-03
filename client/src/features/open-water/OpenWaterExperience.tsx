@@ -217,6 +217,8 @@ export default function OpenWaterExperience({ presentationPaused = false, boardi
       : undefined;
   const releaseKeys = useCallback(() => {
     input.current = {};
+    // Releasing control idles the engine; the existing speed still coasts.
+    boat.current.throttle = 0;
     reefInput.current = {};
     games.current.fishingInput = {};
     setCruise(false);
@@ -233,7 +235,8 @@ export default function OpenWaterExperience({ presentationPaused = false, boardi
   const notify = (text: string) => dispatch({ type: "NOTICE", text });
   const focusWater = () =>
     requestAnimationFrame(() => {
-      root.current?.scrollIntoView({ block: "start", behavior: "instant" });
+      // The helm fills the viewport; reading-page scroll padding must not clip its controls.
+      if (root.current) window.scrollTo({ top: scrollY + root.current.getBoundingClientRect().top, behavior: "instant" });
       helm.current?.focus({ preventScroll: true });
     });
   const refreshBoat = () => {
@@ -244,9 +247,13 @@ export default function OpenWaterExperience({ presentationPaused = false, boardi
     stopped();
     reef.current.target = null;
     reef.current.current = false;
+    // Commit the live pose with the pause, not the scene's older 100ms sample.
+    refreshBoat();
+    setReefTelemetry({ ...reef.current });
   };
   const freezeBoat = (clearCourse = false) => {
     boat.current.speed = 0;
+    boat.current.throttle = 0;
     boat.current.turn = 0;
     if (clearCourse) {
       games.current.dockingAssisted = false;
@@ -308,10 +315,7 @@ export default function OpenWaterExperience({ presentationPaused = false, boardi
     pauseTravel();
     voyage.hasExplored = true;
     dispatch({ type: "SAIL" });
-    requestAnimationFrame(() => {
-      root.current?.scrollIntoView({ block: "start", behavior: "instant" });
-      helm.current?.focus({ preventScroll: true });
-    });
+    focusWater();
   };
   const returnBoat = () => {
     pendingReefPose.current = null;
@@ -324,6 +328,7 @@ export default function OpenWaterExperience({ presentationPaused = false, boardi
         Object.assign(boat.current, cloneBoat(state.returnBoat), {
           speed: 0,
           turn: 0,
+          throttle: 0,
         });
       dispatch({ type: "CANCEL_DIVE" });
     } else if (state.mode === "reef") {
@@ -400,6 +405,7 @@ export default function OpenWaterExperience({ presentationPaused = false, boardi
       return;
     }
     boat.current.speed = 0;
+    boat.current.throttle = 0;
     boat.current.turn = 0;
     boat.current.target = null;
     boat.current.route = [];
@@ -1085,10 +1091,11 @@ export default function OpenWaterExperience({ presentationPaused = false, boardi
     } else {
       input.current[key as keyof Input] = true;
       dispatch({ type: "PAUSE", value: false });
+      // Give the yacht's slower engine enough time to answer a single touch.
       throttleTimer.current = setTimeout(() => {
         input.current[key as keyof Input] = false;
         throttleTimer.current = null;
-      }, 260);
+      }, boat.current.vesselId === "superyacht" ? 600 : 260);
     }
   };
   const status = failed

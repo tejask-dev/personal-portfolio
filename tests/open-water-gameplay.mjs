@@ -78,7 +78,7 @@ async function ready(width = 1440, height = 960) {
   const page = await context.newPage();
   page.setDefaultTimeout(20000);
   page.on("pageerror", (error) => report.errors.push(error.message));
-  await page.goto(baseURL, { waitUntil: "networkidle" });
+  await page.goto(`${baseURL.replace(/#.*$/, "")}#voyage`, { waitUntil: "networkidle" });
   await page.waitForFunction(() =>
     document.querySelector(".ow-experience")?.classList.contains("is-ready"),
   );

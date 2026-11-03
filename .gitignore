@@ -15,3 +15,11 @@ vite.config.ts.*
 *.key
 *.p12
 *.pfx
+
+# Generated production output
+docs/
+
+# Generated QA output; curated review evidence is tracked separately
+design/*results*.json
+design/previews-v*/
+design/**/implementation-qa/

@@ -79,3 +79,30 @@ The previous licensed film and direct boarding transition remain intact.
 Automated viewport/touch tests are not physical-device or thermal-performance
 measurements. The optional yacht retains its pre-existing large lazy JS chunk.
 A zero dependency audit is not a penetration-test guarantee.
+
+## 3 November 2026: direct portfolio, optional ocean
+
+The new owner brief removes the chooser, so this pass evaluates the immediate
+reading page and explicit ocean entry instead. `design/tokens.css` is unchanged.
+Actual captures are in [the overhaul review](overhaul-20261103/README.md).
+
+| Round | Type | Rhythm | Density | Restraint | Alignment | Focus | Evidence |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Integrated reading pass | 4 | 4 | 4 | 4 | 4 | 3 | Clear editorial headline and concise cards; three featured projects share a grid. First full-page capture exposed unloaded images and an incorrect ocean poster. |
+| Corrected visual receipt | 4 | 4 | 4 | 4 | 4 | 4 | Loaded project imagery, a real rendered yacht poster, one Anticipy feature and a compact secondary list. Phone hero keeps Work and Email visible; its two-column proof strip labels team outcomes. |
+
+Type: Spectral display and regular Aspekta body retain the existing character.
+Rhythm: full-width Anticipy band gives the opening a clear second beat; About and
+Ocean use quieter sections. Density: long workbench copy is replaced by six
+compact rows, while each featured project keeps role and stage. Restraint: no new
+palette, UI library or decorative animation. Alignment: shared left edges and
+three equal desktop cards; the mobile header wraps into a deliberate second row.
+Focus: professional work is visible immediately and the ocean requires an explicit
+button. These scores are the foreground's visual judgments, not user-study data.
+
+Browser testing also caught two control-presentation issues: global reading scroll
+padding clipped the helm after same-hash returns, and pause telemetry lagged the
+actual stopped position. Shared navigation/input fixes preserve native document
+scrolling and the vessel's momentum. Existing keyboard, reduced-motion, no-JS,
+asset-failure and touch regressions were retained rather than replaced by static
+screenshots. Detailed commands, results and limits are in the review receipt.

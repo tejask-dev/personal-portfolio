@@ -1,0 +1,850 @@
+{
+  "conditions": "Chrome headless, desktop1440x900 DPR1, unthrottled localhost, fresh context then same-context reload, snapshot4s after navigation; legacy gate marked seen so both home samples measure reading; resource comparison, not field vitals or device performance.",
+  "browser": "156.0.8078.80",
+  "samples": [
+    {
+      "route": "/",
+      "phase": "cold",
+      "nav": {
+        "name": "http://127.0.0.1:4173/",
+        "entryType": "navigation",
+        "startTime": 0,
+        "duration": 64.5,
+        "navigationId": 7589,
+        "initiatorType": "navigation",
+        "deliveryType": "",
+        "nextHopProtocol": "http/1.1",
+        "renderBlockingStatus": "non-blocking",
+        "contentType": "text/html",
+        "contentEncoding": "gzip",
+        "workerStart": 0,
+        "workerRouterEvaluationStart": 0,
+        "workerCacheLookupStart": 0,
+        "workerMatchedSourceType": "",
+        "workerFinalSourceType": "",
+        "redirectStart": 0,
+        "redirectEnd": 0,
+        "fetchStart": 0.29999999701976776,
+        "domainLookupStart": 0.29999999701976776,
+        "domainLookupEnd": 0.29999999701976776,
+        "connectStart": 0.29999999701976776,
+        "secureConnectionStart": 0,
+        "connectEnd": 0.29999999701976776,
+        "requestStart": 0.6999999955296516,
+        "responseStart": 2.899999998509884,
+        "firstInterimResponseStart": 0,
+        "finalResponseHeadersStart": 2.899999998509884,
+        "responseEnd": 3.5999999940395355,
+        "transferSize": 6924,
+        "encodedBodySize": 6624,
+        "decodedBodySize": 22510,
+        "responseStatus": 200,
+        "serverTiming": [],
+        "unloadEventStart": 0,
+        "unloadEventEnd": 0,
+        "domInteractive": 10.899999998509884,
+        "domContentLoadedEventStart": 52.29999999701977,
+        "domContentLoadedEventEnd": 52.29999999701977,
+        "domComplete": 64.5,
+        "loadEventStart": 64.5,
+        "loadEventEnd": 64.5,
+        "type": "navigate",
+        "redirectCount": 0,
+        "activationStart": 0,
+        "criticalCHRestart": 0,
+        "notRestoredReasons": null,
+        "confidence": {
+          "randomizedTriggerRate": 0.4994798,
+          "value": "low"
+        }
+      },
+      "resources": [
+        {
+          "name": "/fonts/Spectral-Light.woff2",
+          "transfer": 44772,
+          "encoded": 44472,
+          "decoded": 44472,
+          "duration": 8.100000001490116
+        },
+        {
+          "name": "/fonts/PortfolioSans-400.woff2",
+          "transfer": 18100,
+          "encoded": 17800,
+          "decoded": 17800,
+          "duration": 8.599999994039536
+        },
+        {
+          "name": "/assets/index-c_e1lvwS.js",
+          "transfer": 86066,
+          "encoded": 85766,
+          "decoded": 255618,
+          "duration": 15.899999998509884
+        },
+        {
+          "name": "/assets/index-CVHvE8rG.css",
+          "transfer": 24524,
+          "encoded": 24224,
+          "decoded": 117334,
+          "duration": 11.600000001490116
+        },
+        {
+          "name": "/fonts/PortfolioSans-600.woff2",
+          "transfer": 18472,
+          "encoded": 18172,
+          "decoded": 18172,
+          "duration": 27.900000005960464
+        },
+        {
+          "name": "/assets/stellar-current-BiRZo_CL.webp",
+          "transfer": 42014,
+          "encoded": 41714,
+          "decoded": 41714,
+          "duration": 2.5
+        },
+        {
+          "name": "/portfolio/molecule-desktop.webp",
+          "transfer": 32160,
+          "encoded": 31860,
+          "decoded": 31860,
+          "duration": 2.6999999955296516
+        },
+        {
+          "name": "/portfolio/research-evidence.svg",
+          "transfer": 1111,
+          "encoded": 811,
+          "decoded": 1988,
+          "duration": 2.899999998509884
+        },
+        {
+          "name": "/assets/portrait-tejass-B3idzOnx.jpeg",
+          "transfer": 15243,
+          "encoded": 14943,
+          "decoded": 14943,
+          "duration": 1.3000000044703484
+        },
+        {
+          "name": "/portfolio/open-water-poster.webp",
+          "transfer": 40356,
+          "encoded": 40056,
+          "decoded": 40056,
+          "duration": 1.3999999985098839
+        },
+        {
+          "name": "/favicon.png",
+          "transfer": 3381,
+          "encoded": 3081,
+          "decoded": 3081,
+          "duration": 0.7000000029802322
+        },
+        {
+          "name": "/favicon.svg",
+          "transfer": 618,
+          "encoded": 318,
+          "decoded": 318,
+          "duration": 0.6000000014901161
+        }
+      ],
+      "totals": {
+        "requests": 12,
+        "transfer": 326817,
+        "encoded": 323217,
+        "decoded": 587356,
+        "includingDocumentTransfer": 333741
+      }
+    },
+    {
+      "route": "/",
+      "phase": "warm",
+      "nav": {
+        "name": "http://127.0.0.1:4173/",
+        "entryType": "navigation",
+        "startTime": 0,
+        "duration": 25,
+        "navigationId": 6526,
+        "initiatorType": "navigation",
+        "deliveryType": "cache",
+        "nextHopProtocol": "",
+        "renderBlockingStatus": "non-blocking",
+        "contentType": "text/html",
+        "contentEncoding": "gzip",
+        "workerStart": 0,
+        "workerRouterEvaluationStart": 0,
+        "workerCacheLookupStart": 0,
+        "workerMatchedSourceType": "",
+        "workerFinalSourceType": "",
+        "redirectStart": 0,
+        "redirectEnd": 0,
+        "fetchStart": 0.3999999985098839,
+        "domainLookupStart": 0.3999999985098839,
+        "domainLookupEnd": 0.3999999985098839,
+        "connectStart": 0.3999999985098839,
+        "secureConnectionStart": 0,
+        "connectEnd": 0.3999999985098839,
+        "requestStart": 1.3999999985098839,
+        "responseStart": 2.600000001490116,
+        "firstInterimResponseStart": 0,
+        "finalResponseHeadersStart": 2.600000001490116,
+        "responseEnd": 3,
+        "transferSize": 300,
+        "encodedBodySize": 6624,
+        "decodedBodySize": 22510,
+        "responseStatus": 200,
+        "serverTiming": [],
+        "unloadEventStart": 7.200000002980232,
+        "unloadEventEnd": 7.200000002980232,
+        "domInteractive": 11.800000004470348,
+        "domContentLoadedEventStart": 14.300000004470348,
+        "domContentLoadedEventEnd": 14.300000004470348,
+        "domComplete": 24.899999998509884,
+        "loadEventStart": 24.899999998509884,
+        "loadEventEnd": 25,
+        "type": "reload",
+        "redirectCount": 0,
+        "activationStart": 0,
+        "criticalCHRestart": 0,
+        "notRestoredReasons": null,
+        "confidence": {
+          "randomizedTriggerRate": 0.4994798,
+          "value": "high"
+        }
+      },
+      "resources": [
+        {
+          "name": "/fonts/Spectral-Light.woff2",
+          "transfer": 300,
+          "encoded": 0,
+          "decoded": 0,
+          "duration": 1.2999999970197678
+        },
+        {
+          "name": "/fonts/PortfolioSans-400.woff2",
+          "transfer": 300,
+          "encoded": 0,
+          "decoded": 0,
+          "duration": 1.7999999970197678
+        },
+        {
+          "name": "/assets/index-CVHvE8rG.css",
+          "transfer": 300,
+          "encoded": 0,
+          "decoded": 0,
+          "duration": 2.600000001490116
+        },
+        {
+          "name": "/assets/index-c_e1lvwS.js",
+          "transfer": 300,
+          "encoded": 0,
+          "decoded": 0,
+          "duration": 2.2000000029802322
+        },
+        {
+          "name": "/assets/stellar-current-BiRZo_CL.webp",
+          "transfer": 300,
+          "encoded": 0,
+          "decoded": 0,
+          "duration": 0.6999999955296516
+        },
+        {
+          "name": "/portfolio/molecule-desktop.webp",
+          "transfer": 300,
+          "encoded": 0,
+          "decoded": 0,
+          "duration": 1.0999999940395355
+        },
+        {
+          "name": "/portfolio/research-evidence.svg",
+          "transfer": 300,
+          "encoded": 0,
+          "decoded": 0,
+          "duration": 1.2999999970197678
+        },
+        {
+          "name": "/assets/portrait-tejass-B3idzOnx.jpeg",
+          "transfer": 300,
+          "encoded": 0,
+          "decoded": 0,
+          "duration": 1.5
+        },
+        {
+          "name": "/portfolio/open-water-poster.webp",
+          "transfer": 300,
+          "encoded": 0,
+          "decoded": 0,
+          "duration": 1.7999999970197678
+        },
+        {
+          "name": "/fonts/PortfolioSans-600.woff2",
+          "transfer": 300,
+          "encoded": 0,
+          "decoded": 0,
+          "duration": 0.6999999955296516
+        },
+        {
+          "name": "/favicon.png",
+          "transfer": 300,
+          "encoded": 3081,
+          "decoded": 3081,
+          "duration": 0.6999999955296516
+        },
+        {
+          "name": "/favicon.svg",
+          "transfer": 300,
+          "encoded": 318,
+          "decoded": 318,
+          "duration": 0.5
+        }
+      ],
+      "totals": {
+        "requests": 12,
+        "transfer": 3600,
+        "encoded": 3399,
+        "decoded": 3399,
+        "includingDocumentTransfer": 3900
+      }
+    },
+    {
+      "route": "case-studies/anticipy",
+      "phase": "cold",
+      "nav": {
+        "name": "http://127.0.0.1:4173/case-studies/anticipy",
+        "entryType": "navigation",
+        "startTime": 0,
+        "duration": 38.599999994039536,
+        "navigationId": 317,
+        "initiatorType": "navigation",
+        "deliveryType": "",
+        "nextHopProtocol": "http/1.1",
+        "renderBlockingStatus": "non-blocking",
+        "contentType": "text/html",
+        "contentEncoding": "gzip",
+        "workerStart": 0,
+        "workerRouterEvaluationStart": 0,
+        "workerCacheLookupStart": 0,
+        "workerMatchedSourceType": "",
+        "workerFinalSourceType": "",
+        "redirectStart": 0,
+        "redirectEnd": 0,
+        "fetchStart": 0.19999999552965164,
+        "domainLookupStart": 0.19999999552965164,
+        "domainLookupEnd": 0.19999999552965164,
+        "connectStart": 0.19999999552965164,
+        "secureConnectionStart": 0,
+        "connectEnd": 0.19999999552965164,
+        "requestStart": 0.3999999985098839,
+        "responseStart": 3.399999998509884,
+        "firstInterimResponseStart": 0,
+        "finalResponseHeadersStart": 3.399999998509884,
+        "responseEnd": 3.5999999940395355,
+        "transferSize": 4911,
+        "encodedBodySize": 4611,
+        "decodedBodySize": 14632,
+        "responseStatus": 200,
+        "serverTiming": [],
+        "unloadEventStart": 0,
+        "unloadEventEnd": 0,
+        "domInteractive": 9.699999995529652,
+        "domContentLoadedEventStart": 18.599999994039536,
+        "domContentLoadedEventEnd": 18.599999994039536,
+        "domComplete": 38.5,
+        "loadEventStart": 38.599999994039536,
+        "loadEventEnd": 38.599999994039536,
+        "type": "navigate",
+        "redirectCount": 0,
+        "activationStart": 0,
+        "criticalCHRestart": 0,
+        "notRestoredReasons": null,
+        "confidence": {
+          "randomizedTriggerRate": 0.4994798,
+          "value": "low"
+        }
+      },
+      "resources": [
+        {
+          "name": "/fonts/PortfolioSans-400.woff2",
+          "transfer": 18100,
+          "encoded": 17800,
+          "decoded": 17800,
+          "duration": 2.899999998509884
+        },
+        {
+          "name": "/fonts/Spectral-Light.woff2",
+          "transfer": 44772,
+          "encoded": 44472,
+          "decoded": 44472,
+          "duration": 2.0999999940395355
+        },
+        {
+          "name": "/assets/index-CVHvE8rG.css",
+          "transfer": 24524,
+          "encoded": 24224,
+          "decoded": 117334,
+          "duration": 4.700000002980232
+        },
+        {
+          "name": "/assets/index-c_e1lvwS.js",
+          "transfer": 86066,
+          "encoded": 85766,
+          "decoded": 255618,
+          "duration": 7.300000004470348
+        },
+        {
+          "name": "/fonts/PortfolioSans-600.woff2",
+          "transfer": 18472,
+          "encoded": 18172,
+          "decoded": 18172,
+          "duration": 4.200000002980232
+        },
+        {
+          "name": "/assets/CaseStudy-DMatZ-JW.js",
+          "transfer": 3515,
+          "encoded": 3215,
+          "decoded": 9768,
+          "duration": 1.4000000059604645
+        },
+        {
+          "name": "/assets/docuBridgeWalkthrough-KkAEy_Ob.js",
+          "transfer": 1330,
+          "encoded": 1030,
+          "decoded": 2077,
+          "duration": 1.3999999985098839
+        },
+        {
+          "name": "/portfolio/anticipy-desktop-2026-10-01.jpg",
+          "transfer": 64515,
+          "encoded": 64215,
+          "decoded": 64215,
+          "duration": 0.6999999955296516
+        },
+        {
+          "name": "/favicon.png",
+          "transfer": 3381,
+          "encoded": 3081,
+          "decoded": 3081,
+          "duration": 0.5999999940395355
+        },
+        {
+          "name": "/favicon.svg",
+          "transfer": 618,
+          "encoded": 318,
+          "decoded": 318,
+          "duration": 0.8000000044703484
+        }
+      ],
+      "totals": {
+        "requests": 10,
+        "transfer": 265293,
+        "encoded": 262293,
+        "decoded": 532855,
+        "includingDocumentTransfer": 270204
+      }
+    },
+    {
+      "route": "case-studies/anticipy",
+      "phase": "warm",
+      "nav": {
+        "name": "http://127.0.0.1:4173/case-studies/anticipy",
+        "entryType": "navigation",
+        "startTime": 0,
+        "duration": 19.19999999552965,
+        "navigationId": 8225,
+        "initiatorType": "navigation",
+        "deliveryType": "cache",
+        "nextHopProtocol": "",
+        "renderBlockingStatus": "non-blocking",
+        "contentType": "text/html",
+        "contentEncoding": "gzip",
+        "workerStart": 0,
+        "workerRouterEvaluationStart": 0,
+        "workerCacheLookupStart": 0,
+        "workerMatchedSourceType": "",
+        "workerFinalSourceType": "",
+        "redirectStart": 0,
+        "redirectEnd": 0,
+        "fetchStart": 0.3999999985098839,
+        "domainLookupStart": 0.3999999985098839,
+        "domainLookupEnd": 0.3999999985098839,
+        "connectStart": 0.3999999985098839,
+        "secureConnectionStart": 0,
+        "connectEnd": 0.3999999985098839,
+        "requestStart": 1,
+        "responseStart": 2.1999999955296516,
+        "firstInterimResponseStart": 0,
+        "finalResponseHeadersStart": 2.1999999955296516,
+        "responseEnd": 2.5,
+        "transferSize": 300,
+        "encodedBodySize": 4611,
+        "decodedBodySize": 14632,
+        "responseStatus": 200,
+        "serverTiming": [],
+        "unloadEventStart": 6.5999999940395355,
+        "unloadEventEnd": 6.5999999940395355,
+        "domInteractive": 12.699999995529652,
+        "domContentLoadedEventStart": 14.299999997019768,
+        "domContentLoadedEventEnd": 14.399999998509884,
+        "domComplete": 19.19999999552965,
+        "loadEventStart": 19.19999999552965,
+        "loadEventEnd": 19.19999999552965,
+        "type": "reload",
+        "redirectCount": 0,
+        "activationStart": 0,
+        "criticalCHRestart": 0,
+        "notRestoredReasons": null,
+        "confidence": {
+          "randomizedTriggerRate": 0.4994798,
+          "value": "high"
+        }
+      },
+      "resources": [
+        {
+          "name": "/fonts/Spectral-Light.woff2",
+          "transfer": 300,
+          "encoded": 0,
+          "decoded": 0,
+          "duration": 1.1000000014901161
+        },
+        {
+          "name": "/fonts/PortfolioSans-400.woff2",
+          "transfer": 300,
+          "encoded": 0,
+          "decoded": 0,
+          "duration": 1.1000000014901161
+        },
+        {
+          "name": "/assets/index-CVHvE8rG.css",
+          "transfer": 300,
+          "encoded": 0,
+          "decoded": 0,
+          "duration": 1.5
+        },
+        {
+          "name": "/assets/index-c_e1lvwS.js",
+          "transfer": 300,
+          "encoded": 0,
+          "decoded": 0,
+          "duration": 1.3999999985098839
+        },
+        {
+          "name": "/portfolio/anticipy-desktop-2026-10-01.jpg",
+          "transfer": 300,
+          "encoded": 0,
+          "decoded": 0,
+          "duration": 0.8999999985098839
+        },
+        {
+          "name": "/fonts/PortfolioSans-600.woff2",
+          "transfer": 300,
+          "encoded": 0,
+          "decoded": 0,
+          "duration": 0.6999999955296516
+        },
+        {
+          "name": "/assets/CaseStudy-DMatZ-JW.js",
+          "transfer": 300,
+          "encoded": 0,
+          "decoded": 0,
+          "duration": 0.5
+        },
+        {
+          "name": "/assets/docuBridgeWalkthrough-KkAEy_Ob.js",
+          "transfer": 300,
+          "encoded": 0,
+          "decoded": 0,
+          "duration": 0.6000000014901161
+        },
+        {
+          "name": "/favicon.png",
+          "transfer": 300,
+          "encoded": 3081,
+          "decoded": 3081,
+          "duration": 0.7999999970197678
+        },
+        {
+          "name": "/favicon.svg",
+          "transfer": 300,
+          "encoded": 318,
+          "decoded": 318,
+          "duration": 0.7000000029802322
+        }
+      ],
+      "totals": {
+        "requests": 10,
+        "transfer": 3000,
+        "encoded": 3399,
+        "decoded": 3399,
+        "includingDocumentTransfer": 3300
+      }
+    },
+    {
+      "route": "case-studies/docubridge",
+      "phase": "cold",
+      "nav": {
+        "name": "http://127.0.0.1:4173/case-studies/docubridge",
+        "entryType": "navigation",
+        "startTime": 0,
+        "duration": 33.600000001490116,
+        "navigationId": 8116,
+        "initiatorType": "navigation",
+        "deliveryType": "",
+        "nextHopProtocol": "http/1.1",
+        "renderBlockingStatus": "non-blocking",
+        "contentType": "text/html",
+        "contentEncoding": "gzip",
+        "workerStart": 0,
+        "workerRouterEvaluationStart": 0,
+        "workerCacheLookupStart": 0,
+        "workerMatchedSourceType": "",
+        "workerFinalSourceType": "",
+        "redirectStart": 0,
+        "redirectEnd": 0,
+        "fetchStart": 0.20000000298023224,
+        "domainLookupStart": 0.20000000298023224,
+        "domainLookupEnd": 0.20000000298023224,
+        "connectStart": 0.20000000298023224,
+        "secureConnectionStart": 0,
+        "connectEnd": 0.20000000298023224,
+        "requestStart": 0.5,
+        "responseStart": 1.3000000044703484,
+        "firstInterimResponseStart": 0,
+        "finalResponseHeadersStart": 1.3000000044703484,
+        "responseEnd": 1.5,
+        "transferSize": 4151,
+        "encodedBodySize": 3851,
+        "decodedBodySize": 12441,
+        "responseStatus": 200,
+        "serverTiming": [],
+        "unloadEventStart": 0,
+        "unloadEventEnd": 0,
+        "domInteractive": 4.600000001490116,
+        "domContentLoadedEventStart": 33.399999998509884,
+        "domContentLoadedEventEnd": 33.399999998509884,
+        "domComplete": 33.600000001490116,
+        "loadEventStart": 33.600000001490116,
+        "loadEventEnd": 33.600000001490116,
+        "type": "navigate",
+        "redirectCount": 0,
+        "activationStart": 0,
+        "criticalCHRestart": 0,
+        "notRestoredReasons": null,
+        "confidence": {
+          "randomizedTriggerRate": 0.4994798,
+          "value": "high"
+        }
+      },
+      "resources": [
+        {
+          "name": "/fonts/Spectral-Light.woff2",
+          "transfer": 44772,
+          "encoded": 44472,
+          "decoded": 44472,
+          "duration": 2.2000000029802322
+        },
+        {
+          "name": "/assets/Docubridge-DndViqKy.webp",
+          "transfer": 29542,
+          "encoded": 29242,
+          "decoded": 29242,
+          "duration": 3.5
+        },
+        {
+          "name": "/fonts/PortfolioSans-400.woff2",
+          "transfer": 18100,
+          "encoded": 17800,
+          "decoded": 17800,
+          "duration": 3.2999999970197678
+        },
+        {
+          "name": "/assets/index-CVHvE8rG.css",
+          "transfer": 24524,
+          "encoded": 24224,
+          "decoded": 117334,
+          "duration": 5.200000002980232
+        },
+        {
+          "name": "/assets/index-c_e1lvwS.js",
+          "transfer": 86066,
+          "encoded": 85766,
+          "decoded": 255618,
+          "duration": 7.799999997019768
+        },
+        {
+          "name": "/fonts/PortfolioSans-600.woff2",
+          "transfer": 18472,
+          "encoded": 18172,
+          "decoded": 18172,
+          "duration": 19.700000002980232
+        },
+        {
+          "name": "/assets/CaseStudy-DMatZ-JW.js",
+          "transfer": 3515,
+          "encoded": 3215,
+          "decoded": 9768,
+          "duration": 1.5
+        },
+        {
+          "name": "/assets/docuBridgeWalkthrough-KkAEy_Ob.js",
+          "transfer": 1330,
+          "encoded": 1030,
+          "decoded": 2077,
+          "duration": 1.3000000044703484
+        },
+        {
+          "name": "/favicon.png",
+          "transfer": 3381,
+          "encoded": 3081,
+          "decoded": 3081,
+          "duration": 0.8000000044703484
+        },
+        {
+          "name": "/favicon.svg",
+          "transfer": 618,
+          "encoded": 318,
+          "decoded": 318,
+          "duration": 0.7000000029802322
+        }
+      ],
+      "totals": {
+        "requests": 10,
+        "transfer": 230320,
+        "encoded": 227320,
+        "decoded": 497882,
+        "includingDocumentTransfer": 234471
+      }
+    },
+    {
+      "route": "case-studies/docubridge",
+      "phase": "warm",
+      "nav": {
+        "name": "http://127.0.0.1:4173/case-studies/docubridge",
+        "entryType": "navigation",
+        "startTime": 0,
+        "duration": 10.299999997019768,
+        "navigationId": 4194,
+        "initiatorType": "navigation",
+        "deliveryType": "cache",
+        "nextHopProtocol": "",
+        "renderBlockingStatus": "non-blocking",
+        "contentType": "text/html",
+        "contentEncoding": "gzip",
+        "workerStart": 0,
+        "workerRouterEvaluationStart": 0,
+        "workerCacheLookupStart": 0,
+        "workerMatchedSourceType": "",
+        "workerFinalSourceType": "",
+        "redirectStart": 0,
+        "redirectEnd": 0,
+        "fetchStart": 0.19999999552965164,
+        "domainLookupStart": 0.19999999552965164,
+        "domainLookupEnd": 0.19999999552965164,
+        "connectStart": 0.19999999552965164,
+        "secureConnectionStart": 0,
+        "connectEnd": 0.19999999552965164,
+        "requestStart": 0.5,
+        "responseStart": 1.0999999940395355,
+        "firstInterimResponseStart": 0,
+        "finalResponseHeadersStart": 1.0999999940395355,
+        "responseEnd": 1.2999999970197678,
+        "transferSize": 300,
+        "encodedBodySize": 3851,
+        "decodedBodySize": 12441,
+        "responseStatus": 200,
+        "serverTiming": [],
+        "unloadEventStart": 3.0999999940395355,
+        "unloadEventEnd": 3.0999999940395355,
+        "domInteractive": 5.5,
+        "domContentLoadedEventStart": 8.199999995529652,
+        "domContentLoadedEventEnd": 8.199999995529652,
+        "domComplete": 10.299999997019768,
+        "loadEventStart": 10.299999997019768,
+        "loadEventEnd": 10.299999997019768,
+        "type": "reload",
+        "redirectCount": 0,
+        "activationStart": 0,
+        "criticalCHRestart": 0,
+        "notRestoredReasons": null,
+        "confidence": {
+          "randomizedTriggerRate": 0.4994798,
+          "value": "high"
+        }
+      },
+      "resources": [
+        {
+          "name": "/fonts/Spectral-Light.woff2",
+          "transfer": 300,
+          "encoded": 0,
+          "decoded": 0,
+          "duration": 1
+        },
+        {
+          "name": "/fonts/PortfolioSans-400.woff2",
+          "transfer": 300,
+          "encoded": 0,
+          "decoded": 0,
+          "duration": 1.2000000029802322
+        },
+        {
+          "name": "/assets/index-CVHvE8rG.css",
+          "transfer": 300,
+          "encoded": 0,
+          "decoded": 0,
+          "duration": 1.7000000029802322
+        },
+        {
+          "name": "/assets/Docubridge-DndViqKy.webp",
+          "transfer": 300,
+          "encoded": 0,
+          "decoded": 0,
+          "duration": 2
+        },
+        {
+          "name": "/assets/index-c_e1lvwS.js",
+          "transfer": 300,
+          "encoded": 0,
+          "decoded": 0,
+          "duration": 1.4000000059604645
+        },
+        {
+          "name": "/fonts/PortfolioSans-600.woff2",
+          "transfer": 300,
+          "encoded": 0,
+          "decoded": 0,
+          "duration": 0.7000000029802322
+        },
+        {
+          "name": "/assets/CaseStudy-DMatZ-JW.js",
+          "transfer": 300,
+          "encoded": 0,
+          "decoded": 0,
+          "duration": 0.6999999955296516
+        },
+        {
+          "name": "/assets/docuBridgeWalkthrough-KkAEy_Ob.js",
+          "transfer": 300,
+          "encoded": 0,
+          "decoded": 0,
+          "duration": 0.7999999970197678
+        },
+        {
+          "name": "/favicon.png",
+          "transfer": 300,
+          "encoded": 3081,
+          "decoded": 3081,
+          "duration": 0.8000000044703484
+        },
+        {
+          "name": "/favicon.svg",
+          "transfer": 300,
+          "encoded": 318,
+          "decoded": 318,
+          "duration": 0.7000000029802322
+        }
+      ],
+      "totals": {
+        "requests": 10,
+        "transfer": 3000,
+        "encoded": 3399,
+        "decoded": 3399,
+        "includingDocumentTransfer": 3300
+      }
+    }
+  ]
+}

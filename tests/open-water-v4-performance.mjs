@@ -84,7 +84,7 @@ async function contextFor(tier,quiet=false){
 }
 async function boot(page){
   const wall=Date.now();
-  await page.goto(url);await page.locator("#take-helm").waitFor();await page.locator("#voyage.is-ready").waitFor({timeout:45000});
+  await page.goto(`${url.replace(/#.*$/, "")}#voyage`);await page.locator("#take-helm").waitFor();await page.locator("#voyage.is-ready").waitFor({timeout:45000});
   const sceneReadyMs=await page.evaluate(()=>performance.now());
   await page.waitForTimeout(1800);
   const startup=await page.evaluate(()=>({firstDrawSubmissionMs:window.__owV4Perf.firstDrawAt,longTasks:window.__owV4Perf.longTasks,settledBrowserMs:performance.now()}));
@@ -195,7 +195,7 @@ try{
       const {context,page,errors,requests}=await contextFor("low",true);
       try{
         await page.route(/\.(?:glb|gltf)(?:\?|$)/,route=>route.abort("failed"));await boot(page);await travel(page,"crown");
-        await page.locator(".exp-nav").getByRole("button",{name:/^Work/}).click();
+        await page.locator(".exp-nav").getByRole("button",{name:/^Project guide/}).click();
         assert.equal(new Set(await page.locator('dialog[open] a[href*="/case-studies/"]').evaluateAll(a=>a.map(n=>n.getAttribute("href")))).size,5);
         assert.deepEqual(errors,[]);return {expectedNetworkFailures:requests};
       }finally{await context.close();}

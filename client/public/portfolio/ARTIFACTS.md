@@ -17,3 +17,8 @@ The portfolio's connector, brief, and privacy walkthroughs are original explanat
 ## Research evidence summary
 
 `research-evidence.svg` is original typographic artwork summarizing facts from the final 2025 Youreka Canada Journal, PDF pages 4–5. Source: https://yourekacanada.org/youreka-journal-2025 and its linked final journal. Checked 2 October 2026. The published author line uses Tejas Kaushik. No journal page, figure, or article text is reproduced; publication reuse permission has not been established.
+
+## MoleculeAI and Open Water
+
+- `molecule-desktop.webp` and `molecule-mobile.webp`: actual public MoleculeAI browser views of an aspirin analysis, captured 3 November 2026 at https://organic-chem-web-app.vercel.app/. App interface by the MoleculeAI project; not a concept mockup.
+- `open-water-poster.webp`: actual canvas pixels from this portfolio's Open Water scene, captured 3 November 2026, cropped to 16:9 and exported at 1600 × 900. The superyacht, lighthouse and turquoise water are rendered assets already credited in the world credits. No generated concept artwork is substituted for the working scene.

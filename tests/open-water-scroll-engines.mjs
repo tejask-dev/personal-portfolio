@@ -17,7 +17,7 @@ for (const [name, engine] of [["firefox", firefox], ["webkit", webkit]]) {
     const page = await browser.newPage({ viewport: { width: 1440, height: 960 }, reducedMotion: "no-preference" });
     page.on("pageerror", error => result.errors.push(error.message));
     page.on("console", message => { if (message.type() === "error") result.consoleErrors.push(message.text()); });
-    const response = await page.goto(url);
+    const response = await page.goto(`${url.replace(/#.*$/, "")}#voyage`);
     assert.equal(response.status(), 200);
     await page.locator("#voyage.is-ready").waitFor({ timeout: 45000 });
     await page.getByRole("link", { name: "Scroll below the surface", exact: false }).click();

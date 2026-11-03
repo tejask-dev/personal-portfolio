@@ -8,7 +8,7 @@ import { readFile, readdir } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { anticipyNarrative, contributions, leadStories, anticipyArtifact } from "../client/src/components/portfolio-v4/content.ts";
+import { anticipyNarrative, alsoWork, anticipyStatus, leadStories, anticipyArtifact } from "../client/src/components/portfolio-v4/content.ts";
 import { caseStudyContent } from "../client/src/data/caseStudyContent.ts";
 import { profile } from "../client/src/data/profile.ts";
 
@@ -53,42 +53,25 @@ async function scan(files, label) {
 }
 
 assert.equal(profile.email, "tejas.kaushik@outlook.com");
-assert.deepEqual(contributions.map(item => item.id), Array.from({ length: 12 }, (_, index) => `C${index + 1}`));
 assert.equal(leadStories.length, 3);
+assert.equal(alsoWork.length, 5);
 assert.equal(caseStudyContent.length, 5);
-assert.match(anticipyNarrative.assistance, /Claude and Codex did a lot of the implementation/);
-assert.match(anticipyNarrative.assistance, /I worked with Codex on the selected work-email prototype/);
-assert.match(anticipyNarrative.team, /team had already built the product foundations/);
-assert.match(anticipyNarrative.team, /I didn't build Anticipy on my own/);
-const byId = Object.fromEntries(contributions.map(item => [item.id, item]));
-for (const [id, field, boundary] of [
-  ["C1", "result", /deployed.*personally reported/i],
-  ["C2", "result", /bounded.*universal protection is not claimed/i],
-  ["C3", "result", /Local integration.*not every repair was traced to a release/i],
-  ["C4", "result", /bounded.*acceptance remained incomplete/i],
-  ["C5", "result", /individual prototypes.*qualification remained incomplete/i],
-  ["C6", "result", /validated locally.*separate preview/i],
-  ["C7", "result", /local flow.*hosted AI processing remained off/i],
-  ["C8", "result", /locally.*No measured production savings/i],
-  ["C9", "result", /Offline integration.*Live work-email activation remained blocked/i],
-  ["C10", "result", /disabled runtime.*not measured financial results/i],
-  ["C11", "result", /Fellowship coming soon.*not fully published.*team work/i],
-  ["C12", "result", /unresolved findings.*does not imply sole architecture authorship/i],
-]) assert.match(byId[id][field], boundary, `${id} must retain its evidence boundary`);
-assert.match(profile.proof[0].label, /reported by Stellar Learning/);
-assert.equal(profile.proof.length, 2);
-assert.match(profile.proof[1].label, /research team/);
+assert.equal(caseStudyContent.find(study => study.slug === "anticipy").role, "COO at Anticipation Labs");
+assert.equal(caseStudyContent.find(study => study.slug === "stellar-learning").role, "CTO");
+const bannedCopy = /\[CONFIRM|—|\bI required\b|\bmy account\b|\bhonestly\b|\bbounded\b|\bevidence\b|\bfixtures?\b|validated within|\bharness(?:es)?\b|\bqualification\b|not claiming|does not imply|checked on \d|partly shipped|remained unfinished|much remained|I went\. That was great\./i;
+const visibleCopy = html => normalize(html.replace(/<head[\s\S]*?<\/head>/gi, "").replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi, ""));
 
 const sourceFiles = [...await filesIn(path.join(root, "client/src")), ...await filesIn(path.join(root, "client/public")), path.join(root, "client/index.html"), path.join(root, "scripts/prerender.ts")];
 const source = await scan(sourceFiles, "source");
-const report = { scope: sourceOnly ? "source-only; generated site not audited" : "source and generated public output", source, contributions: 12, leadStories: 3, routes: 5, generated: null };
+const report = { scope: sourceOnly ? "source-only; generated site not audited" : "source and generated public output", source, additionalContributions: 5, leadStories: 3, routes: 5, generated: null };
 if (!sourceOnly) {
   const generatedFiles = await filesIn(output);
   report.generated = await scan(generatedFiles, "generated output");
   const home = await readFile(path.join(output, "index.html"), "utf8");
   assert.match(home, /id="current-work"/, "Output must include the V4 flagship, not an older homepage");
-  const sectionOrder = ["hero-title", "current-work", "work", "voyage", "about", "engineering-notes", "contact"].map(id => home.indexOf(`id="${id}"`));
+  const sectionOrder = ["hero-title", "current-work", "work", "about", "ocean", "contact"].map(id => home.indexOf(`id="${id}"`));
   assert.ok(sectionOrder.every((position, index) => position >= 0 && (index === 0 || position > sectionOrder[index - 1])), "Generated homepage must preserve the editorial reading order with optional world after the work");
+  assert.doesNotMatch(visibleCopy(home), bannedCopy, "Homepage contains retired editorial copy or an unconfirmed marker");
   assert.match(home, /original Open Water art, created with Codex and Claude assistance/);
   assert.match(home, /Earlier edition \/ V3 vessel attribution/);
   for (const study of caseStudyContent) {
@@ -96,27 +79,26 @@ if (!sourceOnly) {
     const flat = await readFile(path.join(output, "case-studies", `${study.slug}.html`), "utf8");
     assert.equal(html, flat, `${study.slug} hosting variants must agree`);
     assert.ok(home.includes(`case-studies/${study.slug}"`), `${study.slug} must be directly reachable from the homepage`);
-    const text = normalize(html);
+    const text = visibleCopy(html);
+    assert.doesNotMatch(text, bannedCopy, `${study.slug} contains retired copy or an unconfirmed marker`);
+    assert.doesNotMatch(html, /Return to water|Back to Open Water/, "Static direct-entry cases must keep visitors on the reading path");
+    for (const id of ["context", "contribution", "decision", "outcome", "lesson", "sources"]) assert.ok(html.includes(`id="${id}"`), `${study.slug} missing ${id}`);
     for (const value of [study.title, study.role, study.status, study.summary]) assert.ok(text.includes(normalize(value)), `${study.slug} missing role/status/summary`);
     if (study.slug !== "anticipy") continue;
     for (const story of leadStories) {
       assert.ok(html.includes(`id="${story.id}"`));
-      for (const field of ["role", "status", "outcome", "limit"]) assert.ok(html.includes(esc(story[field])), `${story.id} missing ${field}`);
+      for (const field of ["intro", "role", "decision", "status", "outcome"]) assert.ok(html.includes(esc(story[field])), `${story.id} missing ${field}`);
     }
-    for (const item of contributions) {
-      const id = `contribution-${item.id.toLowerCase()}`;
-      const section = html.match(new RegExp(`<details id="${id}">([\\s\\S]*?)<\\/details>`))?.[1];
-      assert.ok(section, `${item.id} not rendered`);
-      for (const field of ["title", "part", "decision", "result", "status"]) assert.ok(section.includes(esc(item[field])), `${item.id} missing ${field}`);
-    }
-    for (const text of [anticipyNarrative.assistance, anticipyNarrative.team, anticipyNarrative.statusSummary, anticipyNarrative.evidence]) assert.ok(html.includes(esc(text)), "Generated Anticipy must retain attribution and outcome qualifications");
+    for (const item of alsoWork) assert.ok(text.includes(item), "Missing additional contribution");
+    for (const item of anticipyStatus) assert.ok(text.includes(item.result), "Missing current project stage");
+    assert.doesNotMatch(html, /<details id="contribution-/);
+    assert.ok(text.includes(anticipyNarrative.team));
     for (const source of anticipyNarrative.sources) assert.ok(html.includes(`href="${source.href}"`));
     for (const asset of [anticipyArtifact.desktop, anticipyArtifact.mobile]) {
       assert.ok(html.includes(asset));
       assert.ok((await readFile(path.join(output, asset))).length > 10000, `Missing public screenshot: ${asset}`);
     }
-    assert.match(html, /invented source \/ no AI calls/);
-    assert.match(html, /Synthetic illustration \/ no real credentials or live capture/);
+    assert.equal((html.match(/class="pv4-demo-label">Illustration</g) ?? []).length, 3);
   }
 }
 console.log(JSON.stringify({ passed: true, ...report }, null, 2));

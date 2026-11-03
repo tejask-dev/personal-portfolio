@@ -7,7 +7,7 @@ export default function DocuBridgeWorkbench() {
   const [answer, setAnswer] = useState(false);
   const item = docuBridgeStages[stage], sample = illustrativeWorksheets[sheet];
   return <section className="docu-workbench" aria-label="DocuBridge illustrative walkthrough">
-    <p className="dw-label">Illustrative workbook / no upload or AI call</p>
+    <p className="dw-label">Illustrative workbook</p>
     <h2>A worksheet, all the way through.</h2>
     <div className="dw-stages" aria-label="Workbook stages">{docuBridgeStages.map((s, i) => <button key={s.name} aria-pressed={stage === i} onClick={() => setStage(i)}><span>0{i + 1}</span>{s.name}</button>)}</div>
     <div className="dw-grid"><div><p className="dw-label">{item.eyebrow}</p><h3>{item.title}</h3><p>{item.body}</p><a href={`${docuBridgeSource}#${item.lines}`} target="_blank" rel="noreferrer">Inspect this source ↗</a></div><div className="dw-sample">

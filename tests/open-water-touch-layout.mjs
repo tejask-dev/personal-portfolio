@@ -69,7 +69,7 @@ try {
       return distance;
     }
     try {
-      await page.goto(url, { waitUntil: "networkidle" });
+      await page.goto(`${url.replace(/#.*$/, "")}#voyage`, { waitUntil: "networkidle" });
       await page.waitForFunction(() => document.querySelector("#voyage")?.dataset.yachtModel === "licensed");
       await page.locator("#take-helm").tap();
       // Entering changes the editorial document into a viewport scene and
@@ -87,7 +87,8 @@ try {
       assert.ok(Math.abs(turn.heading - initial.heading) > .1, "Actual touch steering did not turn yacht");
       const freeDistance = await tapForward();
 
-      await page.locator(".exp-discovery-rail").getByRole("button", { name: /Playground/ }).tap();
+      await page.locator(".exp-nav").getByRole("button", { name: /^Map/ }).tap();
+      await page.locator("dialog[open] .exp-encounter-grid").getByRole("button", { name: /Take the long way/ }).tap();
       const beginRace = page.locator("dialog[open]").getByRole("button", { name: "Start Jump circuit", exact: true });
       await bounded(beginRace, true);
       await beginRace.tap();

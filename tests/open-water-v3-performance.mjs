@@ -116,7 +116,7 @@ async function pageFor(options = {}) {
 }
 const scene = page => page.locator("#voyage");
 const state = page => scene(page).evaluate(element => ({ ...element.dataset }));
-async function boot(page) { await page.goto(url); await page.locator("#take-helm").waitFor(); await page.locator("#voyage.is-ready").waitFor({ timeout: 45000 }); }
+async function boot(page) { await page.goto(`${url.replace(/#.*$/, "")}#voyage`); await page.locator("#take-helm").waitFor(); await page.locator("#voyage.is-ready").waitFor({ timeout: 45000 }); }
 async function screenshot(page, name) { const filename = path.join(output, `performance-${name}.png`); await page.screenshot({ path: filename }); report.screenshots.push(filename); }
 async function resources(page) {
   return page.evaluate(() => ({
@@ -455,7 +455,7 @@ try {
     const { page, context, errors, failedRequests } = await pageFor({ reducedMotion: "reduce" });
     try {
       await page.route(/OpenWaterScene-[^/]+\.js(?:\?|$)/, route => route.abort("failed"));
-      await page.goto(url); await page.locator("#take-helm").waitFor();
+      await page.goto(`${url.replace(/#.*$/, "")}#voyage`); await page.locator("#take-helm").waitFor();
       await page.waitForFunction(() => document.querySelector("#voyage")?.dataset.state === "FALLBACK");
       await page.locator(".exp-nav").getByRole("button", { name: /^Work/ }).click();
       assert.equal(new Set(await page.locator('dialog[open] .exp-work-list a[href*="/case-studies/"]').evaluateAll(links => links.map(link => link.getAttribute("href")))).size, 5);

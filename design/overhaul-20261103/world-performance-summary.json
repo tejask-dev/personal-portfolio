@@ -1,0 +1,536 @@
+{
+  "at": "2026-11-03T06:05:13.281Z",
+  "duration": 15000,
+  "completed": true,
+  "evidence": "Isolated headless Chrome on one Mac. Low uses phone viewport/touch/DPR emulation on the same GPU. No throttling. Frame intervals measure CPU-side rendered submissions, not GPU completion. Resource counts observe live GL handles, not byte-accurate VRAM. A sample shorter than120000 browser milliseconds is a diagnostic probe, not sustained acceptance.",
+  "host": {
+    "platform": "darwin",
+    "architecture": "arm64",
+    "cpu": "Apple M5 Pro"
+  },
+  "browser": "156.0.8078.80",
+  "sampleActivity": "Animated stationary views; interactive races and challenge completion are separate functional checks. Transition long tasks are recorded independently of steady-state frame samples.",
+  "measurements": [
+    {
+      "name": "low-surface",
+      "tier": "low",
+      "mode": "surface",
+      "browserSampleMs": 15015.2,
+      "sustainedDuration": false,
+      "fps": 59.94,
+      "frameMs": {
+        "p50": 16.7,
+        "p95": 16.8,
+        "p99": 16.8,
+        "max": 16.8
+      },
+      "drawCalls": {
+        "p50": 54,
+        "max": 54
+      },
+      "triangles": {
+        "p50": 108204,
+        "max": 108204
+      },
+      "longTasks": {
+        "count": 0,
+        "maxMs": 0,
+        "totalMs": 0
+      },
+      "limits": {
+        "draws": 80,
+        "triangles": 180000,
+        "p95FrameMs": 33.3
+      },
+      "results": {
+        "realFrames": true,
+        "drawBudget": true,
+        "triangleBudget": true,
+        "requestedQuality": true,
+        "frameTarget": true
+      }
+    },
+    {
+      "name": "low-crown",
+      "tier": "low",
+      "mode": "reef",
+      "browserSampleMs": 15015.6,
+      "sustainedDuration": false,
+      "fps": 60,
+      "frameMs": {
+        "p50": 16.7,
+        "p95": 16.7,
+        "p99": 16.8,
+        "max": 16.8
+      },
+      "drawCalls": {
+        "p50": 24,
+        "max": 24
+      },
+      "triangles": {
+        "p50": 98432,
+        "max": 98432
+      },
+      "longTasks": {
+        "count": 0,
+        "maxMs": 0,
+        "totalMs": 0
+      },
+      "limits": {
+        "draws": 80,
+        "triangles": 180000,
+        "p95FrameMs": 33.3
+      },
+      "results": {
+        "realFrames": true,
+        "drawBudget": true,
+        "triangleBudget": true,
+        "requestedQuality": true,
+        "frameTarget": true
+      }
+    },
+    {
+      "name": "low-driftwall",
+      "tier": "low",
+      "mode": "reef",
+      "browserSampleMs": 15015.4,
+      "sustainedDuration": false,
+      "fps": 60.01,
+      "frameMs": {
+        "p50": 16.7,
+        "p95": 16.7,
+        "p99": 16.8,
+        "max": 16.8
+      },
+      "drawCalls": {
+        "p50": 10,
+        "max": 10
+      },
+      "triangles": {
+        "p50": 60312,
+        "max": 60312
+      },
+      "longTasks": {
+        "count": 0,
+        "maxMs": 0,
+        "totalMs": 0
+      },
+      "limits": {
+        "draws": 80,
+        "triangles": 180000,
+        "p95FrameMs": 33.3
+      },
+      "results": {
+        "realFrames": true,
+        "drawBudget": true,
+        "triangleBudget": true,
+        "requestedQuality": true,
+        "frameTarget": true
+      }
+    },
+    {
+      "name": "low-cathedral",
+      "tier": "low",
+      "mode": "reef",
+      "browserSampleMs": 15008.7,
+      "sustainedDuration": false,
+      "fps": 59.97,
+      "frameMs": {
+        "p50": 16.7,
+        "p95": 16.7,
+        "p99": 16.8,
+        "max": 16.8
+      },
+      "drawCalls": {
+        "p50": 15,
+        "max": 15
+      },
+      "triangles": {
+        "p50": 30244,
+        "max": 30244
+      },
+      "longTasks": {
+        "count": 0,
+        "maxMs": 0,
+        "totalMs": 0
+      },
+      "limits": {
+        "draws": 80,
+        "triangles": 180000,
+        "p95FrameMs": 33.3
+      },
+      "results": {
+        "realFrames": true,
+        "drawBudget": true,
+        "triangleBudget": true,
+        "requestedQuality": true,
+        "frameTarget": true
+      }
+    },
+    {
+      "name": "low-lantern",
+      "tier": "low",
+      "mode": "reef",
+      "browserSampleMs": 15008.4,
+      "sustainedDuration": false,
+      "fps": 60.03,
+      "frameMs": {
+        "p50": 16.7,
+        "p95": 16.8,
+        "p99": 16.8,
+        "max": 16.8
+      },
+      "drawCalls": {
+        "p50": 13,
+        "max": 13
+      },
+      "triangles": {
+        "p50": 47324,
+        "max": 47324
+      },
+      "longTasks": {
+        "count": 0,
+        "maxMs": 0,
+        "totalMs": 0
+      },
+      "limits": {
+        "draws": 80,
+        "triangles": 180000,
+        "p95FrameMs": 33.3
+      },
+      "results": {
+        "realFrames": true,
+        "drawBudget": true,
+        "triangleBudget": true,
+        "requestedQuality": true,
+        "frameTarget": true
+      }
+    },
+    {
+      "name": "high-surface",
+      "tier": "high",
+      "mode": "surface",
+      "browserSampleMs": 15014.8,
+      "sustainedDuration": false,
+      "fps": 60.01,
+      "frameMs": {
+        "p50": 16.7,
+        "p95": 16.7,
+        "p99": 16.8,
+        "max": 16.8
+      },
+      "drawCalls": {
+        "p50": 62,
+        "max": 62
+      },
+      "triangles": {
+        "p50": 247973,
+        "max": 247973
+      },
+      "longTasks": {
+        "count": 0,
+        "maxMs": 0,
+        "totalMs": 0
+      },
+      "limits": {
+        "draws": 130,
+        "triangles": 400000,
+        "p95FrameMs": 16.7
+      },
+      "results": {
+        "realFrames": true,
+        "drawBudget": true,
+        "triangleBudget": true,
+        "requestedQuality": true,
+        "frameTarget": true
+      }
+    },
+    {
+      "name": "high-crown",
+      "tier": "high",
+      "mode": "reef",
+      "browserSampleMs": 15018.3,
+      "sustainedDuration": false,
+      "fps": 59.99,
+      "frameMs": {
+        "p50": 16.7,
+        "p95": 16.8,
+        "p99": 16.8,
+        "max": 16.8
+      },
+      "drawCalls": {
+        "p50": 40,
+        "max": 40
+      },
+      "triangles": {
+        "p50": 230634,
+        "max": 230634
+      },
+      "longTasks": {
+        "count": 0,
+        "maxMs": 0,
+        "totalMs": 0
+      },
+      "limits": {
+        "draws": 130,
+        "triangles": 350000,
+        "p95FrameMs": 16.7
+      },
+      "results": {
+        "realFrames": true,
+        "drawBudget": true,
+        "triangleBudget": true,
+        "requestedQuality": true,
+        "frameTarget": false
+      }
+    },
+    {
+      "name": "high-driftwall",
+      "tier": "high",
+      "mode": "reef",
+      "browserSampleMs": 15016.4,
+      "sustainedDuration": false,
+      "fps": 60,
+      "frameMs": {
+        "p50": 16.7,
+        "p95": 16.7,
+        "p99": 16.8,
+        "max": 16.8
+      },
+      "drawCalls": {
+        "p50": 27,
+        "max": 27
+      },
+      "triangles": {
+        "p50": 146701,
+        "max": 146701
+      },
+      "longTasks": {
+        "count": 0,
+        "maxMs": 0,
+        "totalMs": 0
+      },
+      "limits": {
+        "draws": 130,
+        "triangles": 350000,
+        "p95FrameMs": 16.7
+      },
+      "results": {
+        "realFrames": true,
+        "drawBudget": true,
+        "triangleBudget": true,
+        "requestedQuality": true,
+        "frameTarget": true
+      }
+    },
+    {
+      "name": "high-cathedral",
+      "tier": "high",
+      "mode": "reef",
+      "browserSampleMs": 15017.3,
+      "sustainedDuration": false,
+      "fps": 60,
+      "frameMs": {
+        "p50": 16.7,
+        "p95": 16.7,
+        "p99": 16.8,
+        "max": 16.8
+      },
+      "drawCalls": {
+        "p50": 31,
+        "max": 31
+      },
+      "triangles": {
+        "p50": 82302,
+        "max": 82302
+      },
+      "longTasks": {
+        "count": 0,
+        "maxMs": 0,
+        "totalMs": 0
+      },
+      "limits": {
+        "draws": 130,
+        "triangles": 350000,
+        "p95FrameMs": 16.7
+      },
+      "results": {
+        "realFrames": true,
+        "drawBudget": true,
+        "triangleBudget": true,
+        "requestedQuality": true,
+        "frameTarget": true
+      }
+    },
+    {
+      "name": "high-lantern",
+      "tier": "high",
+      "mode": "reef",
+      "browserSampleMs": 15012,
+      "sustainedDuration": false,
+      "fps": 60.02,
+      "frameMs": {
+        "p50": 16.7,
+        "p95": 16.8,
+        "p99": 16.8,
+        "max": 16.8
+      },
+      "drawCalls": {
+        "p50": 29,
+        "max": 29
+      },
+      "triangles": {
+        "p50": 126212,
+        "max": 126212
+      },
+      "longTasks": {
+        "count": 0,
+        "maxMs": 0,
+        "totalMs": 0
+      },
+      "limits": {
+        "draws": 130,
+        "triangles": 350000,
+        "p95FrameMs": 16.7
+      },
+      "results": {
+        "realFrames": true,
+        "drawBudget": true,
+        "triangleBudget": true,
+        "requestedQuality": true,
+        "frameTarget": false
+      }
+    }
+  ],
+  "resourcePlateau": [
+    {
+      "tier": "low",
+      "liveHandleGrowthLastCycle": {
+        "Buffer": 0,
+        "Texture": 0,
+        "Program": 0,
+        "Shader": 0,
+        "Framebuffer": 0,
+        "Renderbuffer": 0,
+        "VertexArray": 0,
+        "Sampler": 0,
+        "TransformFeedback": 0,
+        "Query": 0
+      },
+      "plateau": true,
+      "evidence": "Live GL handles after full region cycles; not a byte-level VRAM or GC heap measurement."
+    },
+    {
+      "tier": "high",
+      "liveHandleGrowthLastCycle": {
+        "Buffer": 0,
+        "Texture": 0,
+        "Program": 0,
+        "Shader": 0,
+        "Framebuffer": 0,
+        "Renderbuffer": 0,
+        "VertexArray": 0,
+        "Sampler": 0,
+        "TransformFeedback": 0,
+        "Query": 0
+      },
+      "plateau": true,
+      "evidence": "Live GL handles after full region cycles; not a byte-level VRAM or GC heap measurement."
+    }
+  ],
+  "checks": [
+    {
+      "name": "low five-view rendering and repeated region disposal",
+      "status": "pass"
+    },
+    {
+      "name": "high five-view rendering and repeated region disposal",
+      "status": "pass"
+    },
+    {
+      "name": "delayed first habitat load cannot resurrect a canceled dive",
+      "status": "pass"
+    },
+    {
+      "name": "blocked model loads retain reef travel and portfolio links",
+      "status": "pass"
+    }
+  ],
+  "startup": [
+    {
+      "quality": "low",
+      "sceneReadyMs": 330.6000000014901,
+      "firstDrawSubmissionMs": 319,
+      "models": [
+        {
+          "path": "/assets/open-water-v4/superyacht-low.glb",
+          "encoded": 681160,
+          "transfer": 681460
+        }
+      ]
+    },
+    {
+      "quality": "high",
+      "sceneReadyMs": 337.3999999985099,
+      "firstDrawSubmissionMs": 325,
+      "models": [
+        {
+          "path": "/assets/open-water-v4/superyacht-low.glb",
+          "encoded": 681160,
+          "transfer": 681460
+        },
+        {
+          "path": "/assets/open-water-v4/superyacht-high.glb",
+          "encoded": 3399304,
+          "transfer": 3399604
+        }
+      ]
+    },
+    {
+      "quality": "low",
+      "sceneReadyMs": 329.6000000014901,
+      "firstDrawSubmissionMs": 318.6000000014901,
+      "models": [
+        {
+          "path": "/assets/open-water-v4/superyacht-low.glb",
+          "encoded": 681160,
+          "transfer": 681460
+        }
+      ]
+    },
+    {
+      "quality": "low",
+      "sceneReadyMs": 320.3999999985099,
+      "firstDrawSubmissionMs": 308.20000000298023,
+      "models": [
+        {
+          "path": "/assets/open-water-v4/superyacht-low.glb",
+          "encoded": 0,
+          "transfer": 0
+        }
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "view": "high-crown",
+      "criterion": "frameTarget",
+      "value": {
+        "p50": 16.7,
+        "p95": 16.8,
+        "p99": 16.8,
+        "max": 16.8
+      }
+    },
+    {
+      "view": "high-lantern",
+      "criterion": "frameTarget",
+      "value": {
+        "p50": 16.7,
+        "p95": 16.8,
+        "p99": 16.8,
+        "max": 16.8
+      }
+    }
+  ]
+}

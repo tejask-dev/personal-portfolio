@@ -35,9 +35,13 @@ try{
       assert.ok(await image.evaluate(img=>img.naturalWidth>0),`${route} image loads`);
     }
     if(route==='/case-studies/docubridge')for(const stage of ['Input','Worksheet','Analysis','Questions','Output'])assert.ok((await page.locator('main').textContent()).includes(stage));
-    if(route==='/')for(const slug of slugs)assert.ok(await page.locator(`a[href$="/case-studies/${slug}"]`).count(),`static homepage ${slug}`);
+    if(route==='/') {
+      for(const slug of slugs)assert.ok(await page.locator(`a[href$="/case-studies/${slug}"]`).count(),`static homepage ${slug}`);
+      assert.equal(await page.locator('#work .pv-work-grid > article').count(),3);
+      assert.ok(await page.locator('a[href="https://organic-chem-web-app.vercel.app/"]').count(),'MoleculeAI has a direct product link');
+    } else assert.equal(await page.getByRole('link',{name:/Back to Open Water|Return to water/}).count(),0,'Static case pages return to reading');
     console.log(`PASS no-JS ${route}: real route, metadata, content, images, width`);
   }
   await context.close();
 }finally{await browser.close();}
-console.log('PASS four unknown paths return HTTP 404/noindex for GET and HEAD. Local production preview only.');
+console.log(`PASS four unknown paths return HTTP 404/noindex for GET and HEAD. Checked origin: ${origin}`);

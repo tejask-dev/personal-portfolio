@@ -33,17 +33,8 @@ try {
     const errors = [];
     page.on('pageerror', e => errors.push(e.message));
     await page.goto(base);
-    await page.locator('.pe-choice-reading').waitFor();
-    await screenshot(page, `${name}-chooser`);
-    const chooser = await page.locator('.pathway-entry').evaluate(el => ({
-      overflow: el.scrollWidth > el.clientWidth,
-      serif: getComputedStyle(el.querySelector('h2')).fontFamily,
-      sans: getComputedStyle(el.querySelector('#pathway-description')).fontFamily,
-    }));
-    assert(!chooser.overflow, `${name}: chooser overflow`);
-    await hit(page.locator('.pe-choice-reading'));
-    await page.locator('.pe-choice-reading').click();
-    await page.locator('.pathway-entry').waitFor({ state: 'detached' });
+    await page.locator('.static-portfolio').waitFor({ state: 'detached' });
+    assert.equal(await page.locator('.pathway-entry').count(), 0, 'No gate before the reading page');
     await screenshot(page, `${name}-home`);
     const reading = await page.locator('.eh-hero-role').evaluate(el => {
       const s = getComputedStyle(el);
@@ -92,7 +83,7 @@ try {
       assert.deepEqual(axe.violations.map(v => ({ id: v.id, impact: v.impact })), [], `${name}: accessibility violations`);
     }
     assert.deepEqual(errors, [], `${name}: page errors`);
-    results.push({ name, width, height, chooser, reading, status: 'passed' });
+    results.push({ name, width, height, reading, status: 'passed' });
     await context.close();
   }
   const plain = await browser.newPage({ javaScriptEnabled: false, viewport: { width: 390, height: 844 } });

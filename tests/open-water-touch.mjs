@@ -41,7 +41,7 @@ try {
   page.setDefaultTimeout(15000);
   const cdp = await page.context().newCDPSession(page);
   async function ready() {
-    await page.goto(baseURL, { waitUntil: "networkidle" });
+    await page.goto(`${baseURL.replace(/#.*$/, "")}#voyage`, { waitUntil: "networkidle" });
     await page.waitForFunction(() =>
       document.querySelector(".ow-experience")?.classList.contains("is-ready"),
     );

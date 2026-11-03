@@ -1,7 +1,7 @@
 import { anticipyArtifact } from "../components/portfolio-v4/content";
-import somaImage from "../assets/SomaAI.png";
-import stellarImage from "../assets/Stellar/stellar-current.png";
-import docubridgeImage from "../assets/Docubridge.png";
+import somaImage from "../assets/SomaAI.webp";
+import stellarImage from "../assets/Stellar/stellar-current.webp";
+import docubridgeImage from "../assets/Docubridge.webp";
 
 import { caseStudyContent, type CaseStudyContent } from "./caseStudyContent";
 

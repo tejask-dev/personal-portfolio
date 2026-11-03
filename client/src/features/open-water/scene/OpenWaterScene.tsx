@@ -30,11 +30,24 @@ import { lensStops } from "../data/encounters";
 import { destinations } from "../data/world";
 import { updateRace, type RaceState } from "../systems/raceController";
 import {
+  BOAT_STEP,
   stepBoat,
   waveHeight,
   type BoatState,
   type Input,
 } from "../systems/boatController";
+import {
+  blendPose,
+  createHullMotion,
+  hullTarget,
+  landHull,
+  resetHullMotion,
+  samePose,
+  samplePose,
+  stepAlpha,
+  stepHullMotion,
+} from "../systems/hullMotion";
+import { vesselDetailPlan, afterInteractive } from "./vesselDetail";
 import { createEnvironment, skyMaterial, SEA_LIGHTING } from "./materials";
 import { createSeabed } from "./Seabed";
 import { createWildlife } from "./Wildlife";
@@ -170,6 +183,16 @@ function World(props: OpenWaterSceneProps) {
     cameraChanged: true,
     lightChanged: true,
     cameraHeading: props.boat.current.heading,
+  });
+  // Physics runs at a fixed 60 Hz. Drawing blends the last two steps, so 120 Hz
+  // and 144 Hz displays see continuous motion rather than repeated poses.
+  const presentation = useRef({
+    previous: samplePose(props.boat.current),
+    current: samplePose(props.boat.current),
+    view: samplePose(props.boat.current),
+    hull: createHullMotion(),
+    boat: { ...props.boat.current } as BoatState,
+    wasAirborne: props.boat.current.airborne,
   });
   const pointer = useRef<{
     x: number;
@@ -367,24 +390,43 @@ function World(props: OpenWaterSceneProps) {
   }, [gl, scene, camera, props.bridge]);
   const vesselId = props.boat.current.vesselId;
   useEffect(() => {
-    const controller = new AbortController();
+    const controller = new AbortController(), { signal } = controller;
+    const quality = props.quality;
+    // The light model makes the helm interactive quickly; the detailed one
+    // replaces it once the scene is idle. Save-Data stays on the light model.
+    const plan = vesselDetailPlan(quality, Boolean((navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData));
     let loaded: Group | null = null;
-    const fallback = createVesselModel(objects.environment, vesselId, props.quality);
-    let hasFallback = true;
-    const releaseFallback = () => { if(hasFallback) { hasFallback = false; objects.fallbackYacht.remove(fallback); disposeModel(fallback); } };
+    let fallback: Group | null = createVesselModel(objects.environment, vesselId, "low");
+    const releaseFallback = () => { if (fallback) { objects.fallbackYacht.remove(fallback); disposeModel(fallback); fallback = null; } };
+    const show = (model: Group) => {
+      if (loaded) { objects.yacht.remove(loaded); disposeModel(loaded); }
+      loaded = model; objects.yacht.add(model);
+      objects.fallbackYacht.visible = false;
+      releaseFallback();
+      latest.current.onYachtModel("licensed"); invalidate();
+    };
     objects.fallbackYacht.add(fallback);
     objects.fallbackYacht.visible = true;
     latest.current.onYachtModel("loading");
-    loadVesselAsset(objects.environment, vesselId, props.quality, controller.signal)
-      .then(model => {
-        if (controller.signal.aborted) { disposeModel(model); return; }
-        loaded = model; objects.yacht.add(model);
-        objects.fallbackYacht.visible = false;
-        releaseFallback();
-        latest.current.onYachtModel("licensed"); invalidate();
-      }).catch(() => {
-        if (!controller.signal.aborted) { latest.current.onYachtModel("procedural"); invalidate(); }
-      });
+    void (async () => {
+      for (const [index, detail] of plan.entries()) {
+        try {
+          if (index) await afterInteractive(signal);
+          const model = await loadVesselAsset(objects.environment, vesselId, detail, signal);
+          if (signal.aborted) { disposeModel(model); return; }
+          show(model);
+        } catch {
+          if (signal.aborted || index) return; // A failed upgrade keeps the light model.
+          if (quality === "high") {
+            releaseFallback();
+            fallback = createVesselModel(objects.environment, vesselId, "high");
+            objects.fallbackYacht.add(fallback);
+          }
+          latest.current.onYachtModel("procedural"); invalidate();
+          return;
+        }
+      }
+    })();
     return () => {
       controller.abort();
       if (loaded) { objects.yacht.remove(loaded); disposeModel(loaded); }
@@ -401,6 +443,12 @@ function World(props: OpenWaterSceneProps) {
     runtime.current.initialized = false;
     runtime.current.cameraHeading = props.boat.current.heading;
     runtime.current.accumulator = 0;
+    // A placement (return aboard, launch, race start) is drawn where it lands.
+    const placed = presentation.current;
+    samplePose(props.boat.current, placed.previous);
+    samplePose(props.boat.current, placed.current);
+    placed.hull.ready = false;
+    placed.wasAirborne = props.boat.current.airborne;
     objects.wake.clear();
     invalidate();
   }, [props.resetKey, props.boat, objects, invalidate]);
@@ -503,11 +551,19 @@ function World(props: OpenWaterSceneProps) {
     const hull = vesselProfile(boat.vesselId);
     const delta = state.resume ? 1 / 60 : Math.min(rawDelta, 0.06);
     state.resume = false;
+    const drawn = presentation.current;
+    // Anything that moved the boat outside a step (return, launch, a still
+    // step control) is a placement: draw it there instead of sweeping to it.
+    if (!samePose(drawn.current, boat)) {
+      samplePose(boat, drawn.previous);
+      samplePose(boat, drawn.current);
+    }
     if (!p.paused) {
       state.time += delta;
       state.accumulator += delta;
       let steps = 0;
-      while (state.accumulator >= 1 / 60 && steps < 4) {
+      while (state.accumulator >= BOAT_STEP && steps < 4) {
+        samplePose(boat, drawn.previous);
         if (!p.inspection && p.sailing && p.mode === "surface" && p.activity !== "lighthouse" && p.activity !== "fishing") {
           if (p.race.current.phase !== "countdown")
             stepBoat(boat, p.cruise ? {...p.input.current, forward:true} : p.input.current, 1 / 60);
@@ -516,15 +572,20 @@ function World(props: OpenWaterSceneProps) {
         if (!p.diving && !p.inspection && p.mode === "reef")
           stepReef(p.reef.current, p.reefInput.current, 1 / 60, nav);
         if (!p.diving && !p.inspection) p.onGameTick(1 / 60);
-        state.accumulator -= 1 / 60;
+        samplePose(boat, drawn.current);
+        state.accumulator -= BOAT_STEP;
         steps++;
       }
     }
+    const helm = drawn.boat;
+    Object.assign(helm, boat, blendPose(drawn.previous, drawn.current, p.paused ? 1 : stepAlpha(state.accumulator), drawn.view));
+    const surge = (drawn.current.speed - drawn.previous.speed) / BOAT_STEP;
     const changedMode = modeRef.current !== p.mode;
     if (changedMode) {
       runtime.current.diveProgress = 0;
       runtime.current.initialized = false;
       runtime.current.cameraChanged = true;
+      drawn.hull.ready = false;
       objects.wake.clear();
       modeRef.current = p.mode;
     }
@@ -580,9 +641,10 @@ function World(props: OpenWaterSceneProps) {
     objects.ocean.visible = p.mode !== "reef";
     objects.anchoredYacht.visible = p.mode === "surface" && Boolean(p.anchoredYacht);
     if (p.anchoredYacht) {
-      const anchor = p.anchoredYacht;
-      objects.anchoredYacht.position.set(anchor.x, waveHeight(anchor.x, anchor.z, state.time) + .12, anchor.z);
-      objects.anchoredYacht.rotation.y = -anchor.heading;
+      // The moored yacht rides the same hull-averaged swell, without inertia.
+      const anchor = p.anchoredYacht, rest = hullTarget({ ...anchor, speed: 0, turn: 0 }, state.time);
+      objects.anchoredYacht.position.set(anchor.x, rest.heave + .12, anchor.z);
+      objects.anchoredYacht.rotation.set(rest.pitch, -anchor.heading, rest.roll, "YXZ");
     }
     companions.group.visible = p.mode === "reef";
     objects.fauna.group.visible = p.mode === "reef";
@@ -607,53 +669,33 @@ function World(props: OpenWaterSceneProps) {
         (Number(p.daylight) - environment.uDay.value) *
         (1 - Math.exp(-delta * 1.8));
     state.lightChanged = false;
-    environment.uBoat.value.set(boat.x, boat.z, -boat.heading);
-    environment.uBoatLift.value = boat.lift;
-    // Sample the analytic surface at bow, stern, port and starboard. The visible
-    // water, hull height, pitch and roll agree instead of using unrelated sines.
-    const forwardX = Math.sin(boat.heading),
-      forwardZ = -Math.cos(boat.heading);
-    const starboardX = Math.cos(boat.heading),
-      starboardZ = Math.sin(boat.heading);
-    const bow = waveHeight(
-      boat.x + forwardX * hull.length * .35,
-      boat.z + forwardZ * hull.length * .35,
-      state.time,
-    );
-    const stern = waveHeight(
-      boat.x - forwardX * hull.length * .35,
-      boat.z - forwardZ * hull.length * .35,
-      state.time,
-    );
-    const port = waveHeight(
-      boat.x - starboardX * hull.beam * .4,
-      boat.z - starboardZ * hull.beam * .4,
-      state.time,
-    );
-    const starboard = waveHeight(
-      boat.x + starboardX * hull.beam * .4,
-      boat.z + starboardZ * hull.beam * .4,
-      state.time,
-    );
-    yacht.position.set(
-      boat.x,
-      (boat.airborne || boat.rampId
-        ? boat.lift
-        : waveHeight(boat.x, boat.z, state.time)) + 0.12,
-      boat.z,
-    );
-    yacht.rotation.set(
-      boat.airborne
-        ? Math.atan2(boat.verticalSpeed, Math.max(Math.abs(boat.speed), 8)) *
-            0.72
-        : boat.rampId
-          ? boat.rampPitch
-          : Math.atan2(bow - stern, hull.length * .7),
-      -boat.heading,
-      (boat.airborne ? 0 : Math.atan2(starboard - port, hull.beam * .8)) -
-        boat.turn * boat.speed * 0.004,
-      "YXZ",
-    );
+    environment.uBoat.value.set(helm.x, helm.z, -helm.heading);
+    environment.uBoatLift.value = helm.lift;
+    // The hull samples the same analytic sea the shader draws, averaged over its
+    // footprint, then rides toward it on damped springs: weight for the yacht,
+    // liveliness for the tender, and the same result at any refresh rate.
+    const water = hullTarget(helm, state.time, surge);
+    const motion = drawn.hull;
+    if (boat.airborne || boat.rampId) {
+      // Ramp and flight poses are driven directly; the spring resumes from
+      // them on touchdown so a landing settles instead of snapping level.
+      resetHullMotion(motion, {
+        heave: helm.lift,
+        pitch: boat.airborne
+          ? Math.atan2(boat.verticalSpeed, Math.max(Math.abs(helm.speed), 8)) * 0.72
+          : boat.rampPitch,
+        roll: boat.airborne
+          ? -Math.max(-hull.maxHeel, Math.min(hull.maxHeel, boat.turn * helm.speed * hull.heel))
+          : water.roll,
+      });
+    } else {
+      landHull(motion, boat, drawn.wasAirborne);
+      if (!state.initialized || !motion.ready) resetHullMotion(motion, water);
+      else if (!p.paused) stepHullMotion(motion, water, hull, delta);
+    }
+    drawn.wasAirborne = boat.airborne;
+    yacht.position.set(helm.x, motion.heave + 0.12, helm.z);
+    yacht.rotation.set(motion.pitch, -helm.heading, motion.roll, "YXZ");
     buoys.forEach((buoy, i) => {
       const dock = destinations[i].dock;
       buoy.position.y = waveHeight(dock.x, dock.z, state.time);
@@ -697,7 +739,7 @@ function World(props: OpenWaterSceneProps) {
       objects.target.scale.setScalar(1 + 0.05 * Math.sin(state.time * 2));
     }
     if (!p.paused || !state.initialized || !p.sailing)
-      objects.wake.update(boat, state.time, p.sailing);
+      objects.wake.update(helm, state.time, p.sailing);
     if (p.activity === "lighthouse") {
       const angle = (p.lensBearing * Math.PI) / 180,
         fx = Math.sin(angle),
@@ -727,9 +769,9 @@ function World(props: OpenWaterSceneProps) {
         diver.z + origin.z - Math.cos(diver.heading) * 2,
       );
     } else if (p.activity === "fishing") {
-      const fx = Math.sin(boat.heading), fz = -Math.cos(boat.heading);
-      eye.set(boat.x - fx * (hull.length*.6+9) + Math.cos(boat.heading)*9, 7, boat.z - fz*(hull.length*.6+9)+Math.sin(boat.heading)*9);
-      aim.set(boat.x-fx*(hull.length*.5+5),.1,boat.z-fz*(hull.length*.5+5));
+      const fx = Math.sin(helm.heading), fz = -Math.cos(helm.heading);
+      eye.set(helm.x - fx * (hull.length*.6+9) + Math.cos(helm.heading)*9, 7, helm.z - fz*(hull.length*.6+9)+Math.sin(helm.heading)*9);
+      aim.set(helm.x-fx*(hull.length*.5+5),.1,helm.z-fz*(hull.length*.5+5));
     } else if (!p.sailing) {
       if (size.width < 700) {
         eye.set(48, 24, 64);
@@ -741,31 +783,31 @@ function World(props: OpenWaterSceneProps) {
     } else if (p.cameraMode === "follow") {
       if (!p.paused || state.cameraChanged) {
         const change = Math.atan2(
-          Math.sin(boat.heading - state.cameraHeading),
-          Math.cos(boat.heading - state.cameraHeading),
+          Math.sin(helm.heading - state.cameraHeading),
+          Math.cos(helm.heading - state.cameraHeading),
         );
         state.cameraHeading +=
           change * (!state.initialized ? 1 : 1 - Math.exp(-delta * 2.3));
       }
       const fx = Math.sin(state.cameraHeading),
         fz = -Math.cos(state.cameraHeading),
-        speed = Math.max(0, boat.speed);
+        speed = Math.max(0, helm.speed);
       const portrait = size.width < 700,
         trailingDistance =
           (portrait ? 41 : 27) + (boat.vesselId === "superyacht" ? 12 : 0) + speed * (portrait ? 0.16 : 0.1);
       eye.set(
-        boat.x - fx * trailingDistance,
-        (portrait ? 17 : 11.5) + boat.lift * 0.35,
-        boat.z - fz * trailingDistance,
+        helm.x - fx * trailingDistance,
+        (portrait ? 17 : 11.5) + helm.lift * 0.35,
+        helm.z - fz * trailingDistance,
       );
       aim.set(
-        boat.x + fx * (17 + speed * 0.18),
-        1.4 + boat.lift * 0.22,
-        boat.z + fz * (17 + speed * 0.18),
+        helm.x + fx * (17 + speed * 0.18),
+        1.4 + helm.lift * 0.22,
+        helm.z + fz * (17 + speed * 0.18),
       );
     } else {
-      eye.set(boat.x + 42, 51 + boat.lift * 0.16, boat.z + 62);
-      aim.set(boat.x, 0, boat.z - 12);
+      eye.set(helm.x + 42, 51 + helm.lift * 0.16, helm.z + 62);
+      aim.set(helm.x, 0, helm.z - 12);
     }
     const portraitInspection = size.width < 700 && size.width < size.height;
     if (p.inspection && (p.mode !== "reef" || p.region === "crown")) {
@@ -826,16 +868,16 @@ function World(props: OpenWaterSceneProps) {
       if (state.diveProgress >= 1) p.onDiveEnd();
     }
     if (p.panel === "photo" && p.mode !== "reef") {
-      const dx = eye.x - boat.x,
-        dz = eye.z - boat.z,
+      const dx = eye.x - helm.x,
+        dz = eye.z - helm.z,
         a = p.photoCamera.yaw,
         z = p.photoCamera.zoom;
       eye.set(
-        boat.x + (dx * Math.cos(a) - dz * Math.sin(a)) * z,
+        helm.x + (dx * Math.cos(a) - dz * Math.sin(a)) * z,
         Math.max(4, eye.y * z),
-        boat.z + (dx * Math.sin(a) + dz * Math.cos(a)) * z,
+        helm.z + (dx * Math.sin(a) + dz * Math.cos(a)) * z,
       );
-      aim.set(boat.x, 1, boat.z);
+      aim.set(helm.x, 1, helm.z);
     }
     if (!p.paused || !state.initialized || state.cameraChanged) {
       const blend =
@@ -860,7 +902,7 @@ function World(props: OpenWaterSceneProps) {
               : p.mode === "reef"
                 ? 58
                 : p.sailing && p.cameraMode === "follow"
-                  ? 48 + Math.min(Math.max(boat.speed - 12, 0) / 14, 1) * 6
+                  ? 48 + Math.min(Math.max(helm.speed - 12, 0) / 14, 1) * 6
                   : 48;
         camera.fov +=
           (desiredFov - camera.fov) *

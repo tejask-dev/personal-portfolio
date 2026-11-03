@@ -1,0 +1,149 @@
+{
+  "scroll": {
+    "browser": "156.0.8078.80",
+    "checks": [
+      {
+        "name": "native wheel reverses reading progress while real film plays and voyage rendering stops",
+        "passed": true
+      },
+      {
+        "name": "pause scenery freezes actual pixels and depth while native scrolling keeps all copy readable",
+        "passed": true
+      },
+      {
+        "name": "four chapter links, skip and case return preserve native destinations and source focus",
+        "passed": true
+      },
+      {
+        "name": "reduced motion is compact on entry and responds live after real scenery has loaded",
+        "passed": true
+      },
+      {
+        "name": "blocked film retains compact readable narrative and professional links",
+        "passed": true
+      },
+      {
+        "name": "invalid film retains compact readable narrative and professional links",
+        "passed": true
+      },
+      {
+        "name": "JavaScript-disabled field guide stays optional and retains native project links",
+        "passed": true
+      },
+      {
+        "name": "native hash returns to the existing vessel without carrying held helm input into reading",
+        "passed": true
+      },
+      {
+        "name": "phone-320 native touch, complete chapter copy, overflow and accessibility",
+        "passed": true
+      },
+      {
+        "name": "phone-390 native touch, complete chapter copy, overflow and accessibility",
+        "passed": true
+      },
+      {
+        "name": "phone-landscape native touch, complete chapter copy, overflow and accessibility",
+        "passed": true
+      }
+    ]
+  },
+  "world": {
+    "browser": "156.0.8078.80",
+    "checks": [
+      {
+        "name": "yacht, tender race, named fish, four habitats, case study and exact original mooring",
+        "passed": true
+      },
+      {
+        "name": "held key from another control cannot acquire the helm through key repeat",
+        "passed": true
+      },
+      {
+        "name": "each reef-to-reef transition is fresh and its visible skip remains usable",
+        "passed": true
+      },
+      {
+        "name": "Dory photo excursion travels to Driftwall and keeps a photograph only on request",
+        "passed": true
+      },
+      {
+        "name": "quiet catch-and-release requires three actual hooked, reeled and released fish",
+        "passed": true
+      },
+      {
+        "name": "guided docking travels the actual hull before three seconds inside the berth",
+        "passed": true
+      },
+      {
+        "name": "shoal run completes through six swept gate crossings with visible direction controls",
+        "passed": true
+      },
+      {
+        "name": "touch stroke releases its timer before fresh held keyboard input and pause cancels the next pulse",
+        "passed": true
+      },
+      {
+        "name": "small-phone touch layout, reachable chart, fish movement and quiet range focus",
+        "passed": true
+      },
+      {
+        "name": "phone touch layout, reachable chart, fish movement and quiet range focus",
+        "passed": true
+      },
+      {
+        "name": "phone-landscape touch layout, reachable chart, fish movement and quiet range focus",
+        "passed": true
+      },
+      {
+        "name": "region chunk failure preserves the vessel and professional routes",
+        "passed": true
+      },
+      {
+        "name": "unavailable WebGL keeps four-region field guide, return aboard, work and contact",
+        "passed": true
+      }
+    ]
+  },
+  "boarding": {
+    "browser": "156.0.8078.80",
+    "checks": [
+      {
+        "name": "desktop-explicit-sailing",
+        "passed": true
+      },
+      {
+        "name": "reduced-motion",
+        "passed": true
+      },
+      {
+        "name": "phone-touch",
+        "passed": true
+      },
+      {
+        "name": "short-landscape",
+        "passed": true
+      },
+      {
+        "name": "resize-and-motion-change",
+        "passed": true
+      },
+      {
+        "name": "pending-load-cancel-and-reenter",
+        "passed": true
+      },
+      {
+        "name": "webgl-fallback",
+        "passed": true
+      },
+      {
+        "name": "lazy-chunk-failure",
+        "passed": true
+      },
+      {
+        "name": "preserve-reef-on-reentry",
+        "passed": true
+      }
+    ]
+  }
+}

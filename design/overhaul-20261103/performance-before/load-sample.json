@@ -1,0 +1,773 @@
+{
+  "conditions": "Chrome headless, desktop1440x900 DPR1, unthrottled localhost, fresh context then same-context reload, snapshot4s after navigation; legacy gate marked seen so both home samples measure reading; resource comparison, not field vitals or device performance.",
+  "browser": "156.0.8078.80",
+  "samples": [
+    {
+      "route": "/",
+      "phase": "cold",
+      "nav": {
+        "name": "http://127.0.0.1:4188/",
+        "entryType": "navigation",
+        "startTime": 0,
+        "duration": 52.899999998509884,
+        "navigationId": 3092,
+        "initiatorType": "navigation",
+        "deliveryType": "",
+        "nextHopProtocol": "http/1.1",
+        "renderBlockingStatus": "non-blocking",
+        "contentType": "text/html",
+        "contentEncoding": "gzip",
+        "workerStart": 0,
+        "workerRouterEvaluationStart": 0,
+        "workerCacheLookupStart": 0,
+        "workerMatchedSourceType": "",
+        "workerFinalSourceType": "",
+        "redirectStart": 0,
+        "redirectEnd": 0,
+        "fetchStart": 0.3999999985098839,
+        "domainLookupStart": 0.3999999985098839,
+        "domainLookupEnd": 0.3999999985098839,
+        "connectStart": 0.3999999985098839,
+        "secureConnectionStart": 0,
+        "connectEnd": 0.3999999985098839,
+        "requestStart": 0.8999999985098839,
+        "responseStart": 5.600000001490116,
+        "firstInterimResponseStart": 0,
+        "finalResponseHeadersStart": 5.600000001490116,
+        "responseEnd": 5.899999998509884,
+        "transferSize": 6560,
+        "encodedBodySize": 6260,
+        "decodedBodySize": 20549,
+        "responseStatus": 200,
+        "serverTiming": [],
+        "unloadEventStart": 0,
+        "unloadEventEnd": 0,
+        "domInteractive": 11.100000001490116,
+        "domContentLoadedEventStart": 52.100000001490116,
+        "domContentLoadedEventEnd": 52.19999999552965,
+        "domComplete": 52.600000001490116,
+        "loadEventStart": 52.899999998509884,
+        "loadEventEnd": 52.899999998509884,
+        "type": "navigate",
+        "redirectCount": 0,
+        "activationStart": 0,
+        "criticalCHRestart": 0,
+        "notRestoredReasons": null,
+        "confidence": {
+          "randomizedTriggerRate": 0.4994798,
+          "value": "high"
+        }
+      },
+      "resources": [
+        {
+          "name": "/assets/index-Ct7xuSxp.js",
+          "transfer": 91821,
+          "encoded": 91521,
+          "decoded": 275298,
+          "duration": 9.600000001490116
+        },
+        {
+          "name": "/assets/index-Bm3RH2ok.css",
+          "transfer": 31714,
+          "encoded": 31414,
+          "decoded": 150690,
+          "duration": 7
+        },
+        {
+          "name": "/fonts/Spectral-Light.ttf",
+          "transfer": 264832,
+          "encoded": 264532,
+          "decoded": 264532,
+          "duration": 32.70000000298023
+        },
+        {
+          "name": "/fonts/Aspekta-400.woff2",
+          "transfer": 22048,
+          "encoded": 21748,
+          "decoded": 21748,
+          "duration": 30.5
+        },
+        {
+          "name": "/fonts/Aspekta-600.otf",
+          "transfer": 39004,
+          "encoded": 38704,
+          "decoded": 38704,
+          "duration": 28.700000002980232
+        },
+        {
+          "name": "/favicon.png",
+          "transfer": 3381,
+          "encoded": 3081,
+          "decoded": 3081,
+          "duration": 1.1000000014901161
+        }
+      ],
+      "totals": {
+        "requests": 6,
+        "transfer": 452800,
+        "encoded": 451000,
+        "decoded": 754053,
+        "includingDocumentTransfer": 459360
+      }
+    },
+    {
+      "route": "/",
+      "phase": "warm",
+      "nav": {
+        "name": "http://127.0.0.1:4188/",
+        "entryType": "navigation",
+        "startTime": 0,
+        "duration": 18.5,
+        "navigationId": 1945,
+        "initiatorType": "navigation",
+        "deliveryType": "cache",
+        "nextHopProtocol": "",
+        "renderBlockingStatus": "non-blocking",
+        "contentType": "text/html",
+        "contentEncoding": "gzip",
+        "workerStart": 0,
+        "workerRouterEvaluationStart": 0,
+        "workerCacheLookupStart": 0,
+        "workerMatchedSourceType": "",
+        "workerFinalSourceType": "",
+        "redirectStart": 0,
+        "redirectEnd": 0,
+        "fetchStart": 0.3999999985098839,
+        "domainLookupStart": 0.3999999985098839,
+        "domainLookupEnd": 0.3999999985098839,
+        "connectStart": 0.3999999985098839,
+        "secureConnectionStart": 0,
+        "connectEnd": 0.3999999985098839,
+        "requestStart": 1,
+        "responseStart": 2.5,
+        "firstInterimResponseStart": 0,
+        "finalResponseHeadersStart": 2.5,
+        "responseEnd": 3,
+        "transferSize": 300,
+        "encodedBodySize": 6260,
+        "decodedBodySize": 20549,
+        "responseStatus": 200,
+        "serverTiming": [],
+        "unloadEventStart": 7.100000001490116,
+        "unloadEventEnd": 7.100000001490116,
+        "domInteractive": 10.700000002980232,
+        "domContentLoadedEventStart": 13.200000002980232,
+        "domContentLoadedEventEnd": 13.200000002980232,
+        "domComplete": 17.799999997019768,
+        "loadEventStart": 18.5,
+        "loadEventEnd": 18.5,
+        "type": "reload",
+        "redirectCount": 0,
+        "activationStart": 0,
+        "criticalCHRestart": 0,
+        "notRestoredReasons": null,
+        "confidence": {
+          "randomizedTriggerRate": 0.4994798,
+          "value": "high"
+        }
+      },
+      "resources": [
+        {
+          "name": "/assets/index-Ct7xuSxp.js",
+          "transfer": 300,
+          "encoded": 0,
+          "decoded": 0,
+          "duration": 2.399999998509884
+        },
+        {
+          "name": "/assets/index-Bm3RH2ok.css",
+          "transfer": 300,
+          "encoded": 0,
+          "decoded": 0,
+          "duration": 1.3999999985098839
+        },
+        {
+          "name": "/fonts/Spectral-Light.ttf",
+          "transfer": 300,
+          "encoded": 0,
+          "decoded": 0,
+          "duration": 0.8999999985098839
+        },
+        {
+          "name": "/fonts/Aspekta-400.woff2",
+          "transfer": 300,
+          "encoded": 0,
+          "decoded": 0,
+          "duration": 1.1999999955296516
+        },
+        {
+          "name": "/fonts/Aspekta-600.otf",
+          "transfer": 300,
+          "encoded": 0,
+          "decoded": 0,
+          "duration": 0.6000000014901161
+        },
+        {
+          "name": "/assets/Professional%20photo%20shoot%20seteve%20jobs%20kinda%20photo%20must%20use-B3idzOnx.jpeg",
+          "transfer": 15243,
+          "encoded": 14943,
+          "decoded": 14943,
+          "duration": 3.3000000044703484
+        },
+        {
+          "name": "/favicon.png",
+          "transfer": 300,
+          "encoded": 3081,
+          "decoded": 3081,
+          "duration": 0.6000000014901161
+        }
+      ],
+      "totals": {
+        "requests": 7,
+        "transfer": 17043,
+        "encoded": 18024,
+        "decoded": 18024,
+        "includingDocumentTransfer": 17343
+      }
+    },
+    {
+      "route": "case-studies/anticipy",
+      "phase": "cold",
+      "nav": {
+        "name": "http://127.0.0.1:4188/case-studies/anticipy",
+        "entryType": "navigation",
+        "startTime": 0,
+        "duration": 46.899999998509884,
+        "navigationId": 5054,
+        "initiatorType": "navigation",
+        "deliveryType": "",
+        "nextHopProtocol": "http/1.1",
+        "renderBlockingStatus": "non-blocking",
+        "contentType": "text/html",
+        "contentEncoding": "gzip",
+        "workerStart": 0,
+        "workerRouterEvaluationStart": 0,
+        "workerCacheLookupStart": 0,
+        "workerMatchedSourceType": "",
+        "workerFinalSourceType": "",
+        "redirectStart": 0,
+        "redirectEnd": 0,
+        "fetchStart": 0.29999999701976776,
+        "domainLookupStart": 0.29999999701976776,
+        "domainLookupEnd": 0.29999999701976776,
+        "connectStart": 0.29999999701976776,
+        "secureConnectionStart": 0,
+        "connectEnd": 0.29999999701976776,
+        "requestStart": 0.6000000014901161,
+        "responseStart": 2.1999999955296516,
+        "firstInterimResponseStart": 0,
+        "finalResponseHeadersStart": 2.1999999955296516,
+        "responseEnd": 2.600000001490116,
+        "transferSize": 8830,
+        "encodedBodySize": 8530,
+        "decodedBodySize": 29108,
+        "responseStatus": 200,
+        "serverTiming": [],
+        "unloadEventStart": 0,
+        "unloadEventEnd": 0,
+        "domInteractive": 7.299999997019768,
+        "domContentLoadedEventStart": 43,
+        "domContentLoadedEventEnd": 43,
+        "domComplete": 46.899999998509884,
+        "loadEventStart": 46.899999998509884,
+        "loadEventEnd": 46.899999998509884,
+        "type": "navigate",
+        "redirectCount": 0,
+        "activationStart": 0,
+        "criticalCHRestart": 0,
+        "notRestoredReasons": null,
+        "confidence": {
+          "randomizedTriggerRate": 0.4994798,
+          "value": "high"
+        }
+      },
+      "resources": [
+        {
+          "name": "/assets/index-Bm3RH2ok.css",
+          "transfer": 31714,
+          "encoded": 31414,
+          "decoded": 150690,
+          "duration": 5.5
+        },
+        {
+          "name": "/assets/index-Ct7xuSxp.js",
+          "transfer": 91821,
+          "encoded": 91521,
+          "decoded": 275298,
+          "duration": 7.800000004470348
+        },
+        {
+          "name": "/fonts/Spectral-Light.ttf",
+          "transfer": 264832,
+          "encoded": 264532,
+          "decoded": 264532,
+          "duration": 28.600000001490116
+        },
+        {
+          "name": "/fonts/Aspekta-400.woff2",
+          "transfer": 22048,
+          "encoded": 21748,
+          "decoded": 21748,
+          "duration": 26.80000000447035
+        },
+        {
+          "name": "/fonts/Aspekta-600.otf",
+          "transfer": 39004,
+          "encoded": 38704,
+          "decoded": 38704,
+          "duration": 25.700000002980232
+        },
+        {
+          "name": "/fonts/Aspekta-200.otf",
+          "transfer": 38212,
+          "encoded": 37912,
+          "decoded": 37912,
+          "duration": 25.80000000447035
+        },
+        {
+          "name": "/portfolio/anticipy-desktop-2026-10-01.jpg",
+          "transfer": 64515,
+          "encoded": 64215,
+          "decoded": 64215,
+          "duration": 1.6000000014901161
+        },
+        {
+          "name": "/assets/CaseStudy-BxlKddjf.js",
+          "transfer": 3509,
+          "encoded": 3209,
+          "decoded": 9851,
+          "duration": 1.3999999985098839
+        },
+        {
+          "name": "/assets/docuBridgeWalkthrough-rp4YkOI5.js",
+          "transfer": 1371,
+          "encoded": 1071,
+          "decoded": 2134,
+          "duration": 1.2999999970197678
+        },
+        {
+          "name": "/favicon.png",
+          "transfer": 3381,
+          "encoded": 3081,
+          "decoded": 3081,
+          "duration": 0.8000000044703484
+        }
+      ],
+      "totals": {
+        "requests": 10,
+        "transfer": 560407,
+        "encoded": 557407,
+        "decoded": 868165,
+        "includingDocumentTransfer": 569237
+      }
+    },
+    {
+      "route": "case-studies/anticipy",
+      "phase": "warm",
+      "nav": {
+        "name": "http://127.0.0.1:4188/case-studies/anticipy",
+        "entryType": "navigation",
+        "startTime": 0,
+        "duration": 16.600000001490116,
+        "navigationId": 4114,
+        "initiatorType": "navigation",
+        "deliveryType": "cache",
+        "nextHopProtocol": "",
+        "renderBlockingStatus": "non-blocking",
+        "contentType": "text/html",
+        "contentEncoding": "gzip",
+        "workerStart": 0,
+        "workerRouterEvaluationStart": 0,
+        "workerCacheLookupStart": 0,
+        "workerMatchedSourceType": "",
+        "workerFinalSourceType": "",
+        "redirectStart": 0,
+        "redirectEnd": 0,
+        "fetchStart": 0.20000000298023224,
+        "domainLookupStart": 0.20000000298023224,
+        "domainLookupEnd": 0.20000000298023224,
+        "connectStart": 0.20000000298023224,
+        "secureConnectionStart": 0,
+        "connectEnd": 0.20000000298023224,
+        "requestStart": 0.5,
+        "responseStart": 1.1000000014901161,
+        "firstInterimResponseStart": 0,
+        "finalResponseHeadersStart": 1.1000000014901161,
+        "responseEnd": 1.2000000029802322,
+        "transferSize": 300,
+        "encodedBodySize": 8530,
+        "decodedBodySize": 29108,
+        "responseStatus": 200,
+        "serverTiming": [],
+        "unloadEventStart": 4,
+        "unloadEventEnd": 4,
+        "domInteractive": 7.5,
+        "domContentLoadedEventStart": 16.400000005960464,
+        "domContentLoadedEventEnd": 16.5,
+        "domComplete": 16.5,
+        "loadEventStart": 16.600000001490116,
+        "loadEventEnd": 16.600000001490116,
+        "type": "reload",
+        "redirectCount": 0,
+        "activationStart": 0,
+        "criticalCHRestart": 0,
+        "notRestoredReasons": null,
+        "confidence": {
+          "randomizedTriggerRate": 0.4994798,
+          "value": "high"
+        }
+      },
+      "resources": [
+        {
+          "name": "/assets/index-Ct7xuSxp.js",
+          "transfer": 300,
+          "encoded": 91521,
+          "decoded": 275298,
+          "duration": 1.8000000044703484
+        },
+        {
+          "name": "/assets/index-Bm3RH2ok.css",
+          "transfer": 300,
+          "encoded": 31414,
+          "decoded": 150690,
+          "duration": 1.1000000014901161
+        },
+        {
+          "name": "/portfolio/anticipy-desktop-2026-10-01.jpg",
+          "transfer": 300,
+          "encoded": 0,
+          "decoded": 0,
+          "duration": 0.7999999970197678
+        },
+        {
+          "name": "/fonts/Spectral-Light.ttf",
+          "transfer": 300,
+          "encoded": 0,
+          "decoded": 0,
+          "duration": 0.6000000014901161
+        },
+        {
+          "name": "/fonts/Aspekta-400.woff2",
+          "transfer": 300,
+          "encoded": 0,
+          "decoded": 0,
+          "duration": 0.7999999970197678
+        },
+        {
+          "name": "/fonts/Aspekta-600.otf",
+          "transfer": 300,
+          "encoded": 0,
+          "decoded": 0,
+          "duration": 0.5
+        },
+        {
+          "name": "/fonts/Aspekta-200.otf",
+          "transfer": 300,
+          "encoded": 0,
+          "decoded": 0,
+          "duration": 0.6000000014901161
+        },
+        {
+          "name": "/assets/CaseStudy-BxlKddjf.js",
+          "transfer": 300,
+          "encoded": 3209,
+          "decoded": 9851,
+          "duration": 0.7999999970197678
+        },
+        {
+          "name": "/assets/docuBridgeWalkthrough-rp4YkOI5.js",
+          "transfer": 300,
+          "encoded": 1071,
+          "decoded": 2134,
+          "duration": 0.8000000044703484
+        },
+        {
+          "name": "/favicon.png",
+          "transfer": 300,
+          "encoded": 3081,
+          "decoded": 3081,
+          "duration": 0.6999999955296516
+        }
+      ],
+      "totals": {
+        "requests": 10,
+        "transfer": 3000,
+        "encoded": 130296,
+        "decoded": 441054,
+        "includingDocumentTransfer": 3300
+      }
+    },
+    {
+      "route": "case-studies/docubridge",
+      "phase": "cold",
+      "nav": {
+        "name": "http://127.0.0.1:4188/case-studies/docubridge",
+        "entryType": "navigation",
+        "startTime": 0,
+        "duration": 40.399999998509884,
+        "navigationId": 2789,
+        "initiatorType": "navigation",
+        "deliveryType": "",
+        "nextHopProtocol": "http/1.1",
+        "renderBlockingStatus": "non-blocking",
+        "contentType": "text/html",
+        "contentEncoding": "gzip",
+        "workerStart": 0,
+        "workerRouterEvaluationStart": 0,
+        "workerCacheLookupStart": 0,
+        "workerMatchedSourceType": "",
+        "workerFinalSourceType": "",
+        "redirectStart": 0,
+        "redirectEnd": 0,
+        "fetchStart": 0.20000000298023224,
+        "domainLookupStart": 0.20000000298023224,
+        "domainLookupEnd": 0.20000000298023224,
+        "connectStart": 0.20000000298023224,
+        "secureConnectionStart": 0,
+        "connectEnd": 0.20000000298023224,
+        "requestStart": 0.6000000014901161,
+        "responseStart": 1.5,
+        "firstInterimResponseStart": 0,
+        "finalResponseHeadersStart": 1.5,
+        "responseEnd": 1.7000000029802322,
+        "transferSize": 4424,
+        "encodedBodySize": 4124,
+        "decodedBodySize": 12980,
+        "responseStatus": 200,
+        "serverTiming": [],
+        "unloadEventStart": 0,
+        "unloadEventEnd": 0,
+        "domInteractive": 4.899999998509884,
+        "domContentLoadedEventStart": 40,
+        "domContentLoadedEventEnd": 40,
+        "domComplete": 40.399999998509884,
+        "loadEventStart": 40.399999998509884,
+        "loadEventEnd": 40.399999998509884,
+        "type": "navigate",
+        "redirectCount": 0,
+        "activationStart": 0,
+        "criticalCHRestart": 0,
+        "notRestoredReasons": null,
+        "confidence": {
+          "randomizedTriggerRate": 0.4994798,
+          "value": "high"
+        }
+      },
+      "resources": [
+        {
+          "name": "/assets/index-Ct7xuSxp.js",
+          "transfer": 91821,
+          "encoded": 91521,
+          "decoded": 275298,
+          "duration": 7.4000000059604645
+        },
+        {
+          "name": "/assets/Docubridge-CQSywBmB.png",
+          "transfer": 517586,
+          "encoded": 517286,
+          "decoded": 517286,
+          "duration": 4.200000002980232
+        },
+        {
+          "name": "/assets/index-Bm3RH2ok.css",
+          "transfer": 31714,
+          "encoded": 31414,
+          "decoded": 150690,
+          "duration": 5.100000001490116
+        },
+        {
+          "name": "/fonts/Spectral-Light.ttf",
+          "transfer": 264832,
+          "encoded": 264532,
+          "decoded": 264532,
+          "duration": 26.899999998509884
+        },
+        {
+          "name": "/fonts/Aspekta-400.woff2",
+          "transfer": 22048,
+          "encoded": 21748,
+          "decoded": 21748,
+          "duration": 25.400000005960464
+        },
+        {
+          "name": "/fonts/Aspekta-600.otf",
+          "transfer": 39004,
+          "encoded": 38704,
+          "decoded": 38704,
+          "duration": 23.899999998509884
+        },
+        {
+          "name": "/fonts/Aspekta-200.otf",
+          "transfer": 38212,
+          "encoded": 37912,
+          "decoded": 37912,
+          "duration": 22.600000001490116
+        },
+        {
+          "name": "/assets/docuBridgeWalkthrough-rp4YkOI5.js",
+          "transfer": 1371,
+          "encoded": 1071,
+          "decoded": 2134,
+          "duration": 1.4000000059604645
+        },
+        {
+          "name": "/assets/CaseStudy-BxlKddjf.js",
+          "transfer": 3509,
+          "encoded": 3209,
+          "decoded": 9851,
+          "duration": 1.5
+        },
+        {
+          "name": "/favicon.png",
+          "transfer": 3381,
+          "encoded": 3081,
+          "decoded": 3081,
+          "duration": 0.6999999955296516
+        }
+      ],
+      "totals": {
+        "requests": 10,
+        "transfer": 1013478,
+        "encoded": 1010478,
+        "decoded": 1321236,
+        "includingDocumentTransfer": 1017902
+      }
+    },
+    {
+      "route": "case-studies/docubridge",
+      "phase": "warm",
+      "nav": {
+        "name": "http://127.0.0.1:4188/case-studies/docubridge",
+        "entryType": "navigation",
+        "startTime": 0,
+        "duration": 18.400000005960464,
+        "navigationId": 2165,
+        "initiatorType": "navigation",
+        "deliveryType": "cache",
+        "nextHopProtocol": "",
+        "renderBlockingStatus": "non-blocking",
+        "contentType": "text/html",
+        "contentEncoding": "gzip",
+        "workerStart": 0,
+        "workerRouterEvaluationStart": 0,
+        "workerCacheLookupStart": 0,
+        "workerMatchedSourceType": "",
+        "workerFinalSourceType": "",
+        "redirectStart": 0,
+        "redirectEnd": 0,
+        "fetchStart": 0.4000000059604645,
+        "domainLookupStart": 0.4000000059604645,
+        "domainLookupEnd": 0.4000000059604645,
+        "connectStart": 0.4000000059604645,
+        "secureConnectionStart": 0,
+        "connectEnd": 0.4000000059604645,
+        "requestStart": 1.1000000014901161,
+        "responseStart": 2.5,
+        "firstInterimResponseStart": 0,
+        "finalResponseHeadersStart": 2.5,
+        "responseEnd": 2.9000000059604645,
+        "transferSize": 300,
+        "encodedBodySize": 4124,
+        "decodedBodySize": 12980,
+        "responseStatus": 200,
+        "serverTiming": [],
+        "unloadEventStart": 6.9000000059604645,
+        "unloadEventEnd": 6.9000000059604645,
+        "domInteractive": 11,
+        "domContentLoadedEventStart": 14.300000004470348,
+        "domContentLoadedEventEnd": 14.400000005960464,
+        "domComplete": 18.400000005960464,
+        "loadEventStart": 18.400000005960464,
+        "loadEventEnd": 18.400000005960464,
+        "type": "reload",
+        "redirectCount": 0,
+        "activationStart": 0,
+        "criticalCHRestart": 0,
+        "notRestoredReasons": null,
+        "confidence": {
+          "randomizedTriggerRate": 0.4994798,
+          "value": "high"
+        }
+      },
+      "resources": [
+        {
+          "name": "/assets/index-Ct7xuSxp.js",
+          "transfer": 300,
+          "encoded": 0,
+          "decoded": 0,
+          "duration": 2.2000000029802322
+        },
+        {
+          "name": "/assets/index-Bm3RH2ok.css",
+          "transfer": 300,
+          "encoded": 0,
+          "decoded": 0,
+          "duration": 1.5
+        },
+        {
+          "name": "/assets/Docubridge-CQSywBmB.png",
+          "transfer": 300,
+          "encoded": 0,
+          "decoded": 0,
+          "duration": 2.600000001490116
+        },
+        {
+          "name": "/fonts/Spectral-Light.ttf",
+          "transfer": 300,
+          "encoded": 0,
+          "decoded": 0,
+          "duration": 0.7999999970197678
+        },
+        {
+          "name": "/fonts/Aspekta-400.woff2",
+          "transfer": 300,
+          "encoded": 0,
+          "decoded": 0,
+          "duration": 1
+        },
+        {
+          "name": "/fonts/Aspekta-600.otf",
+          "transfer": 300,
+          "encoded": 0,
+          "decoded": 0,
+          "duration": 1
+        },
+        {
+          "name": "/fonts/Aspekta-200.otf",
+          "transfer": 300,
+          "encoded": 0,
+          "decoded": 0,
+          "duration": 0.9000000059604645
+        },
+        {
+          "name": "/assets/CaseStudy-BxlKddjf.js",
+          "transfer": 300,
+          "encoded": 0,
+          "decoded": 0,
+          "duration": 0.6999999955296516
+        },
+        {
+          "name": "/assets/docuBridgeWalkthrough-rp4YkOI5.js",
+          "transfer": 300,
+          "encoded": 0,
+          "decoded": 0,
+          "duration": 0.7999999970197678
+        },
+        {
+          "name": "/favicon.png",
+          "transfer": 300,
+          "encoded": 3081,
+          "decoded": 3081,
+          "duration": 0.7000000029802322
+        }
+      ],
+      "totals": {
+        "requests": 10,
+        "transfer": 3000,
+        "encoded": 3081,
+        "decoded": 3081,
+        "includingDocumentTransfer": 3300
+      }
+    }
+  ]
+}

@@ -2,11 +2,11 @@ export const profile = {
   name: "Tejass Kaushik",
   shortName: "Tejass",
   email: "tejas.kaushik@outlook.com",
-  location: "Windsor, Ontario, Canada",
+  location: "Ontario, Canada",
   education: "Western University Computer Science and Ivey AEO",
-  headline: "I build AI products across apps and devices.",
+  headline: "I build AI products people use.",
   intro:
-    "Founding Software Engineer at Anticipation Labs, working across connected apps, AI workflows, and mobile/wearable validation. Former CTO at Stellar Learning. Western University Computer Science and Ivey AEO.",
+    "I’m COO at Anticipation Labs. On Anticipy, I’ve led connected-app repairs, private AI workflows and hands-on device testing. Before that, I was CTO of Stellar Learning, a free exam-prep platform with 40,000+ learners. I also build my own apps, from chemistry tools to software used in a 27,000-can food drive.",
   socials: {
     linkedin: "https://www.linkedin.com/in/tejasskaushik/",
     github: "https://github.com/tejask-dev",
@@ -18,66 +18,36 @@ export const profile = {
    * belongs to the team. These are not interchangeable personal metrics.
    */
   proof: [
-    { value: "40,000+", label: "learners reported by Stellar Learning" },
-    {
-      value: "1st",
-      label: "national recognition for the Youreka research team",
-    },
+    { value: "40,000+", label: "learners on Stellar Learning, where I was CTO" },
+    { value: "27,000+", label: "cans collected in the campaign using my app" },
+    { value: "1st", label: "national, 2025 Youreka research team" },
+    { value: "2026", label: "Stan Launchpad founder camp" },
   ],
-  // Kept as structured source data for legacy components and future pages.
-  tagline: "Building Anticipy at Anticipation Labs.",
-  metrics: [
-    { value: "40,000+", label: "Learners reported by Stellar Learning" },
-    {
-      value: "1st",
-      label: "National recognition for the Youreka research team",
-    },
+  about: [
+    "I’m Tejass. I’m COO at Anticipation Labs, where I work on Anticipy. Before that, I was CTO of Stellar Learning.",
+    "I study Computer Science at Western University and hold Ivey AEO status. I like building things that make a complicated task feel straightforward, whether that’s exploring a molecule or organizing a school food drive.",
+    "I build with AI tools on purpose. I write the spec and acceptance criteria, use Claude Code and Codex for implementation, review the changes, and test the result in a browser, on a phone or on prototype hardware.",
+    "I love boats and yachts, so I wanted an ocean in my portfolio.",
   ],
-  focusAreas: [
-    "Applied AI products",
-    "Education technology",
-    "Financial systems",
-    "Global health research",
-  ],
-  techStack: [
-    "Python",
-    "TypeScript",
-    "React",
-    "Next.js",
-    "Node.js",
-    "Firebase",
-    "SQL",
-    "OpenAI API",
-  ],
-  leadership: [
-    {
-      title: "Founder, Coding Club",
-      description: "Founded and led programming workshops for students.",
-      icon: "Code",
-    },
-    {
-      title: "President, Science Olympiad",
-      description: "Founded the team and led it to regional competition wins.",
-      icon: "FlaskConical",
-    },
-    {
-      title: "Vice President, Target Alpha",
-      description: "Led finance education and investment analysis initiatives.",
-      icon: "TrendingUp",
-    },
-    {
-      title: "Founder, Top Score Tutoring",
-      description:
-        "Built a tutoring initiative supporting more than 40 students.",
-      icon: "GraduationCap",
-    },
-  ],
-  badges: [
-    "Western CS + Ivey AEO",
-    "Software Engineer",
-    "Builder",
-    "Researcher",
-  ],
+  contact: "I’m open to software engineering roles, internships and founding-team conversations. Tell me what you’re building.",
+  ocean: "An explorable ocean with a superyacht, a lighthouse, two reefs, two cave systems and Dakota, a dolphin who is convinced she’s a shark. I built it because I love boats. The world needs WebGL and a few megabytes; the portfolio works without it.",
 } as const;
 
 export type Proof = (typeof profile.proof)[number];
+
+export const moleculeProject = {
+  slug: "molecule-ai",
+  title: "MoleculeAI",
+  role: "Product and development",
+  period: "Independent project",
+  status: "Live",
+  description: "An organic-chemistry app I built to turn molecule names and drawings into chemical properties, functional groups and interactive 3D structures.",
+  proof: "React / TypeScript / FastAPI / RDKit / PubChem",
+  image: "/portfolio/molecule-desktop.webp",
+  imageAlt: "MoleculeAI showing molecule search, an interactive structure and chemical properties.",
+  artifactLabel: "MoleculeAI, live app",
+  sourceHref: "https://github.com/tejask-dev/OrganicChem-WebApp",
+  sourceLabel: "View code",
+  href: "https://organic-chem-web-app.vercel.app/",
+  treatment: "product",
+} as const;

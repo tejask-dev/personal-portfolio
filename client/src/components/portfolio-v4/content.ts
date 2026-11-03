@@ -1,4 +1,4 @@
-/** Public editorial content only. Internal evidence stays outside the published site. */
+/** Public editorial content, shared by React and the static reading path. */
 export type Contribution = {
   id: string;
   title: string;
@@ -13,20 +13,20 @@ export type Contribution = {
 export const anticipyWebsite = "https://anticipy.ai/";
 
 export const anticipyNarrative = {
-  title: "Engineering Anticipy across apps, AI, and prototype hardware.",
-  summary: "I decide which problems to fix first and what we need to test across connected apps, private AI workflows and prototype devices. I direct AI-assisted engineering, coordinate releases, and test on phones and hardware myself.",
-  context: "We're building Anticipy, an AI wearable that turns spoken intentions into actions through connected software, with the person's approval. My work goes from the account-connection flow to testing what happens on the actual device.",
-  personal: "I set the requirements, defined the privacy checks and release conditions, and coordinated the implementation and reviews.",
-  assistance: "Claude and Codex did a lot of the implementation, investigation, testing and documentation under my direction, and also helped review the work. I worked with Codex on the selected work-email prototype.",
-  team: "The team had already built the product foundations: workflow and memory engines, native apps, the browser engine and hardware designs. I built on their work. I didn't build Anticipy on my own.",
-  company: "I've also helped with early operations and recruiting, travelled for the company, and made investor introductions. I'm not claiming those introductions raised any funding.",
-  evidence: "I wrote this from my project records and my own involvement. The results are what we checked at the time, not new tests or proof of customer adoption. Internal records stay private; the public links show the product and the team.",
-  personalLesson: "Hard work pays off. Working on Anticipy gave me the opportunity to go to Stan Launchpad, and I went. That was great.",
-  personalLessonSource: "My account, shared on 12 October 2026.",
-  statusSummary: "The released native builds had limited phone and Mac checks. On individual wearable prototypes, we verified installation and recovery. Pairing, audio and transcripts still needed more testing before we could call them ready.",
+  title: "Making an AI pendant keep its promises.",
+  summary: "Anticipy turns spoken intentions into actions through connected apps. As COO at Anticipation Labs, I work across product, engineering and operations: choosing what to fix, directing implementation, coordinating releases and testing the experience on phones and prototype hardware. My focus is making it work beyond a demo, across real devices.",
+  context: "A wearable is useful when it follows through. Saying something to a pendant is the easy part; connecting the right account, respecting permission and completing the task is where the product has to earn trust.",
+  personal: "I led work on account connections, private AI workflows and browser privacy, then tested builds on phones and wearable prototypes.",
+  assistance: "I use Claude and Codex for implementation, investigation and review, alongside my own product decisions and hands-on testing.",
+  team: "I built on the team’s existing workflow engine, memory system, native apps, browser engine and hardware designs.",
+  company: "I also contribute to recruiting, early operations and investor introductions.",
+  evidence: "The private AI and browser-privacy work was validated in local tests. Live work-email processing remains off.",
+  personalLesson: "Next time, I’d test the complete phone-to-service journey earlier. A successful server response can hide a broken experience.",
+  personalLessonSource: "",
+  statusSummary: "We deployed the connector fix and verified installation and recovery on individual wearable prototypes. Pairing, audio and transcripts still need more testing.",
   sources: [
-    { label: "Anticipy", href: anticipyWebsite, note: "Public product context; not a claim of authorship of the entire product." },
-    { label: "Anticipation Labs", href: "https://www.anticipationlabs.com/", note: "The team behind Anticipy." },
+    { label: "Anticipy", href: anticipyWebsite, note: "The product." },
+    { label: "Anticipation Labs", href: "https://www.anticipationlabs.com/", note: "The team behind it." },
   ],
 } as const;
 
@@ -34,70 +34,79 @@ export const anticipyArtifact = {
   desktop: "portfolio/anticipy-desktop-2026-10-01.jpg",
   mobile: "portfolio/anticipy-mobile-2026-10-01.jpg",
   source: anticipyWebsite,
-  caption: "The main Anticipy website, captured on 1 October 2026 at desktop and mobile widths. Website and brand: Anticipation Labs. Shown for product context; my engineering contributions and the team’s existing foundations are described separately below.",
-  alt: "The Anticipy main website, showing its AI pendant and the message “Not a note taker. An action taker.”",
+  caption: "Anticipy’s public website. Product and brand by Anticipation Labs.",
+  alt: "Anticipy’s AI pendant on its public product website.",
 } as const;
 
 export const leadStories = [
   {
-    id: "connector-journey", number: "01", category: "Connected-app reliability",
-    title: "Getting past the consent page.",
-    intro: "The server reported success, but the person was still stuck on the consent page. We needed to test whether the browser could reach the provider's sign-in page and retry without starting a new authorization.",
-    role: "I made this failure a priority and brought in what I saw on my phone. I required a browser test before release. Claude and Codex did the diagnosis, fix and review, and I later checked a Gmail retrieval task myself.",
-    decision: "Keep the existing consent and expiry when retrying the saved provider attempt. Test the whole browser redirect path, including the step the first test missed.",
-    outcome: "The navigation fix was deployed and checked through the Google and Notion sign-in screens. Separately, I reported one Gmail read-and-summary task that worked.",
-    limit: "Those checks cover one repaired navigation path. They don't show that every connector, phone flow or write action works.",
-    status: "Navigation correction deployed", contributions: ["C1", "C3"],
+    id: "connector-journey", number: "01", category: "Connected apps",
+    title: "Success on the server. Stuck on the phone.",
+    intro: "The server reported success, but the browser stayed on the consent page.",
+    role: "I prioritized the failure, supplied phone observations and required a complete browser test before release.",
+    decision: "Retry the saved connection attempt without replacing consent or extending its expiry.",
+    outcome: "The deployed fix reached Google and Notion sign-in. I later completed a Gmail read-and-summary task myself.",
+    limit: "This repaired the navigation path; other connector actions need their own checks.",
+    status: "Deployed", contributions: ["C1", "C3"],
   },
   {
-    id: "private-preparation", number: "02", category: "Private AI workflows",
-    title: "A brief from one source you chose.",
-    intro: "We wanted a work-preparation prototype that could turn one source you picked into a brief you could check. It couldn't quietly pull in your personal memory or whole inbox, or assume permission to act.",
-    role: "I approved the flow from choosing a source to reading the brief, including the rules for consent, spending, cancellation and keeping data. Claude and Codex split the backend, web and integration work. The pieces were reviewed independently before we joined them.",
-    decision: "Only process the source the person picked, while they still allow it. Check every model request against the spending limit. Discard results that arrive after they've cancelled or withdrawn consent.",
-    outcome: "The combined prototype produced briefs with source citations in local tests. Those tests also checked identity, privacy, spending limits and what happened when work was cancelled or deleted. We deployed a separate account preview with AI processing disabled.",
-    limit: "This was tested locally. The account preview didn't activate live work email or a live AI service.",
-    status: "Locally validated prototype", contributions: ["C6", "C7", "C8", "C9"],
+    id: "private-preparation", number: "02", category: "Private AI",
+    title: "One source in. An inspectable brief out.",
+    intro: "A work brief should start with the source a person chooses, not their entire inbox.",
+    role: "I defined the source-selection flow and its consent, spending and cancellation rules.",
+    decision: "Process only the selected source. Cite the result and discard late responses after cancellation.",
+    outcome: "The local prototype produced cited briefs and passed lifecycle checks. The separate hosted account preview kept AI processing disabled.",
+    limit: "Live work-email processing is not activated.",
+    status: "Local prototype", contributions: ["C6", "C7", "C8", "C9"],
   },
   {
-    id: "privacy-boundary", number: "03", category: "Browser-agent privacy",
-    title: "Check what reaches the model.",
-    intro: "Hiding a protected field in the answer is too late if its value already went into a model request. I wanted the checks where the browser first reads and captures the data.",
-    role: "I required protected-field checks using synthetic test values in the actual outgoing requests and logs. AI agents implemented and reviewed the changes against the existing browser workflows.",
-    decision: "Keep protected values out while allowing the workflows a person has consented to. If the change breaks something, fix it. Don't rewrite old tests just to make the new check pass.",
-    outcome: "Tests in a real browser, plus a smaller check on the installed extension, covered how protected fields were read and what reached the model. The final recorded checks passed for those cases.",
-    limit: "These checks used synthetic data in a limited setup. They don't prove credentials are safe everywhere. I'm leaving private diagnostics out, and I can't claim every browser or native surface was covered.",
-    status: "Locally validated repair", contributions: ["C2"],
+    id: "privacy-boundary", number: "03", category: "Browser privacy",
+    title: "Protect the value before it leaves the page.",
+    intro: "Masking a protected value in an answer is too late if the model already received it.",
+    role: "I set up acceptance checks for outgoing requests using synthetic protected values.",
+    decision: "Withhold those values while preserving the browser actions a person has authorized.",
+    outcome: "The recorded real-browser and installed-extension checks passed for the tested cases.",
+    limit: "These checks cover the tested browser paths, not every surface.",
+    status: "Locally tested", contributions: ["C2"],
   },
 ] as const;
 
+export const alsoWork = [
+  "Tested phone and Mac builds before release.",
+  "Verified installation and recovery on wearable prototypes.",
+  "Directed organization, identity and private-data controls.",
+  "Set spending limits and cancellation behavior for AI requests.",
+  "Helped prepare the Fellowship site and application flow.",
+] as const;
+
+/** Retained for consumers of the original contribution index. */
 export const contributions: Contribution[] = [
-  { id: "C1", title: "Connected-app recovery", group: "Connections", problem: "A person could reach consent but fail to reach the connected service.", part: "Prioritized the failure, supplied phone observations, and directed AI-assisted repair and release validation.", decision: "Reuse the authorized attempt on retry while preserving expiry and ownership.", result: "Browser-navigation correction deployed; one successful Gmail retrieval was personally reported.", status: "Deployed correction" },
-  { id: "C2", title: "Privacy at capture", group: "Connections", problem: "Protected fields can leak before a model produces an answer.", part: "Set the capture-boundary acceptance standard and required actual-payload checks.", decision: "Withhold protected values without broadly refusing useful consented workflows.", result: "Bounded real-browser and extension fixtures validated the repair; universal protection is not claimed.", status: "Locally validated" },
-  { id: "C3", title: "One task, consistent authority", group: "Connections", problem: "Clients and services could disagree about readiness, accounts, permissions, and receipts.", part: "Required integrated user-journey proof and honest capability labels.", decision: "A saved permission choice does not create an available capability.", result: "Local integration repairs covered task evidence, account ambiguity, cancellation, and leases; not every repair was traced to a release.", status: "Locally validated" },
-  { id: "C4", title: "Native-client validation", group: "Devices", problem: "Listening, stopped, connected, and ready need to mean the same thing on the actual device.", part: "Directed release order, installed and exercised phone builds, and reported observed behavior.", decision: "Explicit Stop must remain stopped; a browser escape path must preserve consent.", result: "Native artifacts were released with bounded phone/Mac checks. Wider background and connector acceptance remained incomplete.", status: "Released · bounded checks" },
-  { id: "C5", title: "Wearable bench bring-up", group: "Devices", problem: "Installing firmware is only one step toward a functioning prototype.", part: "Swapped physical units, operated USB/reset/pairing, and supplied readiness and audio observations.", decision: "Identify each device, preserve recovery, then verify installation and readback.", result: "Installation and recovery were verified on individual prototypes; audio, readiness, and pairing qualification remained incomplete.", status: "Prototype · in progress" },
-  { id: "C6", title: "Identity and organizations", group: "Private AI", problem: "Adding a work organization must not expose someone's personal data to colleagues.", part: "Directed isolated implementation and review while preserving the existing personal product.", decision: "Membership is not permission to read another person's private content.", result: "Identity, invitations, sessions, and erasure behavior were validated locally. Selected account behavior reached a separate preview.", status: "Local foundation · preview" },
-  { id: "C7", title: "Source-backed preparation", group: "Private AI", problem: "A private brief needs an explicit source and inspectable reasoning context.", part: "Approved the note, consent, brief, source inspection, and cancellation journey.", decision: "Use only the specifically selected source; no silent personal-memory bridge or external actions.", result: "An integrated local flow produced private briefs with bound citations and receipts; hosted AI processing remained off.", status: "Locally validated prototype" },
-  { id: "C8", title: "Spending and lifecycle limits", group: "Private AI", problem: "Retries, timeouts, and late results can escape a simplistic request counter.", part: "Set bounded spending authority and required visible cancellation and retention behavior.", decision: "Admit each actual request; keep uncertain charges reserved and reject stale results.", result: "Budget and lifecycle behavior was exercised locally. No measured production savings or complete backup-erasure claim.", status: "Locally validated" },
-  { id: "C9", title: "A deliberately selected email", group: "Private AI", problem: "Connecting a mailbox must not silently import an entire inbox.", part: "Continued the bounded source milestone with Codex and review agents.", decision: "Confirm the work identity and select one plain-text message; no background ingestion or mail sending.", result: "Offline integration covered selection, privacy eviction, and revocation. Live work-email activation remained blocked.", status: "Prototype · live activation pending" },
-  { id: "C10", title: "Release evidence and isolation", group: "Delivery", problem: "Several services and devices make it easy to confuse tested code with a delivered experience.", part: "Set release order, preservation requirements, spending boundaries, and artifact verification expectations.", decision: "Keep new services and data separate; verify the deployed artifact and retain a compatible rollback.", result: "A separate account preview and disabled runtime were released. Intended CI savings were not measured financial results.", status: "Bounded release delivered" },
-  { id: "C11", title: "The Fellowship front door", group: "Delivery", problem: "Prospective applicants needed a clear public route into the team.", part: "Contributed the responsive redesign, application navigation, asset verification, and deployment follow-through.", decision: "Use a clear approved application destination and preserve the inherited backend.", result: "The responsive recruiting experience and application navigation were prepared. Fellowship coming soon; it is not fully published yet. Earlier repository, copy, and application infrastructure were team work.", status: "Fellowship coming soon" },
-  { id: "C12", title: "Direction and coordination", group: "Delivery", problem: "Parallel work needs clear priorities and an honest definition of done.", part: "Set acceptance conditions, coordinated Claude/Codex work, controlled release authority, and personally tested devices.", decision: "Challenge “connected,” “merged,” and “installed” until the relevant user behavior is demonstrated.", result: "Bounded implementation stages, reviews, releases, and unresolved findings stayed explicit. This does not imply sole architecture authorship.", status: "Ongoing contribution" },
+  { id: "C1", title: "Connected-app recovery", group: "Connections", problem: "Browser stalled at consent.", part: "Prioritized repair and tested on a phone.", decision: "Reuse the authorized attempt.", result: "Navigation repair deployed.", status: "Deployed" },
+  { id: "C2", title: "Browser privacy", group: "Connections", problem: "Protected values could enter a model request.", part: "Required outgoing-request checks.", decision: "Withhold values at capture.", result: "Synthetic browser checks passed.", status: "Locally tested" },
+  { id: "C3", title: "Consistent permissions", group: "Connections", problem: "Clients could disagree about readiness.", part: "Required end-to-end journey checks.", decision: "Check capability as well as consent.", result: "Local integration repairs.", status: "Locally tested" },
+  { id: "C4", title: "Native-client testing", group: "Devices", problem: "Device behavior needs hands-on testing.", part: "Installed and exercised phone builds.", decision: "Check the released artifact.", result: "Phone and Mac checks completed.", status: "Limited device checks" },
+  { id: "C5", title: "Wearable prototypes", group: "Devices", problem: "A firmware install is only the beginning.", part: "Operated USB, reset and pairing on devices.", decision: "Verify recovery before moving ahead.", result: "Installation and recovery verified; audio testing continues.", status: "Prototype" },
+  { id: "C6", title: "Identity and organizations", group: "Private AI", problem: "Work accounts must preserve personal privacy.", part: "Directed implementation and review.", decision: "Keep membership separate from content access.", result: "Local identity and erasure checks passed.", status: "Local foundation" },
+  { id: "C7", title: "Source-backed briefs", group: "Private AI", problem: "A brief needs a source the reader can inspect.", part: "Defined source selection and consent.", decision: "Use only the chosen source.", result: "Cited briefs in a local prototype.", status: "Prototype" },
+  { id: "C8", title: "Spending limits", group: "Private AI", problem: "Retries and late results complicate limits.", part: "Set spending and cancellation requirements.", decision: "Check each model request.", result: "Local budget and lifecycle checks.", status: "Locally tested" },
+  { id: "C9", title: "Selected email", group: "Private AI", problem: "A mailbox connection is not permission to read everything.", part: "Directed a selected-message prototype.", decision: "Choose one message explicitly.", result: "Offline selection and revocation checks.", status: "Prototype" },
+  { id: "C10", title: "Release coordination", group: "Delivery", problem: "Code and deployed behavior can differ.", part: "Set release order and acceptance criteria.", decision: "Verify the deployed artifact.", result: "Separate account preview released with AI off.", status: "Preview" },
+  { id: "C11", title: "Fellowship website", group: "Delivery", problem: "Applicants needed a clear route into the team.", part: "Helped redesign the site and application flow.", decision: "Build on existing application infrastructure.", result: "Responsive experience prepared.", status: "Coming soon" },
+  { id: "C12", title: "Product direction", group: "Delivery", problem: "Parallel work needs clear priorities.", part: "Coordinated engineering, review and device testing.", decision: "Make user behavior the acceptance criterion.", result: "Product work across apps and hardware.", status: "Ongoing" },
 ];
 
 export const careerJourney = [
-  { period: "Current", title: "Anticipation Labs", role: "Founding Software Engineer", body: "Connected apps, private AI workflows, release verification, and hands-on mobile/wearable validation. I direct AI-assisted engineering alongside the team's existing product work.", slug: "anticipy" },
-  { period: "2025–2026", title: "Stellar Learning", role: "Former CTO / technology lead", body: "IB question-generation and practice work, algorithm decisions to fit the IB curriculum, and AP improvements. Teammates and AI tools handled much of the implementation.", slug: "stellar-learning" },
-  { period: "Summer 2025", title: "DocuBridge", role: "Software engineering intern", body: "A spreadsheet-analysis prototype connecting uploaded data with natural-language questions, charts, and summaries.", slug: "docubridge" },
-  { period: "2024–2025", title: "Youreka Canada", role: "Co-author and student researcher", body: "Writing, data analysis and R graphs for a published 34-country study, recognized as the national first-place team study.", slug: "global-health-research" },
-  { period: "2025–2026", title: "Soma", role: "Backend and model-integration contributor", body: "A team-built health-education experiment that closed in 2026 after infrastructure limitations, according to my account.", slug: "soma-ai" },
+  { period: "Current", title: "Anticipation Labs", role: "COO", body: "Product, engineering and operations for Anticipy, from connected apps to hands-on wearable testing.", slug: "anticipy" },
+  { period: "Aug 2025–Jul 2026", title: "Stellar Learning", role: "CTO", body: "IB question generation and practice, plus improvements to AP questions and lessons.", slug: "stellar-learning" },
+  { period: "Summer 2025", title: "DocuBridge", role: "Software engineering intern", body: "Built a prototype for exploring spreadsheets through charts, summaries and natural-language questions.", slug: "docubridge" },
+  { period: "2024–2025", title: "Youreka Canada", role: "Co-author and student researcher", body: "Writing, analysis and R graphs for a published, national first-place team study across 34 countries.", slug: "global-health-research" },
+  { period: "2025–2026", title: "Soma", role: "Backend and model integration", body: "Built the backend and model integration for a team health-education experiment. Sunset in 2026.", slug: "soma-ai" },
 ] as const;
 
 export const connectorSteps = [
-  { label: "Server response", heading: "A green response was not the destination.", body: "The server returned a successful redirect, but the browser still stopped before provider sign-in. A fixture ending at the first hop missed the real failure.", active: 2, state: "Browser arrival unproven" },
-  { label: "Browser journey", heading: "Follow the path a person actually takes.", body: "The corrected flow preserved consent and reached the provider's sign-in page. The release test stopped before granting a real account.", active: 4, state: "Sign-in navigation verified" },
-  { label: "Retry", heading: "Resume the attempt. Keep its boundaries.", body: "Back, reload, and retry reused the existing provider attempt. Retry did not create a fresh authorization or extend its lifetime.", active: 3, state: "Existing attempt reused" },
+  { label: "Server response", heading: "The browser is still waiting.", body: "The server reports success, but the person has not reached provider sign-in.", active: 2, state: "Before the repair" },
+  { label: "Browser journey", heading: "Reach the provider.", body: "The corrected flow preserves consent and opens the provider’s sign-in page.", active: 4, state: "Navigation repaired" },
+  { label: "Retry", heading: "Resume the same attempt.", body: "Retry reuses the saved attempt and its original expiry.", active: 3, state: "Permission preserved" },
 ] as const;
 
 export const illustrativeNote = "Prepare a launch review. Mira owns the draft. Review the launch checklist on Thursday. No launch decision has been made.";
@@ -107,17 +116,23 @@ export const illustrativeBrief = [
   { text: "A launch decision is still open.", source: "No launch decision has been made." },
 ] as const;
 
-/** Compact evidence used before the product imagery in both reading layers. */
 export const anticipyPreview = {
-  intro: "A successful server response still left the browser stranded at consent.",
-  part: "I prioritized the repair, supplied phone observations, and required browser-tested release evidence. The decision was to preserve consent and expiry while retrying the saved authorization attempt.",
-  before: "Server reports success. Browser stays at consent.",
-  after: "Browser reaches the provider sign-in screen.",
-  attribution: "Claude and Codex contributed implementation and review on the team’s existing product.",
-  followThrough: "I later reported one successful Gmail read-and-summary task. Broader connector acceptance remained separate.",
+  intro: "An AI pendant for turning spoken intentions into drafted emails, calendar events and tasks.",
+  part: "I’m COO at Anticipation Labs. I led work on account connections, private AI workflows and release testing. One fix got people from a stuck consent screen to Google and Notion sign-in.",
+  before: "The server says success. The phone is still on the consent screen.",
+  after: "The browser resumes the saved connection and reaches the provider’s sign-in.",
+  attribution: anticipyNarrative.assistance,
+  followThrough: "See the product decisions, repairs and prototypes behind that promise.",
 } as const;
+
 export const anticipySnapshot = [
-  { id: "connector-journey", title: "Connected apps", result: "Repaired the browser path from consent to provider sign-in.", status: "Navigation correction deployed" },
-  { id: "private-preparation", title: "Private AI", result: "One selected source, explicit consent, citations, cancellation, and spending limits.", status: "Local prototype · account preview processing disabled" },
-  { id: "privacy-boundary", title: "Browser privacy", result: "Required protected-value checks on what actually reaches the model.", status: "Validated within defined browser fixtures" },
+  { id: "connector-journey", title: "Connected apps", result: "Get from consent to sign-in.", status: "Deployed repair" },
+  { id: "private-preparation", title: "Private AI", result: "Prepare a brief from one chosen source.", status: "Local prototype" },
+  { id: "privacy-boundary", title: "Browser privacy", result: "Keep protected values out of model requests.", status: "Locally tested" },
+] as const;
+
+export const anticipyStatus = [
+  { title: "Connected apps", result: "Navigation repair deployed", complete: true },
+  { title: "Private AI", result: "Local prototype; hosted AI processing off", complete: false },
+  { title: "Wearables", result: "Installation and recovery checked; audio testing continues", complete: false },
 ] as const;
