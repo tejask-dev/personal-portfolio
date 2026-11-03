@@ -2,7 +2,6 @@ import { existsSync, readFileSync, statSync } from "node:fs";
 import { defineConfig, type Plugin } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
-import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 
 const outputDirectory = path.resolve(import.meta.dirname, "docs");
 
@@ -41,7 +40,6 @@ export default defineConfig(({ mode }) => ({
   plugins: [
     react(),
     staticRoutePreview(),
-    ...(mode === "development" ? [runtimeErrorOverlay()] : []),
   ],
   assetsInclude: [
     "**/*.JPEG",

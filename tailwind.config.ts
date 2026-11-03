@@ -6,7 +6,6 @@ export default {
     "./client/index.html",
     "./client/src/App.tsx",
     "./client/src/pages/{Home,CaseStudy,not-found}.tsx",
-    "./client/src/components/Reveal.tsx",
   ],
   theme: {
     extend: {
@@ -91,5 +90,5 @@ export default {
       },
     },
   },
-  plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
+  plugins: [],
 } satisfies Config;
