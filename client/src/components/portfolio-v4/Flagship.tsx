@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { Link } from "wouter";
 import { ArrowUpRight, ArrowRight, Check, RotateCcw } from "lucide-react";
-import { anticipyPreview, anticipySnapshot, anticipyStatus, anticipyWebsite, anticipyNarrative, careerJourney, connectorSteps, alsoWork, anticipyArtifact, illustrativeBrief, illustrativeNote, leadStories } from "./content";
+import { anticipyPreview, anticipySnapshot, anticipyStatus, anticipyNarrative, careerJourney, connectorSteps, alsoWork, anticipyArtifact, illustrativeBrief, illustrativeNote, leadStories } from "./content";
 import "./portfolio-v4.css";
 
 export function AnticipyFeature() {
   return <section className="pv4-feature" aria-labelledby="anticipy-feature-title" id="current-work">
     <div className="pv-shell pv4-feature-grid">
-      <div className="pv4-feature-copy"><p className="pv-eyebrow">Current work / Anticipy</p><h2 id="anticipy-feature-title" tabIndex={-1}>Making an AI pendant<br/><em>keep its promises.</em></h2><p className="pv4-feature-lead">{anticipyPreview.intro}</p><p>{anticipyPreview.part}</p><div className="pv4-feature-actions"><Link className="pv4-feature-link" href="/case-studies/anticipy" id="read-anticipy-feature">Read the case study <ArrowUpRight size={20}/></Link><a className="pv4-product-link" href={anticipyWebsite} target="_blank" rel="noreferrer">Visit Anticipy <ArrowUpRight size={17} aria-hidden="true"/></a></div></div>
+      <div className="pv4-feature-copy"><p className="pv-eyebrow">Current work / Anticipy</p><h2 id="anticipy-feature-title" tabIndex={-1}>Making an AI pendant<br/><em>keep its promises.</em></h2><p className="pv4-feature-lead">{anticipyPreview.intro}</p><p>{anticipyPreview.part}</p><div className="pv4-feature-actions"><Link className="pv4-feature-link" href="/case-studies/anticipy" id="read-anticipy-feature">Read the case study <ArrowUpRight size={20}/></Link>{anticipyNarrative.sources.map(source => <a key={source.href} className="pv4-product-link" href={source.href} target="_blank" rel="noreferrer">Visit {source.label} <ArrowUpRight size={17} aria-hidden="true"/></a>)}</div></div>
       <div className="pv4-feature-field"><p className="pv4-diagram-note">Diagram / Completing an account connection</p><ol className="pv4-before-after"><li><span>Before</span><p>{anticipyPreview.before}</p></li><li><span>After · Deployed</span><p>{anticipyPreview.after}</p></li></ol></div>
     </div>
   </section>;
