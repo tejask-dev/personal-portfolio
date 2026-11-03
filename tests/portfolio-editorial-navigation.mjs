@@ -16,6 +16,11 @@ try {
   assert.ok(Math.abs(await page.evaluate(() => scrollY) - featureScroll) < 8, 'Feature return restores the reading position');
   await page.keyboard.press('Tab');
   assert.equal(await page.evaluate(() => document.activeElement?.getAttribute('href')), 'https://anticipy.ai/', 'Tab continues through feature links after Back');
+  await feature.click(); await page.waitForURL('**/case-studies/anticipy');
+  await page.locator('.pv-case-nav .pv-wordmark').click();
+  await page.locator('#hero-title').waitFor();
+  await page.waitForFunction(() => scrollY < 8);
+  assert.equal(await page.locator('#voyage').count(), 0, 'Explicit Home ignores saved reading return');
   const read = page.locator('#read-docubridge'); await read.scrollIntoViewIfNeeded();
   const before = await page.evaluate(() => scrollY); await read.click(); await page.waitForURL('**/case-studies/docubridge');
   await page.goBack(); await page.waitForFunction(() => document.activeElement?.id === 'read-docubridge');
@@ -46,6 +51,12 @@ try {
   await page.locator('.pv-case-nav a[href="/#work"]').click();
   await page.waitForFunction(() => document.activeElement?.id === 'work-title');
   assert.equal(await page.locator('#voyage').count(), 0, 'Explicit reading destination overrides previous world history');
+  await page.locator('#open-ocean').click(); await page.locator('#voyage').waitFor();
+  assert.equal(new URL(page.url()).hash, '#voyage');
+  await feature.click(); await page.waitForURL('**/case-studies/anticipy');
+  assert.equal(await page.getByRole('link', { name: 'Back to Open Water', exact: true }).count(), 0);
+  await page.goBack(); await page.waitForFunction(() => document.activeElement?.id === 'read-anticipy-feature');
+  assert.equal(await page.locator('#voyage').count(), 0, 'A stale voyage hash cannot override a reading-origin return');
   await page.locator('#open-ocean').click(); await page.locator('#voyage').waitFor();
   await page.getByRole('button', { name: 'Close Open Water', exact: true }).click();
   await page.waitForFunction(() => document.activeElement?.id === 'open-ocean');
