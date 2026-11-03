@@ -155,6 +155,13 @@ export default function Home() {
       className="open-water-page"
       id="top"
       onClickCapture={(event) => {
+        const helmLink = (event.target as Element).closest<HTMLAnchorElement>('a[href="#voyage"]');
+        // Native scrolling does not emit hashchange when the hash is unchanged.
+        // Reapply the helm's viewport alignment after the native anchor action.
+        if (helmLink && window.location.hash === "#voyage" && event.button === 0 &&
+          !event.defaultPrevented && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey &&
+          (!helmLink.target || helmLink.target === "_self") && !helmLink.hasAttribute("download"))
+          setNavigation(value => value + 1);
         const link = (event.target as HTMLElement).closest<HTMLAnchorElement>(
           'a[href*="/case-studies/"]',
         );

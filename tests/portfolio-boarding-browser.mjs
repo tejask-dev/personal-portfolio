@@ -62,6 +62,7 @@ try {
     await page.locator('#open-work-index').click();
     await page.locator('dialog[open] a[href*="/case-studies/anticipy"]').first().click();
     await page.waitForURL('**/case-studies/anticipy');
+    await page.getByRole('navigation', { name: 'Case study navigation' }).getByRole('link', { name: 'Back to Open Water', exact: true }).waitFor();
     assert.ok(await page.getByRole('link', { name: /Back to Open Water/ }).count(), 'World-origin case offers a return');
   });
   await scenario('phone-touch', { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true }, async page => {

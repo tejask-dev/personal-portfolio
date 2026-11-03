@@ -212,7 +212,7 @@ try {
     try {
       await boot(page); await delay(900);
       assert.equal(await film(page).count(), 0, "Film loaded before reaching the descent");
-      const opening = await frameWindow(page); assert.ok(opening.voyage > 5);
+      const opening = await frameWindow(page); assert.ok(opening.voyage > 5, `Opening did not keep rendering: ${JSON.stringify(opening)}`);
       await wheelTo(page, .02);
       await page.waitForFunction(() => document.querySelector("#descent video")?.readyState >= 2);
       assert.equal(await page.locator("#descent canvas").count(), 0, "Descent still creates a second 3D scene");
@@ -280,9 +280,10 @@ try {
         assert.ok(visible, `${id} did not reveal its native destination`); destinations.push({ id, href, visible });
       }
       const caseLink = page.locator("#dive-link-connections"); await caseLink.scrollIntoViewIfNeeded(); const returnY = await page.evaluate(() => scrollY);
-      await caseLink.click(); await page.waitForURL(/\/case-studies\/anticipy(?:#.*)?$/); await page.getByRole("heading", { name: "My part, and the collaboration." }).waitFor();
-      assert.equal(await page.locator(".pv4-contribution-list details").count(), 12);
-      await page.locator(".pv-case-wordmark, .pv-case-nav .pv-wordmark").first().click(); await section(page).waitFor();
+      await caseLink.click(); await page.waitForURL(/\/case-studies\/anticipy(?:#.*)?$/); await page.getByRole("heading", { name: "The work behind the promise." }).waitFor();
+      assert.equal(await page.locator(".pv4-story").count(), 3);
+      assert.equal(await page.locator(".pv4-contribution-index .pv-contributions li").count(), 5);
+      await page.getByRole("navigation", { name: "Case study navigation" }).getByRole("link", { name: "Back to Open Water", exact: true }).click(); await section(page).waitFor();
       await page.waitForFunction(() => document.activeElement?.id === "dive-link-connections");
       const restoredY = await page.evaluate(() => scrollY); assert.ok(Math.abs(restoredY - returnY) < 8, `Case return moved from ${returnY} to ${restoredY}`);
       await page.emulateMedia({ reducedMotion: "no-preference" });
@@ -292,7 +293,7 @@ try {
       await page.waitForFunction(() => location.hash === "#current-work");
       await page.locator('.sd-masthead a[href="#contact"]').click(); await page.waitForFunction(() => location.hash === "#contact");
       assert.ok(await page.locator('#contact a[href^="mailto:"]').count());
-      assert.deepEqual(errors, []); return { destinations, caseDestination: "Anticipy, with 12 contribution notes", returnY, restoredY, contactAndSkip: true };
+      assert.deepEqual(errors, []); return { destinations, caseDestination: "Anticipy, with three lead stories and five additional contributions", returnY, restoredY, contactAndSkip: true };
     } finally { await context.close(); }
   });
 
@@ -354,7 +355,10 @@ try {
       const moving = await boatState(); assert.ok(moving.speed > 0);
       await wheelTo(page, .4); await page.keyboard.up("w"); const reading = await boatState(); await delay(700); assert.deepEqual(await boatState(), reading);
       assert.ok(reading.speed > 0, "Pausing the voyage preserves its coasting velocity");
+      assert.equal(new URL(page.url()).hash, "#voyage", "Native descent scrolling keeps the original voyage hash");
       await page.locator(".sd-expedition-mark").click(); await page.waitForFunction(() => location.hash === "#voyage"); await delay(700);
+      const helmBounds = await page.locator("#voyage").boundingBox();
+      assert.ok(Math.abs(helmBounds.y) < 1, `Same-hash return must align the complete helm to the viewport, not the reading offset: ${helmBounds.y}`);
       const returned = await boatState(); assert.equal(returned.vessel, reading.vessel); assert.equal(returned.mode, reading.mode);
       assert.ok(returned.speed > 0, "Releasing control must not abruptly zero the vessel's momentum");
       assert.ok(returned.speed < reading.speed, "Released throttle should coast down instead of inheriting the held acceleration");
