@@ -10,18 +10,18 @@ export const diveChapters = [
     id: "connections", depth: "06", label: "Below the waterline", eyebrow: "02 / Follow the whole journey",
     title: ["Interfaces connect.", "Systems deliver."],
     body: "At Anticipy, my work crosses connected apps, private AI workflows, and the devices in your hand.",
-    note: "Founding Software Engineer / Anticipation Labs", href: "/case-studies/anticipy", link: "Explore the engineering",
+    note: "COO / Anticipation Labs", href: "/case-studies/anticipy", link: "Explore the engineering",
   },
   {
     id: "fieldwork", depth: "14", label: "The living reef", eyebrow: "03 / Closer to the details",
-    title: ["Follow the curiosity.", "Check the evidence."],
+    title: ["Follow the curiosity.", "See what happened."],
     body: "From leading technology at Stellar Learning to research and hands-on device testing, I like getting close enough to understand what really works.",
     note: "Build. Test. Learn. Repeat.", href: "#about", link: "Follow my background",
   },
   {
     id: "depth", depth: "24", label: "A deeper look", eyebrow: "04 / The work, in context",
     title: ["The depth", "is in the details."],
-    body: "The decisions, the collaboration, the things that shipped—and the things still being built. Here's the work behind the view.",
+    body: "The decisions, the collaboration, the things that shipped, and the things still being built. Here's the work behind the view.",
     note: "Continue to the field notes", href: "#current-work", link: "See my work at Anticipy",
   },
 ] as const;

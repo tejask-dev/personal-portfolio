@@ -52,7 +52,7 @@ export default function EncounterCard(p: {
       <header>
         <span className="exp-kicker">
           {p.id === "dakota"
-            ? "Dolphin / identifies as a shark"
+            ? "Dolphin / convinced she’s a shark"
             : "Observe the living reef"}
         </span>
         <button onClick={p.onClose} aria-label={`Close ${title}`}>

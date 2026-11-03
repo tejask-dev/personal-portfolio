@@ -1,13 +1,12 @@
-import { engineeringNotes } from "./notesContent";
-import "./engineering-notes.css";
+import { Link } from "wouter";
+import { moreProjects } from "./notesContent";
 
 export default function EngineeringNotes() {
-  return <section className="engineering-notes pv-shell" id="engineering-notes" aria-labelledby="notes-title">
-    <header><p className="pv-eyebrow">Small builds / concrete decisions</p><h2 id="notes-title">On the workbench.</h2><p>Two projects that show how I think about boundaries.</p></header>
-    <div className="engineering-notes-grid">{engineeringNotes.map(note => <article key={note.id} id={note.id}>
-      <p className="pv-eyebrow">{note.stage}</p><h3>{note.title}</h3><p>{note.body}</p><p>{note.decision}</p>
-      <p className="engineering-note-credit">{note.credit}</p>
-      <a className="pv-text-link" href={note.href} target="_blank" rel="noreferrer">{note.linkLabel} ↗</a>
+  return <section className="eh-more-projects" aria-labelledby="more-projects-title">
+    <header><p className="pv-eyebrow">And a few more</p><h3 id="more-projects-title">Built along the way.</h3></header>
+    <div>{moreProjects.map(project => <article className="eh-project-compact" key={project.id}>
+      <div><h4>{project.title}</h4><p className="pv-eyebrow">{project.stage}</p></div><p>{project.body}</p>
+      {project.href.startsWith("/") ? <Link id={`read-${project.id}`} className="pv-text-link" href={project.href}>{project.linkLabel} <span aria-hidden="true">↗</span></Link> : <a id={`read-${project.id}`} className="pv-text-link" href={project.href} {...(project.href.startsWith("https:") ? { target: "_blank", rel: "noreferrer" } : {})}>{project.linkLabel} <span aria-hidden="true">↗</span></a>}
     </article>)}</div>
   </section>;
 }

@@ -117,10 +117,10 @@ export const illustrativeBrief = [
 ] as const;
 
 export const anticipyPreview = {
-  intro: "An AI wearable that turns spoken intentions into actions through connected apps.",
-  part: "I’m COO at Anticipation Labs. I work across the product and the company, from fixing account connections to testing prototype hardware myself.",
-  before: "A spoken intention: “Follow up on that email.”",
-  after: "The right account, permission and action.",
+  intro: "An AI pendant for turning spoken intentions into drafted emails, calendar events and tasks.",
+  part: "I’m COO at Anticipation Labs. I led work on account connections, private AI workflows and release testing. One fix got people from a stuck consent screen to Google and Notion sign-in.",
+  before: "The server says success. The phone is still on the consent screen.",
+  after: "The browser resumes the saved connection and reaches the provider’s sign-in.",
   attribution: anticipyNarrative.assistance,
   followThrough: "See the product decisions, repairs and prototypes behind that promise.",
 } as const;

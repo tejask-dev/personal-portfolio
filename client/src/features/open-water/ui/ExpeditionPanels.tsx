@@ -361,8 +361,7 @@ export default function ExpeditionPanels(p: PanelProps) {
       {panel === "work" && (
         <>
           <p className="exp-lead">
-            Five projects. Their purpose, my role, and the evidence behind the
-            work.
+            Five projects. What they do, what I built, and how they turned out.
           </p>
           <div className="exp-work-list">
             {selectedWork.map((w, i) => (
@@ -460,7 +459,7 @@ export default function ExpeditionPanels(p: PanelProps) {
             <FieldIllustration kind="dolphin" />
             <div>
               <span className="exp-kicker">
-                A dolphin who identifies as a shark
+                A dolphin who is convinced she’s a shark
               </span>
               <p className="exp-caption" aria-live="polite">
                 {caption}

@@ -1,22 +1,13 @@
-export const engineeringNotes = [
-  {
-    id: "relaypass-note", title: "RelayPass", stage: "Authorization prototype / public code",
-    body: "A delegated agent should receive only the permission it needs. RelayPass explores signed permissions that narrow as work passes between agents, with deterministic checks before disclosure or action.",
-    decision: "Revoking a parent permission also invalidates its descendants. That boundary is enforced in code, rather than left to a model’s interpretation.",
-    credit: "Built with Claude. The Passport adapter, travel agents, downstream services and purchases are simulated; this is not a live merchant integration.",
-    href: "https://github.com/tejask-dev/Egoist-Ideathon---RelayPass/blob/0cee5e98971ce597d290cfefcead50da6d7b4508/README.md#what-is-real",
-    linkLabel: "Inspect the prototype and its limits",
-  },
-  {
-    id: "open-water-note", title: "Open Water", stage: "This portfolio / React + Three.js",
-    body: "A portfolio has two different jobs: make the work easy to read, and give someone a reason to explore. Here, the reading pages remain useful without graphics or JavaScript.",
-    decision: "The ocean is optional. Movement, activities and return positions share one expedition state; reduced motion and a field guide provide other ways through the world.",
-    credit: "I directed the experience and acceptance criteria. Codex and Claude contributed implementation, art and review. Original and adapted assets are credited in the world.",
-    href: "https://github.com/tejask-dev/personal-portfolio",
-    linkLabel: "See the portfolio repository",
-  },
+export const moreProjects = [
+  { id: "prommatch", title: "PromMatch", body: "Student matchmaking with questionnaires, profile recommendations and mutual matches. Weighted answers meet semantic similarity.", stage: "React / FastAPI / PostgreSQL + pgvector", href: "https://prom-match.vercel.app/", linkLabel: "Visit app" },
+  { id: "acs-candrive", title: "ACS can-drive app", body: "Built in five days: donation tracking, leaderboards and collection coordination for a school campaign that collected 27,000+ cans.", stage: "Shipped / Community project", href: "https://github.com/tejask-dev/ACS_CanDrive-WebApp", linkLabel: "View code" },
+  { id: "relaypass", title: "RelayPass", body: "Signed permissions that narrow as work passes between AI agents. Revoking a parent also revokes its descendants, enforced in code.", stage: "Hackathon prototype / Simulated services", href: "https://github.com/tejask-dev/Egoist-Ideathon---RelayPass", linkLabel: "View code" },
+  { id: "docubridge", title: "DocuBridge", body: "An internship prototype for exploring Excel and CSV files with charts, summaries and questions about the data.", stage: "Python / Flask / Pandas / React / Plotly", href: "/case-studies/docubridge", linkLabel: "Read case" },
+  { id: "soma-ai", title: "Soma AI", body: "Conversational teen-health education. Our team reported 300+ people tried it; we closed the project in 2026.", stage: "Python / Flask / React", href: "/case-studies/soma-ai", linkLabel: "Read case" },
+  { id: "open-water", title: "Open Water", body: "This site’s optional ocean: captain a yacht, swim through reefs, race a tender or follow a cinematic descent.", stage: "React / Three.js / React Three Fiber", href: "#ocean", linkLabel: "Take a look" },
 ] as const;
+
 const escape = (s: string) => s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]!));
-export function engineeringNotesHtml() {
-  return `<section class="engineering-notes pv-shell" id="engineering-notes" aria-labelledby="notes-title"><header><p class="pv-eyebrow">Small builds / concrete decisions</p><h2 id="notes-title">On the workbench.</h2><p>Two projects that show how I think about boundaries.</p></header><div class="engineering-notes-grid">${engineeringNotes.map(n => `<article id="${n.id}"><p class="pv-eyebrow">${escape(n.stage)}</p><h3>${escape(n.title)}</h3><p>${escape(n.body)}</p><p>${escape(n.decision)}</p><p class="engineering-note-credit">${escape(n.credit)}</p><a class="pv-text-link" href="${n.href}">${escape(n.linkLabel)} ↗</a></article>`).join('')}</div></section>`;
+export function moreProjectsHtml(base = "/") {
+  return `<section class="eh-more-projects" aria-labelledby="more-projects-title"><header><p class="pv-eyebrow">And a few more</p><h3 id="more-projects-title">Built along the way.</h3></header><div>${moreProjects.map(p => `<article class="eh-project-compact"><div><h4>${escape(p.title)}</h4><p class="pv-eyebrow">${escape(p.stage)}</p></div><p>${escape(p.body)}</p><a id="read-${p.id}" class="pv-text-link" href="${p.href.startsWith('/') ? base + p.href.slice(1) : p.href}"${p.href.startsWith('https:') ? ' target="_blank" rel="noreferrer"' : ''}>${escape(p.linkLabel)} <span aria-hidden="true">↗</span></a></article>`).join('')}</div></section>`;
 }

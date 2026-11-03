@@ -19,7 +19,7 @@ export type SelectedWork = {
 
 /** One complete index, with the same scope and stage as the case pages. */
 export const selectedWork: SelectedWork[] = caseStudies.map((study) => {
-  const sourceHref = (study.slug === "anticipy" ? study.artifactSource?.href : study.decision.source) ?? study.links.find((link) =>
+  const sourceHref = (study.artifactSource?.href ?? study.decision.source) ?? study.links.find((link) =>
     /^https:\/\/github\.com\/[^/]+\/[^/]+\/blob\/[a-f0-9]{7,40}\//i.test(link.href),
   )?.href;
   return {

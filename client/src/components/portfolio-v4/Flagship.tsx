@@ -8,7 +8,7 @@ export function AnticipyFeature() {
   return <section className="pv4-feature" aria-labelledby="anticipy-feature-title" id="current-work">
     <div className="pv-shell pv4-feature-grid">
       <div className="pv4-feature-copy"><p className="pv-eyebrow">Current work / Anticipy</p><h2 id="anticipy-feature-title" tabIndex={-1}>Making an AI pendant<br/><em>keep its promises.</em></h2><p className="pv4-feature-lead">{anticipyPreview.intro}</p><p>{anticipyPreview.part}</p><div className="pv4-feature-actions"><Link className="pv4-feature-link" href="/case-studies/anticipy" id="read-anticipy-feature">Read the case study <ArrowUpRight size={20}/></Link><a className="pv4-product-link" href={anticipyWebsite} target="_blank" rel="noreferrer">Visit Anticipy <ArrowUpRight size={17} aria-hidden="true"/></a></div></div>
-      <div className="pv4-feature-field"><p className="pv4-diagram-note">Illustration / From intention to action</p><ol className="pv4-before-after"><li><span>Intention</span><p>{anticipyPreview.before}</p></li><li><span>Follow-through</span><p>{anticipyPreview.after}</p></li></ol></div>
+      <div className="pv4-feature-field"><p className="pv4-diagram-note">Diagram / Completing an account connection</p><ol className="pv4-before-after"><li><span>Before</span><p>{anticipyPreview.before}</p></li><li><span>After · Deployed</span><p>{anticipyPreview.after}</p></li></ol></div>
     </div>
   </section>;
 }
