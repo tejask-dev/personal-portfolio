@@ -23,7 +23,7 @@ try{
     const response=await page.goto(origin+route);
     assert.equal(response.status(),200,route);
     assert.equal(await page.locator('h1').count(),1,`${route} one main heading`);
-    assert.equal(await page.locator('link[rel=canonical]').getAttribute('href'),`https://tejass-kaushik.vercel.app${route}`);
+    assert.equal(await page.locator('link[rel=canonical]').getAttribute('href'),`https://tejasskaushik.com${route}`);
     const social=socialMetadata(route);
     for(const [key,expected] of [['og:type',social.type],['og:image',social.image],['og:image:alt',social.alt]])assert.equal(await page.locator(`meta[property="${key}"]`).getAttribute('content'),expected,`${route} ${key}`);
     const description=await page.locator('meta[name=description]').getAttribute('content');

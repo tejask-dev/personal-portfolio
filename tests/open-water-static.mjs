@@ -125,7 +125,7 @@ try {
         );
         assert.equal(
           await page.locator('link[rel="canonical"]').getAttribute("href"),
-          `https://tejass-kaushik.vercel.app/case-studies/${study.slug}`,
+          `https://tejasskaushik.com/case-studies/${study.slug}`,
         );
         assert.equal(
           await page.getByRole("heading", { level: 1 }).innerText(),
@@ -136,8 +136,13 @@ try {
           text.includes(study.summary),
           "Shared study summary is missing from initial HTML",
         );
+        if (study.slug === "anticipy") {
+          // Anticipy's flagship layout uses its own headings with the shared prose.
+          assert.match(await page.locator("#context h2").innerText(), /^From intention\s+to action\.$/);
+          assert.match(await page.locator("#outcome h2").innerText(), /^Device tests\s+and unfinished work\.$/);
+        }
         for (const section of study.sections) {
-          assert.ok(text.includes(section.heading));
+          if (study.slug !== "anticipy") assert.ok(text.includes(section.heading));
           for (const paragraph of section.body)
             assert.ok(
               text.includes(paragraph),
