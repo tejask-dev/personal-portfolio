@@ -95,7 +95,7 @@ for (const [name, api, options] of [
           page.on("pageerror", (error) => errors.push(error.message));
           page.setDefaultTimeout(20000);
           try {
-            const response = await page.goto(baseURL, {
+            const response = await page.goto(`${baseURL.replace(/#.*$/, "")}#voyage`, {
               waitUntil: "networkidle",
             });
             assert.equal(response.status(), 200);
@@ -216,7 +216,7 @@ for (const [name, api, options] of [
         page.on("pageerror", error => errors.push(error.message));
         page.setDefaultTimeout(20000);
         try {
-          await page.goto(baseURL, { waitUntil: "networkidle" });
+          await page.goto(`${baseURL.replace(/#.*$/, "")}#voyage`, { waitUntil: "networkidle" });
           await page.waitForFunction(() =>
             document
               .querySelector(".ow-experience")
@@ -292,7 +292,7 @@ for (const [name, api, options] of [
       page.on("pageerror", error => errors.push(error.message));
       page.setDefaultTimeout(20000);
       try {
-        await page.goto(baseURL, { waitUntil: "networkidle" });
+        await page.goto(`${baseURL.replace(/#.*$/, "")}#voyage`, { waitUntil: "networkidle" });
         await page.waitForFunction(() =>
           document
             .querySelector(".ow-experience")

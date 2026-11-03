@@ -69,7 +69,7 @@ try {
       return distance;
     }
     try {
-      await page.goto(url, { waitUntil: "networkidle" });
+      await page.goto(`${url.replace(/#.*$/, "")}#voyage`, { waitUntil: "networkidle" });
       await page.waitForFunction(() => document.querySelector("#voyage")?.dataset.yachtModel === "licensed");
       await page.locator("#take-helm").tap();
       // Entering changes the editorial document into a viewport scene and

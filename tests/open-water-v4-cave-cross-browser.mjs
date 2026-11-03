@@ -68,7 +68,7 @@ for (const [engine, api] of [["firefox", firefox], ["webkit", webkit]]) {
       const started = Date.now();
       try {
         await observeGL(page);
-        const response = await page.goto(url, { waitUntil: "networkidle" });
+        const response = await page.goto(`${url.replace(/#.*$/, "")}#voyage`, { waitUntil: "networkidle" });
         assert.equal(response.status(), 200);
         await page.locator("#voyage.is-ready").waitFor({ timeout: 45000 });
         assert.notEqual((await state(page)).state, "FALLBACK");

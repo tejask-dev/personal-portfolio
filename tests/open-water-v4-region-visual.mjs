@@ -9,7 +9,7 @@ const page=await context.newPage(),errors=[];
 page.on('pageerror',e=>errors.push(e.message));
 page.on('console',m=>{if(m.type()==='error'&&/THREE|WebGL|shader|GLSL/.test(m.text()))errors.push(m.text());});
 try{
- await page.goto(process.env.QA_URL||'http://127.0.0.1:4185');
+ await page.goto(`${(process.env.QA_URL||'http://127.0.0.1:4185').replace(/#.*$/, '')}#voyage`);
  await page.locator('#voyage.is-ready').waitFor({timeout:45000});
  await page.waitForTimeout(1200);
  await page.screenshot({path:`${output}/opening-polish.png`});
@@ -30,7 +30,7 @@ try{
  if(!process.env.QA_SKIP_EXTRAS){
  const mobile=await browser.newContext({viewport:{width:320,height:740},deviceScaleFactor:1,isMobile:true,hasTouch:true});
  const phone=await mobile.newPage();phone.on('pageerror',e=>errors.push(e.message));
- await phone.goto(process.env.QA_URL||'http://127.0.0.1:4185');
+ await phone.goto(`${(process.env.QA_URL||'http://127.0.0.1:4185').replace(/#.*$/, '')}#voyage`);
  await phone.locator('#voyage.is-ready').waitFor({timeout:45000});await phone.locator('#take-helm').click();
  await phone.getByTestId('voyage-chart').click();await phone.getByTestId('region-crown').click();
  await phone.waitForFunction(()=>document.querySelector('#voyage')?.dataset.mode==='reef');

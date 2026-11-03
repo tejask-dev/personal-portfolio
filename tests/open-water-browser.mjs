@@ -140,7 +140,7 @@ async function makePage(name, options = {}) {
 }
 
 async function ready(page) {
-  await page.goto(baseURL, { waitUntil: "networkidle" });
+  await page.goto(`${baseURL.replace(/#.*$/, "")}#voyage`, { waitUntil: "networkidle" });
   await page.waitForFunction(() => {
     const experience = document.querySelector(".ow-experience");
     return (
@@ -742,7 +742,7 @@ try {
               : original.call(this, kind, ...args);
           };
         });
-        await page.goto(baseURL, { waitUntil: "networkidle" });
+        await page.goto(`${baseURL.replace(/#.*$/, "")}#voyage`, { waitUntil: "networkidle" });
         await page.waitForFunction(
           () =>
             document
@@ -770,7 +770,7 @@ try {
         await page.route(/OpenWaterScene[^/]*\.(tsx?|js)(\?.*)?$/, (route) =>
           route.abort("failed"),
         );
-        await page.goto(baseURL, { waitUntil: "networkidle" });
+        await page.goto(`${baseURL.replace(/#.*$/, "")}#voyage`, { waitUntil: "networkidle" });
         await page.waitForFunction(
           () =>
             document
@@ -810,7 +810,7 @@ try {
             await route.abort("failed").catch(() => {});
           },
         );
-        await page.goto(baseURL, { waitUntil: "domcontentloaded" });
+        await page.goto(`${baseURL.replace(/#.*$/, "")}#voyage`, { waitUntil: "domcontentloaded" });
         await page.waitForFunction(() =>
           document
             .querySelector(".ow-experience")
@@ -893,7 +893,7 @@ try {
                 });
             },
           );
-          await page.goto(baseURL, { waitUntil: "networkidle" });
+          await page.goto(`${baseURL.replace(/#.*$/, "")}#voyage`, { waitUntil: "networkidle" });
           await page.waitForFunction(
             () =>
               document

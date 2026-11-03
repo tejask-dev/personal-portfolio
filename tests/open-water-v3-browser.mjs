@@ -52,7 +52,7 @@ async function makePage(options = {}) {
 async function openMap(page) { await nav(page).getByRole("button", { name: /^Map/ }).click(); }
 async function chooseEncounter(page, name) { await dialog(page).locator(".exp-encounter-grid").getByRole("button", { name }).click(); }
 async function close(page) { await dialog(page).getByRole("button", { name: /^Close / }).click(); }
-async function boot(page) { await page.goto(url); await page.locator("#take-helm").waitFor(); }
+async function boot(page) { await page.goto(`${url.replace(/#.*$/, "")}#voyage`); await page.locator("#take-helm").waitFor(); }
 async function sceneReady(page) { await page.locator("#voyage.is-ready").waitFor({ timeout: 30000 }); }
 // React and the R3F root commit separately. Wait for scheduled scroll/focus and
 // final pause telemetry before assessing a settled state; never mutate either.

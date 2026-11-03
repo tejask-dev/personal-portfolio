@@ -181,7 +181,7 @@ try {
     page.on("console", message => { if (message.type() === "error") errors.push(message.text()); });
     page.setDefaultTimeout(25000);
     try {
-      await page.goto(url); await page.locator("#voyage.is-ready").waitFor({ timeout: 45000 });
+      await page.goto(`${url.replace(/#.*$/, "")}#voyage`); await page.locator("#voyage.is-ready").waitFor({ timeout: 45000 });
       await page.locator("#take-helm").click();
       await deck(page, "chart"); await page.getByTestId("region-crown").click();
       await page.waitForFunction(() => document.querySelector("#voyage")?.dataset.mode === "reef");

@@ -84,7 +84,7 @@ async function contextFor(tier,quiet=false){
 }
 async function boot(page){
   const wall=Date.now();
-  await page.goto(url);await page.locator("#take-helm").waitFor();await page.locator("#voyage.is-ready").waitFor({timeout:45000});
+  await page.goto(`${url.replace(/#.*$/, "")}#voyage`);await page.locator("#take-helm").waitFor();await page.locator("#voyage.is-ready").waitFor({timeout:45000});
   const sceneReadyMs=await page.evaluate(()=>performance.now());
   await page.waitForTimeout(1800);
   const startup=await page.evaluate(()=>({firstDrawSubmissionMs:window.__owV4Perf.firstDrawAt,longTasks:window.__owV4Perf.longTasks,settledBrowserMs:performance.now()}));

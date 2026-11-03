@@ -58,7 +58,7 @@ async function makePage(options = {}) {
   return { context, page, errors };
 }
 async function boot(page, scene = true) {
-  await page.goto(url);
+  await page.goto(`${url.replace(/#.*$/, "")}#voyage`);
   await page.locator("#take-helm").waitFor();
   if (scene) await page.locator("#voyage.is-ready").waitFor({ timeout: 45000 });
   await page.locator("#take-helm").click();
