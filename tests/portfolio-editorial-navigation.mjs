@@ -9,6 +9,15 @@ try {
   await page.route('**/OpenWaterExperience-*.js', async route => { await new Promise(resolve => setTimeout(resolve, 500)); await route.continue(); });
   await page.goto(base); await page.locator('.static-portfolio').waitFor({ state: 'detached' });
   assert.equal(await page.locator('.pathway-entry').count(), 0);
+  const elda = page.locator('#read-elda-feature'); await elda.scrollIntoViewIfNeeded();
+  const eldaScroll = await page.evaluate(() => scrollY);
+  await elda.click(); await page.waitForURL('**/case-studies/elda');
+  await page.getByRole('heading', { name: 'My contribution.', exact: true }).waitFor();
+  assert.equal(await page.locator('.pv-reading-index a[href="#lesson"]').count(), 0, 'No invented Elda lesson or dead anchor');
+  await page.goBack(); await page.waitForFunction(() => document.activeElement?.id === 'read-elda-feature');
+  assert.ok(Math.abs(await page.evaluate(() => scrollY) - eldaScroll) < 8);
+  await page.keyboard.press('Tab');
+  assert.equal(await page.evaluate(() => document.activeElement?.getAttribute('href')), 'https://tryelda.com/');
   const feature = page.locator('#read-anticipy-feature'); await feature.scrollIntoViewIfNeeded();
   const featureScroll = await page.evaluate(() => scrollY);
   await feature.click(); await page.waitForURL('**/case-studies/anticipy'); await page.goBack();
@@ -40,8 +49,8 @@ try {
   await page.locator('#take-helm').click();
   await page.waitForFunction(() => document.activeElement?.id === 'yacht-controls');
   await page.locator('#open-work-index').click();
-  await page.locator('dialog[open] a[href*="/case-studies/anticipy"]').first().click();
-  await page.waitForURL('**/case-studies/anticipy');
+  await page.locator('dialog[open] a[href*="/case-studies/elda"]').first().click();
+  await page.waitForURL('**/case-studies/elda');
   await page.locator('.pv-case-nav').getByRole('link', { name: 'Back to Open Water', exact: true }).click();
   await page.waitForFunction(() => document.activeElement?.id === 'open-work-index');
   assert.equal(await page.locator('#voyage').getAttribute('data-state'), 'PAUSED', 'World-origin return keeps the voyage paused');

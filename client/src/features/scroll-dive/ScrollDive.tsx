@@ -99,7 +99,7 @@ export default function ScrollDive({ onSceneActive }: { onSceneActive: (active: 
       </div>
     </div>
     <div className="sd-interface">
-      <div className="sd-masthead"><a href="#voyage" className="sd-expedition-mark"><svg viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="16"/><path d="m18 6 5 12-5 12-5-12 5-12Zm-9 12h18"/></svg><span>Open Water <small>A field expedition</small></span></a><nav aria-label="Descent navigation"><a href="#current-work">Anticipy ↗</a><a href="#work">Work</a><a href="#contact">Contact ↗</a></nav></div>
+      <div className="sd-masthead"><a href="#voyage" className="sd-expedition-mark"><svg viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="16"/><path d="m18 6 5 12-5 12-5-12 5-12Zm-9 12h18"/></svg><span>Open Water <small>A field expedition</small></span></a><nav aria-label="Descent navigation"><a href="#current-work">Elda ↗</a><a href="#work">Work</a><a href="#contact">Contact ↗</a></nav></div>
       <div className="sd-depth" aria-hidden="true"><span>Descent</span><strong><span ref={depth}>00</span><small> / 24</small></strong><div className="sd-depth-track"><i/></div></div>
       <div className="sd-bottom"><span className="sd-scroll-cue">Keep scrolling <span aria-hidden="true">↓</span></span>{compact ? <span>Still expedition</span> : <button type="button" onClick={() => setStill(value => !value)} aria-pressed={still}>{still ? "Play scenery" : "Pause scenery"}<span aria-hidden="true">{still ? "▷" : "Ⅱ"}</span></button>}<a href="#current-work">Back to the work ↑</a></div>
     </div>

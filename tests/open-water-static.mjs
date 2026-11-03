@@ -151,7 +151,7 @@ try {
           }
           for (const value of [...study.contributions, ...study.decision.body, study.lesson]) if (value) assert.ok(text.includes(value), `${study.slug}: missing shared content`);
         }
-        const sections = ["context", "contribution", "decision", "outcome", "lesson", "sources"];
+        const sections = ["context", "contribution", "decision", "outcome", ...(study.lesson ? ["lesson"] : []), "sources"];
         for (const id of sections) assert.equal(await page.locator(`#${id}`).count(), 1, `${study.slug}: ${id} section`);
         assert.equal(await page.getByRole("link", { name: /Back to Open Water|Return to water/ }).count(), 0, "Static cases never force world entry");
         const json = JSON.parse(

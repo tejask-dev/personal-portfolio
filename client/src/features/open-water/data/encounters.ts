@@ -26,7 +26,7 @@ export const reefPlaces = [
 export const lensStops = [
   { bearing: 65.43, label: "065°", name: "Stellar Learning", slug: "stellar-learning", role: "Former CTO", note: "Free education, supported by a volunteer team. 40,000+ learners reported by Stellar Learning." },
   { bearing: 111.04, label: "111°", name: "Global health research", slug: "global-health-research", role: "Co-author · Student researcher", note: "A 34-country team study, published in the 2025 Youreka Canada Journal and recognized there as the national first-place study." },
-  { bearing: 131.19, label: "131°", name: "Anticipy", slug: "anticipy", role: "COO · Anticipation Labs", note: "An AI pendant for connected apps. I led account-connection repairs, private AI workflows and device testing." },
+  { bearing: 131.19, label: "131°", name: "Elda", slug: "elda", role: "COO · Anticipation Labs", note: "A bracelet in development for older adults. I lead customer discovery and test our software." },
 ] as const;
 export const contactEmail = "tejas.kaushik@outlook.com";
 export const linkedIn = "https://www.linkedin.com/in/tejasskaushik/";

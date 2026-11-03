@@ -16,7 +16,7 @@ test("case copy uses confirmed roles, periods and numeric platform metrics", () 
   assert.deepEqual(bySlug["stellar-learning"].metrics.map(metric => metric.value), ["40,000+", "80+", "130+"]);
   assert.ok(bySlug["stellar-learning"].metrics.every(metric => metric.label.startsWith("platform")));
   for (const study of caseStudyContent) {
-    assert.ok(["Live", "Shipped", "Published", "Prototype", "Sunset 2026"].includes(study.status));
+    assert.ok(["Live", "Shipped", "Published", "Prototype", "In development", "Paused prototype", "Sunset 2026"].includes(study.status));
     assert.ok(study.metrics.every(metric => /\d/.test(metric.value)), `${study.slug} has a word-only metric`);
     assert.doesNotMatch(bodyCopy(study), /daily active|\bDAU\b/i);
   }
@@ -78,11 +78,30 @@ test("home feature leads with the product and all case links support subpath hos
     for (const slug of slugs) assert.ok(html.includes(`href="${base}case-studies/${slug}"`));
     const feature = flagshipStaticHtml(base);
     assert.ok(feature.includes(`href="${base}case-studies/anticipy"`));
-    assert.match(readable(feature), /Making an AI pendant keep its promises\./);
+    assert.match(readable(feature), /Current work \/ Anticipation Labs Elda\. Help within reach\./);
+    assert.ok(feature.indexOf(`href="${base}case-studies/elda"`) < feature.indexOf(`href="${base}case-studies/anticipy"`));
     assert.doesNotMatch(feature, /Claude|Codex|pv4-attribution|A browser journey/);
     for (const match of feature.matchAll(/<a\b[^>]*href="https:[^>]*>/g)) {
       assert.match(match[0], /target="_blank"/);
       assert.match(match[0], /rel="noreferrer"/);
     }
   }
+});
+
+test("Elda leads Anticipation Labs while Anticipy retains its own history", () => {
+  const [elda, anticipy] = caseStudyContent;
+  assert.equal(elda.slug, "elda");
+  assert.equal(elda.status, "In development");
+  assert.equal(elda.role, "COO at Anticipation Labs");
+  assert.equal(elda.artifactSource?.href, "https://tryelda.com/");
+  assert.match(elda.summary, /customer discovery/);
+  assert.match(elda.teamContext, /team/);
+  assert.equal(elda.metrics.length, 0);
+  assert.equal(elda.lesson, undefined);
+  assert.equal(anticipy.slug, "anticipy");
+  assert.equal(anticipy.status, "Paused prototype");
+  assert.equal(anticipy.period, "Earlier product");
+  assert.match(anticipy.summary, /current focus.*Elda/);
+  assert.equal(leadStories[0].status, "Deployed");
+  assert.equal(caseStudyContent.length, 6);
 });

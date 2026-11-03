@@ -1216,7 +1216,7 @@ export default function OpenWaterExperience({ presentationPaused = false, boardi
             Project guide <Arrow />
           </button>
           {active ? <>
-            <button onClick={() => read("/case-studies/anticipy")}>Anticipy</button>
+            <button onClick={() => read("/case-studies/elda")}>Elda</button>
             <button onClick={() => read("#about")}>About</button>
           </> : <a href="#about" onClick={() => pauseTravel()}>About</a>}
           <button

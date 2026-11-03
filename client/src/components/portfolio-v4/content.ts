@@ -11,22 +11,34 @@ export type Contribution = {
 };
 
 export const anticipyWebsite = "https://anticipy.ai/";
+export const anticipationLabsWebsite = "https://www.anticipationlabs.com/";
+export const eldaWebsite = "https://tryelda.com/";
+export const elda = {
+  title: "Help within reach.",
+  intro: "A screenless bracelet we’re developing to help older adults with everyday tasks and keep their families connected.",
+  part: "I lead customer discovery and test our software. That includes visiting care homes and talking with older adults and caregivers about the help they need.",
+  status: "In development",
+  image: "portfolio/elda-bracelet-concept.jpg",
+  imageAlt: "Gold Elda bracelet concept shown on the public Elda website.",
+  caption: "Bracelet concept from Elda’s public website. The product is in development.",
+} as const;
 
 export const anticipyNarrative = {
   title: "Making an AI pendant keep its promises.",
-  summary: "Anticipy turns spoken intentions into actions through connected apps. As COO at Anticipation Labs, I work across product, engineering and operations: choosing what to fix, directing implementation, coordinating releases and testing the experience on phones and prototype hardware. My focus is making it work beyond a demo, across real devices.",
+  summary: "Anticipy is an earlier Anticipation Labs product exploring an AI pendant and connected apps. I led work on account connections, private AI workflows and device testing. That meant choosing what to fix, directing implementation and checking the experience on phones and prototype hardware. My current focus at Anticipation Labs is Elda.",
   context: "A wearable is useful when it follows through. Saying something to a pendant is the easy part; connecting the right account, respecting permission and completing the task is where the product has to earn trust.",
   personal: "I led work on account connections, private AI workflows and browser privacy, then tested builds on phones and wearable prototypes.",
   assistance: "I use Claude and Codex for implementation, investigation and review, alongside my own product decisions and hands-on testing.",
   team: "I built on the team’s existing workflow engine, memory system, native apps, browser engine and hardware designs.",
-  company: "I also contribute to recruiting, early operations and investor introductions.",
+  company: "I also contributed to recruiting, early operations and investor introductions.",
   evidence: "The private AI and browser-privacy work was validated in local tests. Live work-email processing remains off.",
   personalLesson: "Next time, I’d test the complete phone-to-service journey earlier. A successful server response can hide a broken experience.",
   personalLessonSource: "",
   statusSummary: "We deployed the connector fix and verified installation and recovery on individual wearable prototypes. Pairing, audio and transcripts still need more testing.",
   sources: [
     { label: "Anticipy", href: anticipyWebsite, note: "The product." },
-    { label: "Anticipation Labs", href: "https://www.anticipationlabs.com/", note: "The team behind it." },
+    { label: "Anticipation Labs", href: anticipationLabsWebsite, note: "The company behind Elda and Anticipy." },
+    { label: "Elda", href: eldaWebsite, note: "Our current focus: a bracelet in development for older adults." },
   ],
 } as const;
 
@@ -85,18 +97,19 @@ export const contributions: Contribution[] = [
   { id: "C2", title: "Browser privacy", group: "Connections", problem: "Protected values could enter a model request.", part: "Required outgoing-request checks.", decision: "Withhold values at capture.", result: "Synthetic browser checks passed.", status: "Locally tested" },
   { id: "C3", title: "Consistent permissions", group: "Connections", problem: "Clients could disagree about readiness.", part: "Required end-to-end journey checks.", decision: "Check capability as well as consent.", result: "Local integration repairs.", status: "Locally tested" },
   { id: "C4", title: "Native-client testing", group: "Devices", problem: "Device behavior needs hands-on testing.", part: "Installed and exercised phone builds.", decision: "Check the released artifact.", result: "Phone and Mac checks completed.", status: "Limited device checks" },
-  { id: "C5", title: "Wearable prototypes", group: "Devices", problem: "A firmware install is only the beginning.", part: "Operated USB, reset and pairing on devices.", decision: "Verify recovery before moving ahead.", result: "Installation and recovery verified; audio testing continues.", status: "Prototype" },
+  { id: "C5", title: "Wearable prototypes", group: "Devices", problem: "A firmware install is only the beginning.", part: "Operated USB, reset and pairing on devices.", decision: "Verify recovery before moving ahead.", result: "Installation and recovery verified; audio not fully verified.", status: "Prototype" },
   { id: "C6", title: "Identity and organizations", group: "Private AI", problem: "Work accounts must preserve personal privacy.", part: "Directed implementation and review.", decision: "Keep membership separate from content access.", result: "Local identity and erasure checks passed.", status: "Local foundation" },
   { id: "C7", title: "Source-backed briefs", group: "Private AI", problem: "A brief needs a source the reader can inspect.", part: "Defined source selection and consent.", decision: "Use only the chosen source.", result: "Cited briefs in a local prototype.", status: "Prototype" },
   { id: "C8", title: "Spending limits", group: "Private AI", problem: "Retries and late results complicate limits.", part: "Set spending and cancellation requirements.", decision: "Check each model request.", result: "Local budget and lifecycle checks.", status: "Locally tested" },
   { id: "C9", title: "Selected email", group: "Private AI", problem: "A mailbox connection is not permission to read everything.", part: "Directed a selected-message prototype.", decision: "Choose one message explicitly.", result: "Offline selection and revocation checks.", status: "Prototype" },
   { id: "C10", title: "Release coordination", group: "Delivery", problem: "Code and deployed behavior can differ.", part: "Set release order and acceptance criteria.", decision: "Verify the deployed artifact.", result: "Separate account preview released with AI off.", status: "Preview" },
   { id: "C11", title: "Fellowship website", group: "Delivery", problem: "Applicants needed a clear route into the team.", part: "Helped redesign the site and application flow.", decision: "Build on existing application infrastructure.", result: "Responsive experience prepared.", status: "Coming soon" },
-  { id: "C12", title: "Product direction", group: "Delivery", problem: "Parallel work needs clear priorities.", part: "Coordinated engineering, review and device testing.", decision: "Make user behavior the acceptance criterion.", result: "Product work across apps and hardware.", status: "Ongoing" },
+  { id: "C12", title: "Product direction", group: "Delivery", problem: "Parallel work needs clear priorities.", part: "Coordinated engineering, review and device testing.", decision: "Make user behavior the acceptance criterion.", result: "Product work across apps and hardware.", status: "Past product work" },
 ];
 
 export const careerJourney = [
-  { period: "Current", title: "Anticipation Labs", role: "COO", body: "Product, engineering and operations for Anticipy, from connected apps to hands-on wearable testing.", slug: "anticipy" },
+  { period: "Current", title: "Anticipation Labs", role: "COO", body: "Customer discovery, software testing and recruiting for Elda. Previously, connected apps and prototype testing for Anticipy.", slug: "elda" },
+  { period: "Earlier product", title: "Anticipy", role: "Anticipation Labs", body: "Connected-app repairs, private AI workflows and hands-on prototype testing. Development is paused.", slug: "anticipy" },
   { period: "Aug 2025–Jul 2026", title: "Stellar Learning", role: "CTO", body: "IB question generation and practice, plus improvements to AP questions and lessons.", slug: "stellar-learning" },
   { period: "Summer 2025", title: "DocuBridge", role: "Software engineering intern", body: "Built a prototype for exploring spreadsheets through charts, summaries and natural-language questions.", slug: "docubridge" },
   { period: "2024–2025", title: "Youreka Canada", role: "Co-author and student researcher", body: "Writing, analysis and R graphs for a published, national first-place team study across 34 countries.", slug: "global-health-research" },
@@ -134,5 +147,5 @@ export const anticipySnapshot = [
 export const anticipyStatus = [
   { title: "Connected apps", result: "Navigation repair deployed", complete: true },
   { title: "Private AI", result: "Local prototype; hosted AI processing off", complete: false },
-  { title: "Wearables", result: "Installation and recovery checked; audio testing continues", complete: false },
+  { title: "Wearables", result: "Installation and recovery checked; audio not fully verified", complete: false },
 ] as const;

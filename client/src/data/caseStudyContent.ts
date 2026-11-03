@@ -1,4 +1,4 @@
-import { anticipyArtifact, anticipyNarrative, anticipyWebsite } from "../components/portfolio-v4/content.ts";
+import { elda, eldaWebsite, anticipationLabsWebsite, anticipyArtifact, anticipyNarrative, anticipyWebsite } from "../components/portfolio-v4/content.ts";
 
 export type CaseStudySection = { heading: string; body: string[] };
 export type CaseStudyContent = {
@@ -19,6 +19,7 @@ export type CaseStudyContent = {
   metrics: { value: string; label: string }[];
   stack: string[];
   imageAsset:
+    | "elda"
     | "anticipy"
     | "stellar"
     | "soma"
@@ -38,8 +39,40 @@ export type CaseStudyContent = {
 /** Shared copy for the interactive and static case-study pages. */
 export const caseStudyContent: CaseStudyContent[] = [
   {
-    slug: "anticipy", title: "Anticipy", kicker: "01 / Current work",
-    role: "COO at Anticipation Labs", period: "Current", status: "Prototype",
+    slug: "elda", title: "Elda", kicker: "01 / Anticipation Labs",
+    role: "COO at Anticipation Labs", period: "Current focus", status: elda.status,
+    thesis: "A bracelet for everyday help and family connection.",
+    summary: `${elda.intro} ${elda.part} I also help with recruiting at Anticipation Labs.`,
+    shortDescription: "Customer discovery and software testing for a screenless bracelet in development for older adults.",
+    proof: "Care-home visits · Customer discovery · Software testing",
+    contributions: [
+      "Lead customer discovery, including visits to care homes and conversations with older adults and caregivers.",
+      "Test our software as the team develops the product.",
+      "Help with recruiting at Anticipation Labs.",
+    ],
+    teamContext: "I work with the team building Elda’s agent, wrist software and family app. My focus is discovery and testing.",
+    evidenceNote: "The bracelet is in development. Apple Watch is a prototype platform while the custom bracelet is developed.",
+    decision: { label: "The work ahead", title: "Test the everyday experience.", body: [
+      "We’re prototyping on Apple Watch while developing the bracelet. That gives us a way to work on the software while the physical product takes shape.",
+      "The goal is an older adult asking for help by voice, approving an action and choosing what their family sees. The public website describes the intended experience; the bracelet is not available yet."
+    ] },
+    metrics: [], stack: ["Customer discovery", "Software testing", "Product development"], imageAsset: "elda", imageTreatment: "illustration",
+    artifactLabel: "Elda / Bracelet concept", imageAlt: elda.imageAlt, imageCaption: elda.caption,
+    artifactSource: { label: "Visit Elda", href: eldaWebsite },
+    sections: [
+      { heading: "Help with the things between appointments.", body: ["A ride, a follow-up or an update to family can take several calls and apps. Elda is being developed around older adults asking for everyday help by voice, with family kept informed on their terms."] },
+      { heading: "Start with the people who will use it.", body: ["I’ve visited care homes and spoken with older adults and caregivers. I lead customer discovery and test our software as the team builds. Those responsibilities sit alongside my recruiting work as COO."] },
+      { heading: "In development at Anticipation Labs.", body: ["Elda is our current focus. The public site is open for waitlist signups while we develop the bracelet and prototype the software. Anticipy is an earlier product from the same company; its connected-app and device work has a separate case study."] },
+    ],
+    links: [
+      { label: "Elda", href: eldaWebsite, note: "Product direction and waitlist." },
+      { label: "Anticipation Labs", href: anticipationLabsWebsite, note: "The company behind Elda and Anticipy." },
+      { label: "Earlier work on Anticipy", href: "/case-studies/anticipy", note: "Connected apps, private AI workflows and prototype testing." },
+    ], flagship: true,
+  },
+  {
+    slug: "anticipy", title: "Anticipy", kicker: "Anticipation Labs / Earlier product",
+    role: "COO at Anticipation Labs", period: "Earlier product", status: "Paused prototype",
     thesis: anticipyNarrative.title, summary: anticipyNarrative.summary,
     shortDescription: "Making an AI pendant keep its promises across connected apps and prototype hardware.",
     proof: "Connected-app repair deployed · private AI prototype · hands-on device testing",

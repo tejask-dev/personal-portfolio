@@ -1,8 +1,10 @@
 import { inject, track, type BeforeSendEvent } from "@vercel/analytics";
 import { SITE_URL } from "./siteMetadata.ts";
 
-const publicRoutes = new Set(["/", "/resume", "/case-studies/anticipy", "/case-studies/stellar-learning", "/case-studies/global-health-research", "/case-studies/docubridge", "/case-studies/soma-ai"]);
+const publicRoutes = new Set(["/", "/resume", "/case-studies/elda", "/case-studies/anticipy", "/case-studies/stellar-learning", "/case-studies/global-health-research", "/case-studies/docubridge", "/case-studies/soma-ai"]);
 const projectLinks = new Map([
+  ["https://tryelda.com/", "elda"],
+  ["https://www.anticipationlabs.com/", "anticipation-labs"],
   ["https://anticipy.ai/", "anticipy"],
   ["https://stellarlearning.app/", "stellar-learning"],
   ["https://organic-chem-web-app.vercel.app/", "molecule-ai"],

@@ -51,7 +51,7 @@ export default function CaseStudy() {
     );
 
   const cameFromWorld = voyage.returnPending && isInteractiveReturnFocus(voyage.returnFocus);
-  const imageDimensions: Record<string, [number, number]> = { stellar: [1440, 1000], docubridge: [1791, 805], soma: [1230, 564], research: [1200, 800] };
+  const imageDimensions: Record<string, [number, number]> = { elda: [712, 368], stellar: [1440, 1000], docubridge: [1791, 805], soma: [1230, 564], research: [1200, 800] };
   const numericMetrics = study.metrics.filter(metric => /\d/.test(metric.value));
   const next =
     caseStudies[(caseStudies.indexOf(study) + 1) % caseStudies.length];
@@ -150,10 +150,10 @@ export default function CaseStudy() {
             <p className="pv-eyebrow">In this case</p>
             <nav>
               <a href="#context">Context</a>
-              <a href="#contribution">What I built</a>
-              <a href="#decision">The hard part</a>
+              <a href="#contribution">My contribution</a>
+              <a href="#decision">{study.decision.label}</a>
               <a href="#outcome">Result</a>
-              <a href="#lesson">What I’d change</a>
+              {study.lesson && <a href="#lesson">What I’d change</a>}
               <a href="#sources">Links</a>
             </nav>
             <p>{study.stack.join(" / ")}</p>
@@ -167,8 +167,8 @@ export default function CaseStudy() {
               ))}
             </section>
             <section id="contribution">
-              <p className="pv-eyebrow">02 / What I built</p>
-              <h2>What I built.</h2>
+              <p className="pv-eyebrow">02 / My contribution</p>
+              <h2>My contribution.</h2>
               <ul className="pv-contributions">
                 {study.contributions.map((p) => (
                   <li key={p}>{p}</li>
@@ -176,7 +176,7 @@ export default function CaseStudy() {
               </ul>
             </section>
             <section className="pv-decision" id="decision">
-              <p className="pv-eyebrow">03 / The hard part</p>
+              <p className="pv-eyebrow">03 / {study.decision.label}</p>
               <h2>{study.decision.title}</h2>
               {study.decision.body.map((p) => (
                 <p key={p}>{p}</p>

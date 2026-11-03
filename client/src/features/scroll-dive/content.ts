@@ -4,13 +4,13 @@ export const diveChapters = [
     id: "surface", depth: "00", label: "The surface", eyebrow: "01 / A different perspective",
     title: ["There's more", "beneath the surface."],
     body: "A product is what you see. The interesting work is everything that makes it possible.",
-    note: "Scroll to follow the descent", href: "#current-work", link: "Straight to Anticipy",
+    note: "Scroll to follow the descent", href: "#current-work", link: "Straight to Elda",
   },
   {
     id: "connections", depth: "06", label: "Below the waterline", eyebrow: "02 / Follow the whole journey",
     title: ["Interfaces connect.", "Systems deliver."],
-    body: "At Anticipy, my work crosses connected apps, private AI workflows, and the devices in your hand.",
-    note: "COO / Anticipation Labs", href: "/case-studies/anticipy", link: "Explore the engineering",
+    body: "Earlier, on Anticipy at Anticipation Labs, I led work on connected apps, private AI workflows and prototype device testing.",
+    note: "COO / Anticipation Labs", href: "/case-studies/anticipy", link: "Earlier work on Anticipy",
   },
   {
     id: "fieldwork", depth: "14", label: "The living reef", eyebrow: "03 / Closer to the details",
@@ -22,7 +22,7 @@ export const diveChapters = [
     id: "depth", depth: "24", label: "A deeper look", eyebrow: "04 / The work, in context",
     title: ["The depth", "is in the details."],
     body: "The decisions, the collaboration, the things that shipped, and the things still being built. Here's the work behind the view.",
-    note: "Continue to the field notes", href: "#current-work", link: "See my work at Anticipy",
+    note: "Continue to the field notes", href: "#current-work", link: "See my work on Elda",
   },
 ] as const;
 

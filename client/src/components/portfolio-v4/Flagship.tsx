@@ -1,14 +1,28 @@
 import { useState } from "react";
 import { Link } from "wouter";
 import { ArrowUpRight, ArrowRight, Check, RotateCcw } from "lucide-react";
-import { anticipyPreview, anticipySnapshot, anticipyStatus, anticipyNarrative, careerJourney, connectorSteps, alsoWork, anticipyArtifact, illustrativeBrief, illustrativeNote, leadStories } from "./content";
+import { elda, eldaWebsite, anticipyWebsite, anticipationLabsWebsite, anticipySnapshot, anticipyStatus, anticipyNarrative, careerJourney, connectorSteps, alsoWork, anticipyArtifact, illustrativeBrief, illustrativeNote, leadStories } from "./content";
 import "./portfolio-v4.css";
 
-export function AnticipyFeature() {
-  return <section className="pv4-feature" aria-labelledby="anticipy-feature-title" id="current-work">
+export function LabsFeature() {
+  return <section className="pv4-feature" aria-labelledby="labs-feature-title" id="current-work">
     <div className="pv-shell pv4-feature-grid">
-      <div className="pv4-feature-copy"><p className="pv-eyebrow">Current work / Anticipy</p><h2 id="anticipy-feature-title" tabIndex={-1}>Making an AI pendant<br/><em>keep its promises.</em></h2><p className="pv4-feature-lead">{anticipyPreview.intro}</p><p>{anticipyPreview.part}</p><div className="pv4-feature-actions"><Link className="pv4-feature-link" href="/case-studies/anticipy" id="read-anticipy-feature">Read the case study <ArrowUpRight size={20}/></Link>{anticipyNarrative.sources.map(source => <a key={source.href} className="pv4-product-link" href={source.href} target="_blank" rel="noreferrer">Visit {source.label} <ArrowUpRight size={17} aria-hidden="true"/></a>)}</div></div>
-      <div className="pv4-feature-field"><p className="pv4-diagram-note">Diagram / Completing an account connection</p><ol className="pv4-before-after"><li><span>Before</span><p>{anticipyPreview.before}</p></li><li><span>After · Deployed</span><p>{anticipyPreview.after}</p></li></ol></div>
+      <div className="pv4-feature-copy">
+        <p className="pv-eyebrow">Current work / Anticipation Labs</p>
+        <h2 id="labs-feature-title" tabIndex={-1}>Elda.<br/><em>{elda.title}</em></h2>
+        <span className="pv4-status">{elda.status}</span>
+        <p className="pv4-feature-lead">{elda.intro}</p><p>{elda.part}</p>
+        <div className="pv4-feature-actions">
+          <Link className="pv4-feature-link" href="/case-studies/elda" id="read-elda-feature">My work on Elda <ArrowUpRight size={20}/></Link>
+          <a className="pv4-product-link" href={eldaWebsite} target="_blank" rel="noreferrer">Visit Elda <ArrowUpRight size={17} aria-hidden="true"/></a>
+          <a className="pv4-product-link" href={anticipationLabsWebsite} target="_blank" rel="noreferrer">Visit Anticipation Labs <ArrowUpRight size={17} aria-hidden="true"/></a>
+        </div>
+      </div>
+      <figure className="pv4-elda-concept"><img src={`${import.meta.env.BASE_URL}${elda.image}`} alt={elda.imageAlt} width="712" height="368" loading="lazy" decoding="async"/><figcaption>{elda.caption}</figcaption></figure>
+      <aside className="pv4-related-product" aria-label="Another product from Anticipation Labs">
+        <div><p className="pv-eyebrow">Also from Anticipation Labs / Earlier product</p><h3>Anticipy</h3><p>An AI pendant and connected apps. I led account-connection repairs, private AI workflows and prototype testing.</p></div>
+        <div><Link className="pv4-product-link" href="/case-studies/anticipy" id="read-anticipy-feature">My work on Anticipy <ArrowUpRight size={17}/></Link><a className="pv4-product-link" href={anticipyWebsite} target="_blank" rel="noreferrer">Visit Anticipy <ArrowUpRight size={17} aria-hidden="true"/></a></div>
+      </aside>
     </div>
   </section>;
 }

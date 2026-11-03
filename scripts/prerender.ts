@@ -5,7 +5,7 @@ import {
   caseStudyContent,
   type CaseStudyContent,
 } from "../client/src/data/caseStudyContent.ts";
-import { anticipyArtifact } from "../client/src/components/portfolio-v4/content.ts";
+import { elda, anticipyArtifact } from "../client/src/components/portfolio-v4/content.ts";
 import { socialMetadata } from "../client/src/lib/socialMetadata.ts";
 import { workbenchStatic } from "../client/src/components/editorial/workbenchStatic.ts";
 import { moreProjectsHtml } from "../client/src/components/editorial/notesContent.ts";
@@ -118,6 +118,7 @@ function applyMetadata(
 
 const assets = await readdir(path.join(outputDirectory, "assets"));
 const artifactPrefixes: Record<CaseStudyContent["imageAsset"], string> = {
+  elda: "",
   anticipy: "",
   stellar: "stellar-current-",
   research: "Research Paper-",
@@ -132,6 +133,7 @@ function asset(prefix: string) {
   return `${base}assets/${encodeURIComponent(file)}`;
 }
 function studyImage(study: CaseStudyContent) {
+  if (study.imageAsset === "elda") return `${base}${elda.image}`;
   if (study.imageAsset === "research") return `${base}portfolio/research-evidence.svg`;
   return study.imageAsset === "anticipy"
     ? `${base}${anticipyArtifact.desktop}`
@@ -166,7 +168,7 @@ function nav(casePage = false) {
   return `<nav class="pv-case-nav" aria-label="${casePage ? "Case study navigation" : "Portfolio"}"><a class="pv-wordmark" href="${homeLink()}">Tejass Kaushik</a><div><a href="${homeLink("#work")}">Selected work</a><a href="${homeLink("#about")}">About</a><a href="mailto:${profile.email}">Contact ↗</a></div></nav>`;
 }
 function artifact(study: CaseStudyContent) {
-  const dimensions: Record<string, [number, number]> = { stellar: [1440, 1000], docubridge: [1791, 805], soma: [1230, 564], research: [1200, 800] };
+  const dimensions: Record<string, [number, number]> = { elda: [712, 368], stellar: [1440, 1000], docubridge: [1791, 805], soma: [1230, 564], research: [1200, 800] };
   const [width, height] = dimensions[study.imageAsset] ?? [1440, 960];
   return `<figure class="pv-case-artifact pv-shell" id="artifact"><div class="pv-artifact-label"><span>${escape(study.artifactLabel)}</span><span>Field note / ${escape(study.kicker.split(" / ")[0])}</span></div><div class="pv-case-image pv-case-image--${study.imageTreatment ?? "cover"}"><img src="${studyImage(study)}" alt="${escape(study.imageAlt)}" width="${width}" height="${height}" loading="eager" /></div><figcaption><p>${escape(study.imageCaption)}</p>${study.artifactSource ? external(study.artifactSource.href, study.artifactSource.label) : ""}</figcaption></figure>`;
 }
@@ -178,10 +180,10 @@ function studyHtml(study: CaseStudyContent) {
   return `<div class="static-portfolio portfolio-v3 pv-case"><a class="skip-link" href="#main">Skip to case study</a>${nav(true)}<main id="main">
     <header class="pv-case-hero pv-shell"><div class="pv-case-breadcrumb"><a href="${homeLink("#work")}">← All projects</a><span>${escape(study.kicker)}</span></div><p class="pv-stage">${escape(study.status)}</p><h1>${escape(study.title)}</h1><p class="pv-case-thesis">${escape(study.thesis)}</p><dl class="pv-case-facts"><div><dt>My role</dt><dd>${escape(study.role)}</dd></div><div><dt>Period</dt><dd>${escape(study.period)}</dd></div><div><dt>Focus</dt><dd>${escape(study.stack.slice(0, 3).join(" · "))}</dd></div></dl><p class="pv-case-summary">${escape(study.summary)}</p></header>
     ${study.slug === "anticipy" ? anticipyStaticHtml(base) : `${artifact(study)}
-    <article class="pv-case-reading pv-shell"><aside class="pv-reading-index" aria-label="On this page"><p class="pv-eyebrow">In this case</p><nav><a href="#context">Context</a><a href="#contribution">What I built</a><a href="#decision">The hard part</a><a href="#outcome">Result</a><a href="#lesson">What I’d change</a><a href="#sources">Links</a></nav><p>${escape(study.stack.join(" / "))}</p></aside><div class="pv-case-prose">
+    <article class="pv-case-reading pv-shell"><aside class="pv-reading-index" aria-label="On this page"><p class="pv-eyebrow">In this case</p><nav><a href="#context">Context</a><a href="#contribution">My contribution</a><a href="#decision">${escape(study.decision.label)}</a><a href="#outcome">Result</a>${study.lesson ? `<a href="#lesson">What I’d change</a>` : ""}<a href="#sources">Links</a></nav><p>${escape(study.stack.join(" / "))}</p></aside><div class="pv-case-prose">
     <section id="context"><p class="pv-eyebrow">01 / Context</p><h2>${escape(study.sections[0].heading)}</h2>${paragraphs(study.sections[0].body)}</section>
-    <section id="contribution"><p class="pv-eyebrow">02 / What I built</p><h2>What I built.</h2><ul class="pv-contributions">${study.contributions.map((p) => `<li>${escape(p)}</li>`).join("")}</ul></section>
-    <section class="pv-decision" id="decision"><p class="pv-eyebrow">03 / The hard part</p><h2>${escape(study.decision.title)}</h2>${paragraphs(study.decision.body)}${study.slug === "docubridge" ? workbenchStatic() : ""}${study.decision.source ? external(study.decision.source, study.decision.source.includes("stellarlearning.app") ? "Visit Stellar Learning" : "Explore this work", "pv-text-link") : ""}</section>
+    <section id="contribution"><p class="pv-eyebrow">02 / My contribution</p><h2>My contribution.</h2><ul class="pv-contributions">${study.contributions.map((p) => `<li>${escape(p)}</li>`).join("")}</ul></section>
+    <section class="pv-decision" id="decision"><p class="pv-eyebrow">03 / ${escape(study.decision.label)}</p><h2>${escape(study.decision.title)}</h2>${paragraphs(study.decision.body)}${study.slug === "docubridge" ? workbenchStatic() : ""}${study.decision.source ? external(study.decision.source, study.decision.source.includes("stellarlearning.app") ? "Visit Stellar Learning" : "Explore this work", "pv-text-link") : ""}</section>
     <section id="outcome"><p class="pv-eyebrow">04 / Result</p>${study.sections
       .slice(1)
       .map(

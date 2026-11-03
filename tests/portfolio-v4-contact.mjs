@@ -9,7 +9,7 @@ import { fileURLToPath } from "node:url";
 const root = fileURLToPath(new URL("../", import.meta.url));
 const output = path.resolve(root, process.env.PORTFOLIO_OUT_DIR ?? "docs");
 const email = "tejas.kaushik@outlook.com";
-const slugs = ["anticipy", "stellar-learning", "global-health-research", "docubridge", "soma-ai"];
+const slugs = ["elda", "anticipy", "stellar-learning", "global-health-research", "docubridge", "soma-ai"];
 const mailtoAddresses = html => [...html.matchAll(/href="mailto:([^"?#]+)(?:[^"<>]*)"/g)].map(match => decodeURIComponent(match[1]));
 const allMailsAreCanonical = (html, surface) => {
   const addresses = mailtoAddresses(html);
@@ -26,7 +26,7 @@ test("homepage and its contact section use the exact canonical address", async (
   allMailsAreCanonical(contact, "Home contact");
 });
 
-test("all five case studies and both static route forms have canonical contact links", async () => {
+test("all six case studies and both static route forms have canonical contact links", async () => {
   for (const slug of slugs) for (const suffix of [`${slug}/index.html`, `${slug}.html`]) allMailsAreCanonical(await readFile(path.join(output, "case-studies", suffix), "utf8"), suffix);
 });
 

@@ -29,8 +29,8 @@ test("home metadata and structured identity match the current role without an in
   assert.match(html, /type="image\/svg\+xml" href="%BASE_URL%favicon\.svg"/);
 });
 
-test("all six social images have the expected dimensions and alternate text describes their content", () => {
-  assert.equal(Object.keys(socialCards).length, 6);
+test("all seven social images have the expected dimensions and alternate text describes their content", () => {
+  assert.equal(Object.keys(socialCards).length, 7);
   for (const [slug, card] of Object.entries(socialCards)) {
     const png = readFileSync(new URL(`../client/public/social/${slug}.png`, import.meta.url));
     assert.equal(png.toString("hex", 0, 8), "89504e470d0a1a0a");
@@ -45,7 +45,7 @@ test("all six social images have the expected dimensions and alternate text desc
 
 test("pageview redaction excludes query, hash, unknown paths, credentials and noncanonical hosts", () => {
   for (const type of ["pageview", "event"] as const) {
-    for (const path of ["/", "/resume", "/case-studies/anticipy"]) {
+    for (const path of ["/", "/resume", "/case-studies/elda", "/case-studies/anticipy"]) {
       assert.deepEqual(redactAnalyticsEvent({ type, url: `${SITE_URL}${path}?email=private@example.org#secret` }), { type, url: `${SITE_URL}${path}` });
     }
   }
@@ -79,4 +79,13 @@ test("analytics is production-only and gated for paid custom events; redirects c
   assert.ok(csp.includes("script-src 'self'"));
   assert.ok(csp.includes("connect-src 'self' blob:"));
   assert.doesNotMatch(csp, /vercel-insights\.com|unsafe-eval|https:\/\/\*/);
+});
+
+test("Elda is public in search metadata and privacy-safe analytics", () => {
+  assert.match(DEFAULT_DESCRIPTION, /Elda/);
+  assert.equal(socialMetadata('/case-studies/elda').image, SITE_URL + '/social/elda.png');
+  assert.ok(read('client/public/sitemap.xml').includes(SITE_URL + '/case-studies/elda'));
+  for (const href of ['/case-studies/elda?private=value#detail', 'https://tryelda.com/?email=private@example.org']) {
+    assert.deepEqual(portfolioLinkEvent(href, SITE_URL), { name: 'Project open', data: { project: 'elda' } });
+  }
 });

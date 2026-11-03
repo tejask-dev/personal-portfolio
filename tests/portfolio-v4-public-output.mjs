@@ -55,7 +55,7 @@ async function scan(files, label) {
 assert.equal(profile.email, "tejas.kaushik@outlook.com");
 assert.equal(leadStories.length, 3);
 assert.equal(alsoWork.length, 5);
-assert.equal(caseStudyContent.length, 5);
+assert.equal(caseStudyContent.length, 6);
 assert.equal(caseStudyContent.find(study => study.slug === "anticipy").role, "COO at Anticipation Labs");
 assert.equal(caseStudyContent.find(study => study.slug === "stellar-learning").role, "CTO");
 const bannedCopy = /\[CONFIRM|—|\bI required\b|\bmy account\b|\bhonestly\b|\bbounded\b|\bevidence\b|\bfixtures?\b|validated within|\bharness(?:es)?\b|\bqualification\b|not claiming|does not imply|checked on \d|partly shipped|remained unfinished|much remained|I went\. That was great\./i;
@@ -63,7 +63,7 @@ const visibleCopy = html => normalize(html.replace(/<head[\s\S]*?<\/head>/gi, ""
 
 const sourceFiles = [...await filesIn(path.join(root, "client/src")), ...await filesIn(path.join(root, "client/public")), path.join(root, "client/index.html"), path.join(root, "scripts/prerender.ts")];
 const source = await scan(sourceFiles, "source");
-const report = { scope: sourceOnly ? "source-only; generated site not audited" : "source and generated public output", source, additionalContributions: 5, leadStories: 3, routes: 5, generated: null };
+const report = { scope: sourceOnly ? "source-only; generated site not audited" : "source and generated public output", source, additionalContributions: 5, leadStories: 3, routes: caseStudyContent.length, generated: null };
 if (!sourceOnly) {
   const generatedFiles = await filesIn(output);
   report.generated = await scan(generatedFiles, "generated output");
@@ -82,7 +82,7 @@ if (!sourceOnly) {
     const text = visibleCopy(html);
     assert.doesNotMatch(text, bannedCopy, `${study.slug} contains retired copy or an unconfirmed marker`);
     assert.doesNotMatch(html, /Return to water|Back to Open Water/, "Static direct-entry cases must keep visitors on the reading path");
-    for (const id of ["context", "contribution", "decision", "outcome", "lesson", "sources"]) assert.ok(html.includes(`id="${id}"`), `${study.slug} missing ${id}`);
+    for (const id of ["context", "contribution", "decision", "outcome", ...(study.lesson ? ["lesson"] : []), "sources"]) assert.ok(html.includes(`id="${id}"`), `${study.slug} missing ${id}`);
     for (const value of [study.title, study.role, study.status, study.summary]) assert.ok(text.includes(normalize(value)), `${study.slug} missing role/status/summary`);
     if (study.slug !== "anticipy") continue;
     for (const story of leadStories) {

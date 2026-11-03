@@ -35,6 +35,12 @@ function assertNoWorld(requests, message) { assert.deepEqual(requests.filter(url
 async function reading(page) {
   await hydrated(page);
   await page.locator('#hero-title').waitFor();
+  assert.match(await page.locator('.eh-hero-role').innerText(), /Elda/);
+  assert.match(await page.locator('#labs-feature-title').innerText(), /Elda/);
+  assert.equal(await page.locator('#current-work a').first().getAttribute('href'), '/case-studies/elda');
+  assert.ok(await page.locator('#current-work a[href="https://tryelda.com/"]').count());
+  assert.ok(await page.locator('#current-work a[href="https://www.anticipationlabs.com/"]').count());
+  assert.match(await page.locator('.pv4-related-product').innerText(), /Earlier product[\s\S]*Anticipy/i);
   assert.equal(await page.locator('.pathway-entry, .pe-departure').count(), 0, 'No entry gate or departure overlay');
   assert.equal(await page.getByRole('button', { name: 'Choose interactions', exact: true }).count(), 0);
 }
@@ -132,6 +138,7 @@ try {
     ['stellar-learning', [/AP/, /IB/, /curriculum/i, /benchmark/i]],
     ['global-health-research', [/\bR\b/, /writing|wrote/i, /34/, /team/i, /association/i]],
     ['docubridge', [/learn/i, /worksheet/i, /prototype/i]],
+    ['elda', [/COO/, /care homes/i, /In development/, /Apple Watch/]],
     ['anticipy', [/COO/, /consent/i, /prototype/i, /processing.*off|processing disabled/i]],
     ['soma-ai', [/infrastructure/i, /Sub.Saharan Africa/i, /2026/]],
   ];

@@ -22,3 +22,11 @@ The portfolio's connector, brief, and privacy walkthroughs are original explanat
 
 - `molecule-desktop.webp` and `molecule-mobile.webp`: actual public MoleculeAI browser views of an aspirin analysis, captured 3 November 2026 at https://organic-chem-web-app.vercel.app/. App interface by the MoleculeAI project; not a concept mockup.
 - `open-water-poster.webp`: actual canvas pixels from this portfolio's Open Water scene, captured 3 November 2026, cropped to 16:9 and exported at 1600 × 900. The superyacht, lighthouse and turquoise water are rendered assets already credited in the world credits. No generated concept artwork is substituted for the working scene.
+
+## Elda bracelet concept — 3 November 2026
+
+- Source: https://tryelda.com/ (interactive bracelet viewer).
+- Website, product concept and brand: Anticipation Labs.
+- File: `elda-bracelet-concept.jpg`, 712 × 368.
+- Captured from the public product viewer with controls outside the crop and compressed to JPEG. No design or hardware alteration.
+- Used with a visible concept/in-development caption. This image does not establish manufactured hardware or tested functionality.

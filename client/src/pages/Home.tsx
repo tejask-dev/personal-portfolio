@@ -5,7 +5,7 @@ import { selectedWork } from "@/data/selectedWork";
 import { voyage } from "@/features/open-water/voyage";
 import { useSeo } from "@/lib/seo";
 import { isInteractiveReturnFocus } from "@/lib/portfolioReturn";
-import { AnticipyFeature } from "@/components/portfolio-v4/Flagship";
+import { LabsFeature } from "@/components/portfolio-v4/Flagship";
 import EngineeringNotes from "@/components/editorial/EngineeringNotes";
 import "./portfolio-v3.css";
 import "./editorial-home.css";
@@ -207,7 +207,7 @@ export default function Home() {
           </dl>
         </section>
         <div className="portfolio-v3">
-          <AnticipyFeature />
+          <LabsFeature />
           <section
             id="work"
             tabIndex={-1}

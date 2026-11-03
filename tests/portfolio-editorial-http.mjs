@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { chromium } from 'playwright';
 import { socialMetadata } from '../client/src/lib/socialMetadata.ts';
 const origin=(process.env.QA_URL || 'http://127.0.0.1:4175').replace(/\/$/,'');
-const slugs=['anticipy','stellar-learning','global-health-research','docubridge','soma-ai'];
+const slugs=['elda','anticipy','stellar-learning','global-health-research','docubridge','soma-ai'];
 for(const route of ['/this-route-does-not-exist','/case-studies/missing-case','/missing/nested-route','/missing.png']){
   const response=await fetch(origin+route);
   assert.equal(response.status,404,`HTTP status ${route}`);

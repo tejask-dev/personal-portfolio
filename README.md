@@ -23,7 +23,7 @@ Controller and interaction checks live in `tests/`. For a production preview, ru
 
 - `client/src/data/profile.ts`: identity and contact details.
 - `client/src/data/selectedWork.ts`, `projects.ts`, `caseStudyContent.ts`: work selection, evidence, attribution and case-study content.
-- `client/src/components/portfolio-v4/`: Anticipy case-study presentation and shared content.
+- `client/src/components/portfolio-v4/`: Anticipation Labs feature, Elda and Anticipy shared content, and Anticipy case-study presentation.
 - `scripts/prerender.ts`: initial HTML and metadata for the homepage and case-study routes.
 - `client/src/features/open-water/`: the optional world, navigation, controllers and rendering.
 - `client/src/features/scroll-dive/`: the separate decorative descent.
@@ -33,6 +33,6 @@ Keep individual contributions distinct from team outcomes, and historical claims
 
 ## Credits
 
-Asset notices ship with the site: [V4 art](client/public/assets/open-water-v4/ART-CREDITS.md), [fish-swimming license](client/public/assets/open-water-v4/THIRD-PARTY-SWIMMING.txt), [wildlife](client/public/assets/open-water-v3/WILDLIFE-CREDITS.md), [scroll descent](client/public/assets/open-water-v5/CREDITS.md), and [Anticipy screenshots](client/public/portfolio/ARTIFACTS.md). Type uses [Aspekta](client/public/licenses/Aspekta-OFL.txt) and [Spectral](client/public/licenses/Spectral-OFL.txt), locally hosted as subset WOFF2 files. The modified Aspekta subset uses the internal family name “Portfolio Sans”; the original copyright and license remain included.
+Asset notices ship with the site: [V4 art](client/public/assets/open-water-v4/ART-CREDITS.md), [fish-swimming license](client/public/assets/open-water-v4/THIRD-PARTY-SWIMMING.txt), [wildlife](client/public/assets/open-water-v3/WILDLIFE-CREDITS.md), [scroll descent](client/public/assets/open-water-v5/CREDITS.md), and [product imagery](client/public/portfolio/ARTIFACTS.md). Type uses [Aspekta](client/public/licenses/Aspekta-OFL.txt) and [Spectral](client/public/licenses/Spectral-OFL.txt), locally hosted as subset WOFF2 files. The modified Aspekta subset uses the internal family name “Portfolio Sans”; the original copyright and license remain included.
 
 V4 vessels and named companions are original editable geometry authored with Claude Desktop and integrated by Codex. The historical V3 yacht adapts **motoryacht 35** by **angelo raffaele catalano**, CC BY 4.0. Wildlife adapts **Quaternius Animated Fish**, CC0, with a rebuilt Dakota rig and loop. Fish swimming adapts the MIT-licensed **0s0ka/sea** implementation. The architecture, habitats, octopus, instruments and fallback illustrations were authored for Open Water. Source notices and adaptation details remain beside the assets and in the website credits.

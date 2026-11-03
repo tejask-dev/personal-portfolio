@@ -1,4 +1,4 @@
-import { anticipyArtifact } from "../components/portfolio-v4/content";
+import { elda, anticipyArtifact } from "../components/portfolio-v4/content";
 import somaImage from "../assets/SomaAI.webp";
 import stellarImage from "../assets/Stellar/stellar-current.webp";
 import docubridgeImage from "../assets/Docubridge.webp";
@@ -9,6 +9,7 @@ export type { CaseStudySection } from "./caseStudyContent";
 export type CaseStudy = CaseStudyContent & { image: string };
 
 const images: Record<CaseStudyContent["imageAsset"], string> = {
+  elda: `${import.meta.env.BASE_URL}${elda.image}`,
   anticipy: `${import.meta.env.BASE_URL}${anticipyArtifact.desktop}`,
   stellar: stellarImage,
   soma: somaImage,

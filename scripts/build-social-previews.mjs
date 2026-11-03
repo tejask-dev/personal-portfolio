@@ -39,5 +39,5 @@ try {
     assert.ok(fits, `${slug} social artwork overflows`);
     await page.screenshot({ path: new URL(`${slug}.png`, out).pathname });
   }
-  console.log('Generated six ivory/teal social cards, 1200 × 630.');
+  console.log('Generated seven ivory/teal social cards, 1200 × 630.');
 } finally { await browser.close(); }
