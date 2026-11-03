@@ -9,6 +9,7 @@ import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { caseStudyContent } from "../client/src/data/caseStudyContent.ts";
+import { anticipyNarrative, leadStories, alsoWork, anticipyStatus } from "../client/src/components/portfolio-v4/content.ts";
 
 const repository = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -78,12 +79,13 @@ try {
       const response = await page.goto(`${baseURL}/`, { waitUntil: "load" });
       assert.equal(response.status(), 200);
       await page.locator(".static-portfolio").waitFor({ state: "visible" });
-      assert.equal(await page.title(), "Tejass Kaushik | Open Water");
+      assert.equal(await page.title(), "Tejass Kaushik, Software Engineer");
       const text = await page.locator("main").innerText();
       for (const expected of [
         "Tejass Kaushik",
-        "Founding Software Engineer at Anticipation Labs",
-        "I study Computer Science at Western University and hold Ivey AEO status.",
+        "COO at Anticipation Labs",
+        "Western",
+        "Ivey AEO",
         "tejas.kaushik@outlook.com",
       ])
         assert.ok(text.includes(expected));
@@ -121,7 +123,7 @@ try {
         assert.equal(response.status(), 200);
         assert.equal(
           await page.title(),
-          `${study.title} | Work by Tejass Kaushik`,
+          `${study.title} | Tejass Kaushik`,
         );
         assert.equal(
           await page.locator('link[rel="canonical"]').getAttribute("href"),
@@ -137,18 +139,21 @@ try {
           "Shared study summary is missing from initial HTML",
         );
         if (study.slug === "anticipy") {
-          // Anticipy's flagship layout uses its own headings with the shared prose.
           assert.match(await page.locator("#context h2").innerText(), /^From intention\s+to action\.$/);
-          assert.match(await page.locator("#outcome h2").innerText(), /^Device tests\s+and unfinished work\.$/);
+          assert.equal(await page.locator("#outcome h2").innerText(), "Where it stands.");
+          for (const value of [anticipyNarrative.context, anticipyNarrative.team, anticipyNarrative.personal, anticipyNarrative.personalLesson, ...alsoWork]) assert.ok(text.includes(value), "Anticipy shared prose missing");
+          for (const story of leadStories) for (const key of ["title", "intro", "role", "decision", "outcome"]) assert.ok(text.includes(story[key]), `${story.id}: missing ${key}`);
+          for (const item of anticipyStatus) assert.ok(text.includes(item.result), "Device/status boundary missing");
+        } else {
+          for (const section of study.sections) {
+            assert.ok(text.includes(section.heading));
+            for (const paragraph of section.body) assert.ok(text.includes(paragraph), `Missing prose: ${section.heading}`);
+          }
+          for (const value of [...study.contributions, ...study.decision.body, study.lesson]) if (value) assert.ok(text.includes(value), `${study.slug}: missing shared content`);
         }
-        for (const section of study.sections) {
-          if (study.slug !== "anticipy") assert.ok(text.includes(section.heading));
-          for (const paragraph of section.body)
-            assert.ok(
-              text.includes(paragraph),
-              `Missing prose: ${section.heading}`,
-            );
-        }
+        const sections = ["context", "contribution", "decision", "outcome", "lesson", "sources"];
+        for (const id of sections) assert.equal(await page.locator(`#${id}`).count(), 1, `${study.slug}: ${id} section`);
+        assert.equal(await page.getByRole("link", { name: /Back to Open Water|Return to water/ }).count(), 0, "Static cases never force world entry");
         const json = JSON.parse(
           await page
             .locator('script[type="application/ld+json"]')
@@ -200,7 +205,7 @@ try {
           await page.locator(".case-page h1").waitFor({ state: "visible" });
           assert.equal(
             await page.title(),
-            `${study.title} | Work by Tejass Kaushik`,
+            `${study.title} | Tejass Kaushik`,
           );
           assert.equal(
             await page.getByRole("heading", { level: 1 }).innerText(),
@@ -212,14 +217,13 @@ try {
             "Static initial shell was not replaced",
           );
           const widths = await reflow(page);
-          await page
-            .getByRole("navigation", { name: "Case study navigation" })
-            .getByRole("link", { name: "Return to water", exact: true })
-            .click();
-          await page.locator(".ow-experience").waitFor({ state: "visible" });
-          assert.equal(new URL(page.url()).hash, "#voyage");
-          await page.locator("#take-helm").waitFor({ state: "visible" });
-          assert.equal(await page.title(), "Tejass Kaushik | Open Water");
+          assert.equal(await page.getByRole("link", { name: /Back to Open Water|Return to water/ }).count(), 0);
+          await page.getByRole("navigation", { name: "Case study navigation" }).locator('a[href="/#work"]').click();
+          await page.locator("#work-title").waitFor({ state: "visible" });
+          assert.equal(new URL(page.url()).hash, "#work");
+          await page.waitForFunction(() => document.activeElement?.id === "work-title");
+          assert.equal(await page.locator("#voyage").count(), 0, "Reading return leaves the world unloaded");
+          assert.equal(await page.title(), "Tejass Kaushik, Software Engineer");
           await reflow(page);
           assert.deepEqual(errors, [], "Unhandled browser errors");
           return {

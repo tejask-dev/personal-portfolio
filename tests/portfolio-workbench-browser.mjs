@@ -7,7 +7,7 @@ try{
  const context=await browser.newContext({viewport:{width:375,height:812},reducedMotion:'reduce'});
  const page=await context.newPage();
  const errors=[],requests=[];
- page.on('pageerror',e=>errors.push(e.message));page.on('request',r=>{if(['fetch','xhr'].includes(r.resourceType()))requests.push(r.url());});
+ page.on('pageerror',e=>errors.push(e.message));page.on('request',r=>{if(['fetch','xhr'].includes(r.resourceType())&&!new URL(r.url()).pathname.startsWith('/_vercel/insights/'))requests.push(r.url());});
  await page.goto(base+'/case-studies/docubridge');
  const demo=page.getByRole('region',{name:'DocuBridge illustrative walkthrough'});
  await demo.getByRole('button',{name:/Questions/}).click();

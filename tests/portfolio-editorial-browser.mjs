@@ -10,8 +10,7 @@ try{
  for(const [width,height,name] of [[375,812,'phone'],[768,1024,'tablet'],[1440,900,'desktop'],[844,390,'landscape']]){
   const context=await browser.newContext({viewport:{width,height},reducedMotion:'reduce',permissions:['clipboard-read','clipboard-write']});const page=await context.newPage();page.setDefaultTimeout(12000);const errors=[];page.on('pageerror',e=>errors.push(e.message));
   await page.goto(url);await page.locator('.static-portfolio').waitFor({state:'detached'});
-  await page.locator('.pathway-entry').getByRole('button',{name:/Read the portfolio/}).click();
-  await page.locator('.pathway-entry').waitFor({state:'detached'});
+  assert.equal(await page.locator('.pathway-entry').count(),0,'Reading is available without an entry gate');
   assert.equal(await page.locator('h1').count(),1);
   assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
   const proof=await page.locator('#current-work').evaluate(el=>el.getBoundingClientRect().top+scrollY);

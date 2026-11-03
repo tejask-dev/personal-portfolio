@@ -3,7 +3,7 @@ import { mkdir } from "node:fs/promises";
 import { chromium } from "playwright";
 import AxeBuilder from "@axe-core/playwright";
 
-const origin = process.env.PORTFOLIO_URL ?? "http://127.0.0.1:4173/";
+const origin = `${(process.env.PORTFOLIO_URL ?? process.env.QA_URL ?? "http://127.0.0.1:4173").replace(/\/$/, "")}/`;
 const output = process.env.PORTFOLIO_QA_DIR ?? "/tmp/portfolio-v4-qa";
 await mkdir(output, { recursive: true });
 const browser = await chromium.launch({ channel: "chrome", headless: true });
@@ -13,7 +13,7 @@ try {
   const errors = [];
   page.on("pageerror", error => errors.push(error.message));
   await page.goto(new URL("case-studies/anticipy", origin).href);
-  await page.getByRole("heading", { name: "My part, and the collaboration." }).waitFor();
+  await page.getByRole("heading", { name: "The work behind the promise." }).waitFor();
   const assertContact = async surface => {
     const addresses = await page.locator('a[href^="mailto:"]').evaluateAll(links => links.map(link => decodeURIComponent(link.getAttribute("href").slice(7).split("?")[0])));
     assert.ok(addresses.length >= 2, `${surface} has visible direct contact links`);
@@ -21,15 +21,18 @@ try {
     assert.equal(await page.locator(".pv-email").innerText(), "tejas.kaushik@outlook.com");
   };
   await assertContact("Anticipy case study");
-  assert.equal(await page.locator(".pv4-contribution-list details").count(), 12);
+  assert.equal(await page.locator(".pv4-contribution-index .pv-contributions > li").count(), 5);
+  assert.equal(await page.locator(".pv4-story").count(), 3);
+  assert.equal(await page.locator(".pv4-evidence-ladder > li").count(), 3);
+  assert.equal(await page.getByRole("link", { name: /Back to Open Water|Return to water/ }).count(), 0, "Direct reading arrival does not open the world");
   const publicArtifact = page.locator(".pv4-product-artifact");
   assert.equal(await publicArtifact.getByRole("link").getAttribute("href"), "https://anticipy.ai/");
   await publicArtifact.scrollIntoViewIfNeeded();
   await page.waitForFunction(() => document.querySelector(".pv4-product-artifact img")?.naturalWidth === 1440);
   await page.getByRole("button", { name: "Browser journey", exact: true }).click();
-  await page.getByRole("heading", { name: "Follow the path a person actually takes." }).waitFor();
+  await page.getByRole("heading", { name: "Reach the provider." }).waitFor();
   await page.getByRole("button", { name: "Retry", exact: true }).click();
-  await page.getByRole("heading", { name: "Resume the attempt. Keep its boundaries." }).waitFor();
+  await page.getByRole("heading", { name: "Resume the same attempt." }).waitFor();
   const prepare = page.getByRole("button", { name: "Prepare example" });
   assert.equal(await prepare.isDisabled(), true);
   await page.getByRole("checkbox").check();
@@ -45,8 +48,8 @@ try {
   assert.equal(await prepare.isDisabled(), true);
   await page.getByRole("button", { name: "The outgoing information" }).click();
   assert.equal(await page.locator(".pv4-protected-value").innerText(), "[value withheld]");
-  await page.locator("#contribution-c5 summary").click();
-  assert.equal(await page.locator("#contribution-c5").getAttribute("open"), "");
+  assert.match(await page.locator("#outcome").innerText(), /hosted AI processing off/);
+  assert.match(await page.locator("#outcome").innerText(), /audio testing continues/);
   const accessibility = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa"]).analyze();
   assert.deepEqual(accessibility.violations.map(item => ({ id: item.id, nodes: item.nodes.map(node => node.target) })), []);
   for (const [name, width, height] of [["desktop", 1440, 1000], ["phone", 390, 844], ["phone-landscape", 844, 390]]) {
@@ -75,5 +78,5 @@ try {
   }
   assert.deepEqual(errors, []);
   await context.close();
-  console.log(`V4 portfolio: 12 notes, 3 interactive stories, consent/revocation/cancel, sources, 3 viewports, and accessibility passed.${process.env.PORTFOLIO_QA_CASE_ONLY === "1" ? " Home graphics and career UI excluded in case-only mode." : " All five direct project links passed."}`);
+  console.log(`V4 portfolio: 5 supporting contributions, 3 device/status items, 3 interactive stories, consent/revocation/cancel, sources, 3 viewports, and accessibility passed.${process.env.PORTFOLIO_QA_CASE_ONLY === "1" ? " Home graphics and career UI excluded in case-only mode." : " All five direct project links passed."}`);
 } finally { await browser.close(); }
