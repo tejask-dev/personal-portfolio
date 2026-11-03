@@ -24,7 +24,16 @@ export type BoatState = Point & {
   rampPitch: number;
   landingImpact: number;
   jumpCount: number;
+  /** Smoothed engine command, -1 astern to 1 ahead. Missing in older snapshots means idle. */
+  throttle?: number;
 };
+
+/** The simulation's fixed step. Larger requests are split, never integrated as one leap. */
+export const BOAT_STEP = 1 / 60;
+/** A suspended tab or stalled frame advances at most this much simulated time per call. */
+export const MAX_BOAT_DELTA = 1 / 30;
+/** Below this astern speed the rudder blends from ahead to astern steering. */
+const REVERSE_STEER_BLEND = 0.5;
 
 export type Input = {
   forward?: boolean;
@@ -64,6 +73,7 @@ export function createBoat(vesselId: VesselId = "tender"): BoatState {
     rampPitch: 0,
     landingImpact: 0,
     jumpCount: 0,
+    throttle: 0,
   };
 }
 
@@ -155,7 +165,9 @@ function rampHullCorrection(boat: BoatState, ramp: Ramp): Point | null {
   return { x: (hullPoint.x - rampPoint.x) * ratio, z: (hullPoint.z - rampPoint.z) * ratio };
 }
 
-function keepHullClear(boat: BoatState, _profile: Readonly<VesselProfile>): boolean {
+/** Separates the hull from every structure. Returns the total push, or null when clear. */
+function keepHullClear(boat: BoatState): Point | null {
+  const start = { x: boat.x, z: boat.z };
   let collided = false;
   for (let pass = 0; pass < 4; pass++) {
     let moved = false;
@@ -178,7 +190,26 @@ function keepHullClear(boat: BoatState, _profile: Readonly<VesselProfile>): bool
     }
     if (!moved) break;
   }
-  return collided;
+  return collided ? { x: boat.x - start.x, z: boat.z - start.z } : null;
+}
+
+/** Share of speed kept after a hull contact: head-on contact stops the yacht,
+ * a glancing one lets it scrape along the stone instead of sticking. */
+export function contactSpeedRetention(
+  heading: number,
+  speed: number,
+  push: Point,
+  retention: number,
+): number {
+  const length = Math.hypot(push.x, push.z);
+  if (!(length > 1e-9) || speed === 0) return 1;
+  const travel = Math.sign(speed);
+  const into = -(
+    (Math.sin(heading) * travel * push.x - Math.cos(heading) * travel * push.z) /
+    length
+  );
+  const impact = clamp(into, 0, 1);
+  return 0.985 * (1 - (1 - retention) * impact);
 }
 
 /** Used by dive/return and vessel switching before accepting a saved anchor. */
@@ -305,7 +336,7 @@ export function steerTo(
 ): void {
   if (!Number.isFinite(target.x) || !Number.isFinite(target.z)) return;
   const profile = vesselProfile(boat.vesselId);
-  if (keepOutsideStructures(boat, profile.hullRadius)) boat.speed = 0;
+  if (keepOutsideStructures(boat, profile.hullRadius)) boat.speed = boat.throttle = 0;
   const safeTarget = { ...target };
   boundPoint(safeTarget, COURSE_RADIUS);
   keepOutsideStructures(safeTarget, profile.navigationMargin + 1, true);
@@ -323,14 +354,34 @@ export function steerTo(
   boat.arrived = null;
 }
 
-/** Call at a bounded fixed step (1/60 s). The clamp also protects callers after a suspended tab. */
+/** Advances by delta seconds in fixed sub-steps of at most BOAT_STEP, so a caller's
+ * frame rate cannot change the trajectory. The clamp protects callers after a suspended tab. */
 export function stepBoat(
   boat: BoatState,
   input: Input,
   delta: number,
 ): BoatState {
-  const dt = Number.isFinite(delta) ? clamp(delta, 0, 1 / 30) : 0;
+  const dt = Number.isFinite(delta) ? clamp(delta, 0, MAX_BOAT_DELTA) : 0;
   if (dt === 0) return boat;
+  const steps = Math.max(1, Math.ceil(dt / BOAT_STEP - 1e-9));
+  for (let i = 0; i < steps; i++) if (integrateBoat(boat, input, dt / steps)) break;
+  return boat;
+}
+
+/** Moves the engine command toward its target with spool-up and ease-off inertia. */
+export function stepThrottle(
+  current: number,
+  command: number,
+  profile: Pick<VesselProfile, "throttleRise" | "throttleFall">,
+  dt: number,
+): number {
+  const spooling = command * current >= 0 && Math.abs(command) > Math.abs(current);
+  const blend = 1 - Math.exp(-dt * (spooling ? profile.throttleRise : profile.throttleFall));
+  return blend >= 1 ? command : current + (command - current) * blend;
+}
+
+/** One fixed step. Returns true when an autopilot course has just finished. */
+function integrateBoat(boat: BoatState, input: Input, dt: number): boolean {
   const profile = vesselProfile(boat.vesselId);
   const manual = Boolean(
     input.forward || input.backward || input.left || input.right,
@@ -348,7 +399,8 @@ export function stepBoat(
         boat.target = null;
         boat.speed = 0;
         boat.turn = 0;
-        return boat;
+        boat.throttle = 0;
+        return true;
       }
     }
     if (boat.route.length) {
@@ -366,23 +418,29 @@ export function stepBoat(
     throttle = Number(Boolean(input.forward)) - Number(Boolean(input.backward));
     steer = Number(Boolean(input.right)) - Number(Boolean(input.left));
   }
+  // Astern, the rudder works the other way. Blend across a small speed band so
+  // the helm never flips direction within a single step at low reverse speed.
+  const rudder = clamp((boat.speed + REVERSE_STEER_BLEND) / REVERSE_STEER_BLEND, -1, 1);
   const intendedTurn =
     steer *
     profile.turnRate *
     (0.32 + Math.min(Math.abs(boat.speed) / profile.turnSpeed, 1)) *
-    (boat.speed < -0.5 ? -1 : 1);
+    rudder;
   boat.turn += (intendedTurn - boat.turn) * (1 - Math.exp(-dt * profile.turnResponse));
   boat.heading = wrap(
     boat.heading + boat.turn * dt * (boat.airborne ? 0.23 : 1),
   );
+  boat.throttle = stepThrottle(boat.throttle ?? 0, throttle, profile, dt);
   if (boat.airborne) boat.speed *= Math.exp(-dt * 0.025);
   else {
     boat.speed +=
-      (throttle * profile.acceleration -
+      (boat.throttle * profile.acceleration -
         boat.speed * profile.linearDrag -
         boat.speed * Math.abs(boat.speed) * profile.quadraticDrag) *
       dt;
-    if (!boat.target && !manual) boat.speed *= Math.exp(-dt * profile.coastDrag);
+    // Coasting drag fades in as the engine eases off, rather than in one step.
+    if (!boat.target && !manual)
+      boat.speed *= Math.exp(-dt * profile.coastDrag * (1 - Math.min(1, Math.abs(boat.throttle))));
   }
   boat.speed = clamp(boat.speed, -profile.reverseSpeed, profile.maxSpeed);
   boat.x += Math.sin(boat.heading) * boat.speed * dt;
@@ -394,8 +452,15 @@ export function stepBoat(
     boat.rampId = null;
   }
   // Islands remain solid during a jump; a leap is never a way through an island.
-  if (profile.id === "tender" ? keepOutsideStructures(boat, HULL_RADIUS) : keepHullClear(boat, profile)) {
-    boat.speed *= 0.65;
+  const heading = boat.heading, speed = boat.speed;
+  const push = profile.id === "tender"
+    ? keepOutsideStructures(boat, HULL_RADIUS) ? { x: 0, z: 0 } : null
+    : keepHullClear(boat);
+  if (push) {
+    // The tender keeps its race-tuned contact; the long hull responds to the contact angle.
+    boat.speed *= profile.id === "tender"
+      ? profile.impactRetention
+      : contactSpeedRetention(heading, speed, push, profile.impactRetention);
     if (boat.airborne) boat.verticalSpeed = Math.min(boat.verticalSpeed, 0);
     boat.rampId = null;
   }
@@ -403,7 +468,7 @@ export function stepBoat(
     boat.speed *= 0.5;
     clearCourse(boat);
   }
-  return boat;
+  return false;
 }
 
 const GRAVITY = 9.81;
