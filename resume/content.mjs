@@ -21,7 +21,7 @@ export const resume = {
       dates: "Aug. 2026 to present",
       detail: "COO (current); previously Founding Software Engineer",
       bullets: [
-        "Lead customer discovery, product testing and recruiting for Elda, a screenless bracelet in development for older adults.",
+        "Lead customer discovery, test software and help with recruiting for Elda, a screenless bracelet in development for older adults.",
         "Visited care homes and spoke with older adults and caregivers to guide product decisions.",
         "For Anticipy, directed AI-assisted connected-app repairs and private AI workflows; tested phone and wearable prototypes.",
         "Scoped and tested a consent-page redirect repair for Anticipy, restoring the browser journey to provider sign-in.",
