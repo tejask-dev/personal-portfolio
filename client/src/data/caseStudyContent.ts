@@ -35,403 +35,120 @@ export type CaseStudyContent = {
   flagship: boolean;
 };
 
-/** Shared by the live pages and static HTML. Scope and outcomes are deliberately separate. */
+/** Shared copy for the interactive and static case-study pages. */
 export const caseStudyContent: CaseStudyContent[] = [
   {
-    slug: "anticipy",
-    title: "Anticipy",
-    kicker: "01 / Current product work",
-    role: "Founding Software Engineer at Anticipation Labs",
-    period: "Current",
-    status: "Being built",
-    thesis: anticipyNarrative.title,
-    summary: anticipyNarrative.summary,
-    shortDescription:
-      "Connected apps, private AI workflows, and prototype hardware—with the decisions and evidence behind each.",
-    proof: "Deployed connector repair · locally validated AI prototype · hands-on device testing",
-    contributions: [
-      "Set product priorities and acceptance criteria for connected apps, privacy and private AI workflows.",
-      "Directed AI-assisted implementation, independent review and release checks.",
-      "Hands-on phone and prototype wearable testing, alongside the upcoming Fellowship experience and early operations.",
-    ],
-    teamContext:
-      anticipyNarrative.team,
+    slug: "anticipy", title: "Anticipy", kicker: "01 / Current work",
+    role: "COO at Anticipation Labs", period: "Current", status: "Prototype",
+    thesis: anticipyNarrative.title, summary: anticipyNarrative.summary,
+    shortDescription: "Making an AI pendant keep its promises across connected apps and prototype hardware.",
+    proof: "Connected-app repair deployed · private AI prototype · hands-on device testing",
+    contributions: [anticipyNarrative.personal], teamContext: anticipyNarrative.team,
     evidenceNote: anticipyNarrative.evidence,
-    decision: {
-      label: "Browser journey / engineering decision",
-      title: "Getting past the consent page.",
-      body: [
-        "The server reported a successful redirect, but the browser was still stuck before the provider's sign-in page. The fix kept the existing consent and expiry, let the browser finish the path, and allowed a retry of the saved authorization attempt.",
-        "I made this failure a priority, shared what I saw on my phone, and required a browser test before release. Claude and Codex did the diagnosis, fix and review. The deployed fix was checked through the provider sign-in screens. That doesn't show every connector or write action works.",
-      ],
-      source: anticipyWebsite,
-    },
-    metrics: [
-      { value: "Current", label: "engineering role" },
-      { value: "Mixed stages", label: "deployed repairs, local prototypes, ongoing validation" },
-    ],
-    stack: [
-      "Product engineering",
-      "AI workflows",
-      "Mobile / wearable validation",
-      "TypeScript / Python",
-      "Release engineering",
-    ],
-    imageAsset: "anticipy",
-    artifactLabel: "Main Anticipy website",
-    imageTreatment: "cover",
-    imageAlt: anticipyArtifact.alt,
-    imageCaption: anticipyArtifact.caption,
-    artifactSource: {
-      label: "Visit anticipy.ai",
-      href: anticipyWebsite,
-    },
-    sections: [
-      {
-        heading: "From intention",
-        body: [anticipyNarrative.context],
-      },
-      {
-        heading: "Installed is a step.",
-        body: [
-          anticipyNarrative.statusSummary,
-        ],
-      },
-    ],
-    lesson: "Hard work pays off. Working on Anticipy gave me the opportunity to go to Stan Launchpad, and I went. That was great.",
-    links: [
-      {
-        label: "Anticipy",
-        href: anticipyWebsite,
-        note: "Public product description. Personal contribution is described separately above.",
-      },
-      {
-        label: "Anticipation Labs",
-        href: "https://www.anticipationlabs.com/",
-        note: "The team behind Anticipy.",
-      },
-    ],
-    flagship: true,
+    decision: { label: "The hard part", title: "Following through, with permission.", body: ["Connected services, private data and physical devices each need to work together. I focus on the points where a promising demo becomes a reliable experience."], source: anticipyWebsite },
+    metrics: [], stack: ["Product engineering", "AI workflows", "Wearable testing", "TypeScript / Python"],
+    imageAsset: "anticipy", artifactLabel: "Anticipy / Product website", imageTreatment: "cover",
+    imageAlt: anticipyArtifact.alt, imageCaption: anticipyArtifact.caption,
+    artifactSource: { label: "Visit Anticipy", href: anticipyWebsite },
+    sections: [{ heading: "Context", body: [anticipyNarrative.context] }, { heading: "Result", body: [anticipyNarrative.statusSummary] }],
+    lesson: anticipyNarrative.personalLesson,
+    links: [...anticipyNarrative.sources], flagship: true,
   },
   {
-    slug: "stellar-learning",
-    title: "Stellar Learning",
-    kicker: "02 / Education platform",
-    role: "Former CTO / technology lead",
-    period: "2025–2026",
-    status: "Former role · IB partly shipped",
-    thesis: "Question generation and practice for IB and AP.",
-    summary: "At Stellar Learning, I worked on IB Diploma question generation and practice. I helped decide how to make the algorithm better, and I improved the AP question and lesson harnesses too. My teammates and AI tools handled a lot of the actual algorithm development and API prompting.",
-    shortDescription: "IB Diploma question generation and practice; improvements to AP question and lesson systems.",
-    proof: "IB curriculum adaptation · generation and practice systems · AP improvements",
+    slug: "stellar-learning", title: "Stellar Learning", kicker: "02 / Education",
+    role: "CTO", period: "Aug 2025–Jul 2026", status: "Shipped",
+    thesis: "Better practice starts with the right questions.",
+    summary: "As CTO at Stellar Learning, I worked on IB question generation and practice, and improved the AP question and lesson systems. I was studying IB myself, so I could see when a generated question missed what students actually needed. That perspective shaped the changes I pushed for with the team.",
+    shortDescription: "IB question generation and practice for a free learning platform serving 40,000+ learners.",
+    proof: "IB practice features shipped · AP question and lesson improvements",
     contributions: [
-      "Worked on the IB Diploma question-generation and practice systems.",
-      "Helped decide how to change the algorithm when the AP approach did not fit the IB curriculum.",
-      "Improved the AP question and lesson harnesses, with teammates and AI tools contributing much of the implementation."
+      "Worked on the IB question-generation and practice systems.",
+      "Pushed for a different approach when our AP system did not fit the IB curriculum.",
+      "Improved the AP question and lesson systems with the volunteer team."
     ],
-    teamContext: "Stellar’s reported 40,000+ learners, 80+ courses and 130+ volunteers describe the organization, not my individual impact.",
-    evidenceNote: "My account of the work, collaboration and unfinished IB scope was updated on 12 October 2026. The improvement in question accuracy is my observation, not a measured benchmark. Organization figures were checked on 2 October 2026.",
-    decision: {
-      "label": "The challenge / adapting to IB",
-      "title": "The AP approach did not work for IB.",
-      "body": [
-        "We tried to copy the AP prompting and algorithms over to IB, and it didn't work. I was doing IB myself. The questions didn't seem accurate enough for the IB curriculum, so I decided the approach needed to change.",
-        "I was still learning the technical side, and it was really difficult. The algorithm broke a lot, and so did the connectors. After I worked on the algorithm, with teammates and AI tools doing much of the development, the questions seemed much more accurate. That surprised me. I don't have a before-and-after benchmark, so that's my observation."
-      ],
-      "source": "https://stellarlearning.app/"
-    },
-    metrics: [
-      { value: "40,000+", label: "learners, reported by Stellar" },
-      { value: "80+", label: "courses, reported by Stellar" },
-      { value: "130+", label: "volunteers, reported by Stellar" },
-    ],
-    stack: [
-      "Technology leadership",
-      "Product engineering",
-      "Volunteer collaboration",
-    ],
-    imageAsset: "stellar",
-    artifactLabel: "Public product screen",
-    imageAlt:
-      "Stellar Learning homepage showing its free exam-preparation platform.",
-    imageCaption:
-      "The public Stellar Learning homepage. Shown as platform context, not as a claim of personal ownership of every feature. Organization figures checked 2 October 2026.",
-    artifactSource: {
-      label: "Visit the live platform",
-      href: "https://stellarlearning.app/",
-    },
+    teamContext: "Teammates and AI tools contributed much of the algorithm development and API prompting.",
+    evidenceNote: "The figures below describe Stellar’s whole platform.",
+    decision: { label: "The hard part", title: "IB was not AP with a different label.", body: [
+      "We tried carrying the AP prompting and algorithms over to IB. The questions did not fit the curriculum well enough. I pushed for a change and worked with teammates to improve the approach while learning the technical details myself.",
+      "The revised questions looked better in review. We did not have a before-and-after accuracy benchmark."
+    ] },
+    metrics: [{ value: "40,000+", label: "platform learners" }, { value: "80+", label: "platform courses" }, { value: "130+", label: "platform volunteers" }],
+    stack: ["Technology leadership", "Question generation", "Curriculum design"], imageAsset: "stellar",
+    artifactLabel: "Stellar Learning / Public website", imageAlt: "Stellar Learning’s free exam-preparation platform.", imageCaption: "Stellar Learning’s public website.",
+    artifactSource: { label: "Visit Stellar Learning", href: "https://stellarlearning.app/" },
     sections: [
-      {
-        "heading": "A shared place to prepare",
-        "body": [
-          "Stellar brings lessons, practice, mock exams, flashcards and an AI tutor into one study system. It serves students preparing for several exam formats, with a team of volunteers contributing to the experience."
-        ]
-      },
-      {
-        "heading": "Some shipped; much remained unfinished.",
-        "body": [
-          "Some of the IB work shipped, but a lot remained unfinished. I've since stepped down as CTO."
-        ]
-      }
+      { heading: "A shared place to prepare.", body: ["Stellar brings lessons, practice, mock exams, flashcards and an AI tutor into one free study platform. A volunteer team supports students preparing for several exam systems."] },
+      { heading: "IB practice reached students.", body: ["Some of the IB work shipped during my time as CTO, alongside improvements to AP questions and lessons. The full IB programme was still unfinished when I stepped down in July 2026."] }
     ],
-    lesson: "I'd do a lot of things differently at Stellar. Next time, I'd seek out help from people who really know the technical environment.",
-    links: [
-      {
-        label: "Stellar Learning",
-        href: "https://stellarlearning.app/",
-        note: "Source for the product description and organization-reported figures; checked 2 October 2026.",
-      },
-    ],
-    flagship: true,
+    lesson: "I’d bring in someone with deeper experience in the technical stack earlier, and establish a shared set of curriculum-specific questions to measure progress.",
+    links: [{ label: "Stellar Learning", href: "https://stellarlearning.app/", note: "Product and platform figures." }], flagship: true,
   },
   {
-    slug: "global-health-research",
-    title: "Global health research",
-    kicker: "03 / Youreka Canada",
-    role: "Co-author and student researcher",
-    period: "2024–2025",
-    status: "Published · team recognition",
-    thesis: "What a 34-country study can tell us about treatment access.",
-    summary: "I did much of the writing and data analysis for our paper on adolescent fertility and pediatric HIV treatment coverage in Sub-Saharan Africa, and managed a lot of the work. I coded the graphs in R. My co-authors were Liyona Wang, Shikai Jin and Elijah Murtagh. Our study appears in the 2025 Youreka Canada Journal as the national first-place study.",
-    shortDescription:
-      "A published study, a team award, and a careful reading of what the data supports.",
-    proof: "Co-author · national first-place study, 2025 Youreka Journal",
-    contributions: [
-      "Handled much of the paper’s writing, data analysis and coordination.",
-      "Coded graphs in R while learning how to use it for the research.",
-      "Helped lead revisions to our hypotheses when the initial tests did not support them."
-    ],
-    teamContext: "The paper and first-place recognition belong to all four of us: Liyona Wang, Shikai Jin, Elijah Murtagh and me. An AI tool helped me research many sources, and AI also helped me learn R.",
-    evidenceNote: "The final journal identifies the four authors and first-place recognition on PDF page 4; the 34-country sample is described on page 5. My account of the writing, analysis, R work and AI assistance was added on 12 October 2026; the journal does not establish the division of work.",
-    decision: {
-      label: "Research interpretation / team study",
-      title: "Keep the claim at the level of the data.",
-      body: [
-        "The paper reports a weak negative association: r = −0.3464. Higher adolescent fertility was associated with lower pediatric treatment coverage in this sample.",
-        "A country-level correlation can't tell us why any one child gets treatment. We used aggregated estimates, excluded countries with missing data, and compared observations from different years. Those choices limit what we can conclude. The result shows an association; it doesn't establish a cause.",
-      ],
-      source:
-        "https://drive.google.com/file/d/1lTrTsLfvYSEkUlYoGWTSYcoekdeiJqu4/view",
-    },
-    metrics: [
-      { value: "34", label: "countries in the team study" },
-      { value: "1st", label: "national recognition for the team" },
-      { value: "2025", label: "Youreka Canada Journal" },
-    ],
-    stack: [
-      "R",
-      "Public health data",
-      "Correlation analysis",
-      "Research communication"
-    ],
-    imageAsset: "research",
-    artifactLabel: "Published study / evidence summary",
-    imageTreatment: "paper",
-    imageAlt:
-      "Original summary of the final journal: four co-authors, a 34-country sample and national first-place team recognition.",
-    imageCaption:
-      "Original evidence summary linked to the final 2025 Youreka Canada Journal, PDF pages 4–5. The published author line spells my name “Tejas.” No journal page or figure is reproduced.",
-    artifactSource: {
-      label: "Read the final journal",
-      href: "https://drive.google.com/file/d/1lTrTsLfvYSEkUlYoGWTSYcoekdeiJqu4/view",
-    },
+    slug: "global-health-research", title: "Global health research", kicker: "03 / Youreka Canada",
+    role: "Co-author and student researcher", period: "2024–2025", status: "Published",
+    thesis: "A 34-country study of access to pediatric HIV treatment.",
+    summary: "I handled much of the writing, data analysis and coordination for our study of adolescent fertility and pediatric HIV treatment coverage in Sub-Saharan Africa. I also learned R to code and refine the graphs. Our four-person team’s paper was published in the 2025 Youreka Canada Journal and received national first-place recognition.",
+    shortDescription: "Writing, analysis and R graphs for a national first-place team study across 34 countries.",
+    proof: "Published research · 34 countries · national first-place team",
+    contributions: ["Wrote and revised substantial sections of the paper.", "Analyzed country-level data and coded the graphs in R.", "Coordinated the work and helped revise our hypotheses when initial tests did not support them."],
+    teamContext: "My co-authors were Liyona Wang, Shikai Jin and Elijah Murtagh.", evidenceNote: "",
+    decision: { label: "The hard part", title: "Let the data change the question.", body: [
+      "Our initial hypotheses did not hold up. We revised them as a team instead of forcing the results to fit. I was learning R at the same time, working through broken code to turn our analysis into graphs.",
+      "We found a weak negative association, r = −0.3464. Country-level estimates, missing data and observations from different years limit the interpretation: this is an association, not proof of causation."
+    ] },
+    metrics: [{ value: "34", label: "countries studied" }, { value: "1st", label: "national team recognition" }, { value: "2025", label: "journal publication" }],
+    stack: ["R", "Public health data", "Research communication"], imageAsset: "research", imageTreatment: "paper",
+    artifactLabel: "Research / Study overview", imageAlt: "Overview of the published four-author, 34-country study and its national first-place recognition.", imageCaption: "Study overview. The full paper is linked below.",
+    artifactSource: { label: "Read the journal", href: "https://drive.google.com/file/d/1lTrTsLfvYSEkUlYoGWTSYcoekdeiJqu4/view" },
     sections: [
-      {
-        "heading": "The research question",
-        "body": [
-          "Our team asked whether adolescent fertility rates were associated with pediatric antiretroviral treatment coverage across Sub-Saharan Africa. We paired country-level indicators for 34 countries to examine that relationship."
-        ]
-      },
-      {
-        "heading": "Learning R while doing the research",
-        "body": [
-          "Learning R and getting the graphs to work was hard. My code broke and didn't work for a long time. AI helped me get it working, and I was surprised by how well it was able to teach me.",
-          "Our first hypotheses didn't hold up when we tested them, so we changed them. That was a team effort, but I helped lead a lot of it."
-        ]
-      },
-      {
-        "heading": "A result with limits",
-        "body": [
-          "The study compares 2022 treatment coverage with fertility observations from 2016 to 2022.",
-          "Our study was published in the 2025 Youreka Canada Journal and received national first-place recognition as a team."
-        ]
-      }
+      { heading: "A question about treatment access.", body: ["We asked whether adolescent fertility rates were associated with pediatric antiretroviral treatment coverage across Sub-Saharan Africa, pairing country-level indicators for 34 countries."] },
+      { heading: "Published, and recognized as a team.", body: ["Our study appears in the 2025 Youreka Canada Journal as the national first-place team paper. I came away with a published paper, working R graphs and a much clearer understanding of how to argue from data."] }
     ],
-    lesson: "I'd tackle research differently next time. I did a lot of the work myself, and I'd learn how to delegate tasks properly.",
-    links: [
-      {
-        label: "2025 Youreka Canada Journal",
-        href: "https://drive.google.com/file/d/1lTrTsLfvYSEkUlYoGWTSYcoekdeiJqu4/view",
-        note: "Authors and recognition: PDF page 4. Sample: page 5. Correlation: page 6. Figure: page 12.",
-      },
-      {
-        label: "Youreka research archive",
-        href: "https://yourekacanada.org/research-1",
-        note: "The organization's journal archive.",
-      },
-    ],
-    flagship: true,
+    lesson: "I’d divide the analysis and writing responsibilities earlier. I took on too much myself; clearer ownership would have given us more time to review each other’s work.",
+    links: [{ label: "2025 Youreka Canada Journal", href: "https://drive.google.com/file/d/1lTrTsLfvYSEkUlYoGWTSYcoekdeiJqu4/view", note: "Authors and recognition: page 4. Sample: page 5. Correlation: page 6." }, { label: "Youreka research archive", href: "https://yourekacanada.org/research-1" }], flagship: true,
   },
   {
-    slug: "docubridge",
-    title: "DocuBridge",
-    kicker: "04 / Internship prototype",
-    role: "Software engineering intern",
-    period: "Summer 2025",
-    status: "Prototype",
-    thesis: "From uploaded spreadsheets to inspectable answers.",
-    summary:
-      "During my internship at DocuBridge, I developed a prototype where you could upload an Excel or CSV file, explore charts and summaries, and ask questions about the data.",
-    shortDescription:
-      "An Excel and CSV analysis prototype connecting a Python backend to a React interface.",
-    proof:
-      "Public backend source · upload, sheet selection, analysis and questions",
-    contributions: [
-      "Developed the spreadsheet-analysis prototype during my internship.",
-      "Connected the data analysis and generated questions to an interface you can inspect.",
-    ],
-    teamContext:
-      "This was an internship prototype. The public repository shows the implemented paths, not production adoption, financial accuracy or who wrote every line.",
-    evidenceNote:
-      "Role and period are my account. You can inspect the implementation in the public backend at commit a6c9d2b, checked 29 September 2026.",
-    decision: {
-      label: "Inspectable implementation choice",
-      title: "Select the sheet before asking the question.",
-      body: [
-        "The upload path lists Excel worksheets and records a selected sheet. The analysis and question paths then load that selected sheet; CSV files take a separate parser path.",
-        "The analysis also returns column names, numeric columns, summary statistics and charts alongside the generated answers. You can inspect how the code produces them; this isn't an accuracy benchmark.",
-      ],
-      source:
-        "https://github.com/tejask-dev/Docubridge-Intership/blob/a6c9d2b4e81b9fa3bc6d61d9958f03936174ee2f/Backend/app.py#L364-L374",
-    },
-    metrics: [
-      { value: "Excel + CSV", label: "input formats in the source" },
-      { value: "Prototype", label: "project stage" },
-    ],
-    stack: [
-      "Python",
-      "Flask",
-      "Pandas",
-      "React",
-      "TypeScript",
-      "Plotly",
-      "OpenRouter",
-    ],
-    imageAsset: "docubridge",
-    artifactLabel: "Prototype interface",
-    imageAlt:
-      "DocuBridge prototype interface for exploring uploaded financial spreadsheets.",
-    imageCaption:
-      "Interface from the internship prototype. Shown as an existing project artifact; displayed analyses are not a verified financial result or a live demo.",
-    artifactSource: {
-      label: "Inspect the analysis backend",
-      href: "https://github.com/tejask-dev/Docubridge-Intership/blob/a6c9d2b4e81b9fa3bc6d61d9958f03936174ee2f/Backend/app.py",
-    },
+    slug: "docubridge", title: "DocuBridge", kicker: "04 / Internship",
+    role: "Software engineering intern", period: "Summer 2025", status: "Prototype",
+    thesis: "Ask a spreadsheet a question. See where the answer came from.",
+    summary: "During my DocuBridge internship, I built a prototype for uploading Excel and CSV files, exploring charts and summaries, and asking questions about the data. It connected a Python analysis backend to a React interface. I learned much of the stack while building it, working from file upload through to the answer a person sees.",
+    shortDescription: "A spreadsheet-analysis prototype with charts, summaries and natural-language questions.",
+    proof: "Excel and CSV uploads · worksheet selection · charts and questions",
+    contributions: ["Developed the Python, Flask and Pandas analysis backend.", "Connected spreadsheet uploads, charting and natural-language questions to the React interface.", "Carried the selected worksheet through the analysis and question endpoints."],
+    teamContext: "Built during my software engineering internship at DocuBridge.", evidenceNote: "",
+    decision: { label: "The hard part", title: "Keep the answer tied to the selected sheet.", body: [
+      "An Excel file can contain several worksheets. The upload flow lists them and stores the person’s selection, which the analysis and question endpoints then use. CSV files follow their own parsing path.",
+      "Alongside generated answers, the interface exposes column names, summary statistics and charts. That gives the person something concrete to inspect."
+    ] },
+    metrics: [], stack: ["Python / Flask", "Pandas", "React / TypeScript", "Plotly", "OpenRouter"], imageAsset: "docubridge",
+    artifactLabel: "DocuBridge / Prototype interface", imageAlt: "DocuBridge interface for exploring an uploaded spreadsheet.", imageCaption: "The spreadsheet-analysis prototype.",
+    artifactSource: { label: "View the source", href: "https://github.com/tejask-dev/Docubridge-Intership" },
     sections: [
-      {
-        heading: "Make a spreadsheet easier to inspect",
-        body: [
-          "The prototype accepts Excel and CSV uploads, then provides exploratory summaries, trends, ratios, anomalies, forecasts and charts. A question-and-answer layer uses the uploaded dataset as context.",
-          "Python, Flask and Pandas handle the data paths. React and TypeScript present the interface, with Plotly charts and an OpenRouter connection for natural-language questions.",
-        ],
-      },
-      {
-        heading: "Learning the technical skills",
-        body: ["Honestly, one problem I ran into was learning the technical skills I needed to actually build something like this."],
-      },
-      {
-        heading: "A prototype with a visible path",
-        body: [
-          "You can inspect the upload, worksheet selection, analysis, chart and question endpoints in the public repository.",
-          "I built this as a prototype. I don't have evidence of production reliability, accurate forecasts or customer savings, and I don't present it as financial advice.",
-        ],
-      },
+      { heading: "Make a spreadsheet easier to explore.", body: ["The prototype puts uploaded data, charts and a question-and-answer interface in one place. The goal was to make exploration more approachable without hiding the underlying table."] },
+      { heading: "A working prototype with public source.", body: ["The repository contains the upload, worksheet-selection, analysis, chart and question paths. This remained an internship prototype; production adoption and answer accuracy were not measured."] }
     ],
-    links: [
-      {
-        label: "Analysis backend · pinned source",
-        href: "https://github.com/tejask-dev/Docubridge-Intership/blob/a6c9d2b4e81b9fa3bc6d61d9958f03936174ee2f/Backend/app.py",
-        note: "Upload and selected-sheet handling; analysis response; question endpoints. Source inspected without executing the historical application.",
-      },
-      {
-        label: "Prototype repository",
-        href: "https://github.com/tejask-dev/Docubridge-Intership",
-        note: "Public project source. Repository marketing claims are not treated as measured outcomes.",
-      },
-    ],
-    flagship: false,
+    lesson: "I’d build a small set of reference spreadsheets and expected answers earlier, so every change could be checked against known results.",
+    links: [{ label: "Prototype repository", href: "https://github.com/tejask-dev/Docubridge-Intership" }, { label: "Analysis backend", href: "https://github.com/tejask-dev/Docubridge-Intership/blob/a6c9d2b4e81b9fa3bc6d61d9958f03936174ee2f/Backend/app.py" }], flagship: false,
   },
   {
-    slug: "soma-ai",
-    title: "Soma AI",
-    kicker: "05 / Closed experiment",
-    role: "Backend and model-integration contributor",
-    period: "2025–2026",
-    status: "Closed in 2026",
-    thesis: "A health-education experiment that ran into infrastructure limits.",
-    summary:
-      "I worked on the backend and model integration for Soma, a teen-health education experiment we built as a team. It closed in 2026. You can still see the source and the old interface.",
-    shortDescription:
-      "Backend and model integration for a team-built health-education experiment that closed.",
-    proof: "Flask backend and model integration · closed in 2026",
-    contributions: [
-      "Worked on the backend using Python and Flask.",
-      "Integrated the model for the conversational experience.",
-      "Connected the React interface with the backend conversation flow.",
-    ],
-    teamContext:
-      "Our team reported that more than 300 people tried Soma. That tells us people tried it; it doesn't tell us how many kept using it or whether it helped their health.",
-    evidenceNote: "Role, trial count and closure are the team’s and my account. My account of the infrastructure-related closure was added on 12 October 2026. The public source supports the Flask, React and OpenRouter implementation description.",
-    decision: {
-      "label": "Why the project ended / my account",
-      "title": "Infrastructure limited what we could continue.",
-      "body": [
-        "We ended Soma because of infrastructure limitations in Sub-Saharan Africa. That is my account of why we stopped.",
-        "The project closed in 2026. Its source and historical interface remain available as a record of the implementation."
-      ]
-    },
-    metrics: [
-      { value: "Closed", label: "project status since 2026" },
-      { value: "Team-built", label: "educational experiment" },
-    ],
-    stack: ["Python", "Flask", "React", "OpenRouter"],
-    imageAsset: "soma",
-    artifactLabel: "Historical interface",
-    imageAlt:
-      "Historical Soma AI landing page for a team-built teen-health education experiment that is now closed.",
-    imageCaption:
-      "Historical interface. Soma is closed. The educational experiment is not presented as clinical care or as a validated health service.",
-    artifactSource: {
-      label: "View the archived work",
-      href: "https://github.com/tejask-dev/SomaAI",
-    },
+    slug: "soma-ai", title: "Soma AI", kicker: "05 / Health education",
+    role: "Backend and model integration", period: "2025–2026", status: "Sunset 2026",
+    thesis: "A conversational starting point for teen health education.",
+    summary: "Our team built Soma to make teen health education easier to access through conversation. I worked on the Python and Flask backend, integrated the language model through OpenRouter, and connected it to the React interface. More than 300 people tried it, according to our team’s count. We sunset the project in 2026.",
+    shortDescription: "Backend and model integration for a health-education experiment tried by 300+ people.",
+    proof: "300+ people tried it, team reported · sunset in 2026",
+    contributions: ["Built backend conversation paths using Python and Flask.", "Integrated the language model through OpenRouter.", "Connected the React interface to the backend conversation flow."],
+    teamContext: "Soma was a team project intended for education, not clinical care.", evidenceNote: "",
+    decision: { label: "The hard part", title: "The infrastructure has to fit the people using it.", body: ["We ran into infrastructure limitations in Sub-Saharan Africa that made the project difficult to continue. Building the conversational interface was only part of making the service accessible."] },
+    metrics: [{ value: "300+", label: "people tried it, team reported" }, { value: "2026", label: "project sunset" }],
+    stack: ["Python / Flask", "React", "OpenRouter"], imageAsset: "soma",
+    artifactLabel: "Soma / Historical interface", imageAlt: "Soma’s health-education conversation interface.", imageCaption: "Soma’s interface before the project closed in 2026.",
+    artifactSource: { label: "View the source", href: "https://github.com/tejask-dev/SomaAI" },
     sections: [
-      {
-        heading: "A more approachable interface",
-        body: [
-          "Soma explored whether a conversational interface could make teen and sexual-health information easier to approach. I contributed to its backend and model integration as part of the team.",
-        ],
-      },
-      {
-        heading: "What remains",
-        body: [
-          "The repository still has the Flask backend, OpenRouter connection and React frontend. You can inspect the work there, but the service is closed.",
-          "The source shows what we built. It doesn't show clinical validation.",
-        ],
-      },
+      { heading: "A more approachable way to ask.", body: ["Soma explored whether a conversational interface could make teen health information easier to access. We built a web experience around that idea."] },
+      { heading: "An experiment we chose to close.", body: ["More than 300 people tried Soma before we ended the project. That count describes trial, not continued use or a measured health benefit. The code remains available."] }
     ],
-    links: [
-      {
-        label: "Soma backend · pinned source",
-        href: "https://github.com/tejask-dev/SomaAI/blob/ad97c49f766a5d38a5fa1c84a0ddfcc930fd6832/Backend/app.py",
-        note: "Historical implementation, checked 29 September 2026. Deployment instructions in the repository do not supersede the closed status.",
-      },
-      {
-        label: "Project repository",
-        href: "https://github.com/tejask-dev/SomaAI",
-        note: "Public source for the team-built experiment.",
-      },
-    ],
-    flagship: false,
+    lesson: "I’d test the service in its intended environment earlier, including the connectivity and infrastructure it needs to keep working.",
+    links: [{ label: "Soma repository", href: "https://github.com/tejask-dev/SomaAI" }, { label: "Conversation backend", href: "https://github.com/tejask-dev/SomaAI/blob/ad97c49f766a5d38a5fa1c84a0ddfcc930fd6832/Backend/app.py" }], flagship: false,
   },
 ];

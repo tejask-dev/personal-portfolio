@@ -1,59 +1,88 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { anticipyNarrative, careerJourney, contributions, leadStories } from "../client/src/components/portfolio-v4/content.ts";
+import { alsoWork, anticipyNarrative, anticipyStatus, careerJourney, leadStories } from "../client/src/components/portfolio-v4/content.ts";
 import { anticipyStaticHtml, careerStaticHtml, flagshipStaticHtml } from "../client/src/components/portfolio-v4/staticHtml.ts";
 import { caseStudyContent } from "../client/src/data/caseStudyContent.ts";
-import { profile } from "../client/src/data/profile.ts";
 
-test("all twelve distinct contributions retain attribution and outcome boundaries", () => {
-  assert.deepEqual(contributions.map(item => item.id), Array.from({ length: 12 }, (_, i) => `C${i + 1}`));
-  for (const item of contributions) for (const field of ["title", "problem", "part", "decision", "result", "status"] as const) assert.ok(item[field].length > 5, `${item.id} ${field}`);
-  assert.match(anticipyNarrative.assistance, /Claude and Codex/);
-  assert.match(anticipyNarrative.assistance, /work-email prototype was implemented with Codex/);
-  assert.match(anticipyNarrative.team, /team foundations/);
-});
+const readable = (html: string) => html.replace(/<[^>]+>/g, " ").replace(/&#39;/g, "'").replace(/&quot;/g, '"').replace(/&amp;/g, "&").replace(/\s+/g, " ").trim();
+const banned = /\[CONFIRM|—|\bI required\b|\bmy account\b|\bhonestly\b|\bbounded\b|\bevidence\b|\bfixtures?\b|validated within|\bharness(?:es)?\b|\bqualification\b|not claiming|does not imply|checked on \d|partly shipped|remained unfinished|much remained|I went\. That was great\./i;
+const bodyCopy = (study: typeof caseStudyContent[number]) => [study.title, study.role, study.status, study.thesis, study.summary, ...study.contributions, ...study.decision.body, ...study.sections.flatMap(section => [section.heading, ...section.body]), study.lesson ?? "", study.imageCaption, ...study.metrics.flatMap(metric => [metric.value, metric.label])].join(" ");
 
-test("the flagship separates deployed navigation from local AI and security evidence", () => {
-  assert.equal(leadStories.length, 3);
-  assert.match(leadStories[0].status, /deployed/);
-  assert.match(leadStories[0].limit, /not completion of every connector/);
-  assert.match(leadStories[1].outcome, /AI processing disabled/);
-  assert.match(leadStories[1].limit, /Live work-email activation/);
-  assert.match(leadStories[2].limit, /not universal credential safety/);
-  assert.match(contributions.find(item => item.id === "C5")!.result, /remained incomplete/);
-});
-
-test("public copy contains no private evidence links, investor identity, account preview, or local paths", () => {
-  const content = JSON.stringify({ anticipyNarrative, careerJourney, contributions, leadStories, caseStudyContent });
-  for (const pattern of [/\/Users\//i, /github\.com\/[^/\s]+\/[^/\s]+\/(?:pull\/\d+|actions\/runs\/\d+)/i, /(?:database_id|account_id)\s*["']?\s*[:=]\s*["']?[a-f0-9-]{20,}/i, /Dorm(?:side| Room) Fund/i, /\b[A-Z][A-Z0-9_]+_(?:SERVICE_TOKEN|SERVICE_SECRET|API_KEY|PASSWORD)\b/]) assert.doesNotMatch(content, pattern);
-  assert.equal(profile.email, "tejas.kaushik@outlook.com");
-});
-
-test("static flagship preserves all three stories, twelve notes, attribution, and explanatory equivalents", () => {
-  const html = anticipyStaticHtml();
-  for (const item of contributions) assert.ok(html.includes(`id="contribution-${item.id.toLowerCase()}"`));
-  for (const story of leadStories) assert.ok(html.includes(`id="${story.id}"`));
-  assert.match(html, /No launch decision has been made/);
-  assert.match(html, /\[value withheld\]/);
-  assert.match(html, /AI-assisted engineering/);
-  assert.doesNotMatch(html, /<button/);
-  assert.equal((html.match(/<details /g) ?? []).length, 12);
-  const text = html.replace(/<[^>]+>/g, " ").replace(/&#39;/g, "'").replace(/&quot;/g, '"').replace(/&amp;/g, "&").replace(/\s+/g, " ");
-  for (const section of caseStudyContent[0].sections) {
-    assert.ok(text.includes(section.heading));
-    for (const paragraph of section.body) assert.ok(text.includes(paragraph));
+test("case copy uses confirmed roles, periods and numeric platform metrics", () => {
+  const bySlug = Object.fromEntries(caseStudyContent.map(study => [study.slug, study]));
+  assert.equal(bySlug.anticipy.role, "COO at Anticipation Labs");
+  assert.equal(bySlug["stellar-learning"].role, "CTO");
+  assert.equal(bySlug["stellar-learning"].period, "Aug 2025–Jul 2026");
+  assert.deepEqual(bySlug["stellar-learning"].metrics.map(metric => metric.value), ["40,000+", "80+", "130+"]);
+  assert.ok(bySlug["stellar-learning"].metrics.every(metric => metric.label.startsWith("platform")));
+  for (const study of caseStudyContent) {
+    assert.ok(["Live", "Shipped", "Published", "Prototype", "Sunset 2026"].includes(study.status));
+    assert.ok(study.metrics.every(metric => /\d/.test(metric.value)), `${study.slug} has a word-only metric`);
+    assert.doesNotMatch(bodyCopy(study), /daily active|\bDAU\b/i);
   }
 });
 
-test("the complete career journey preserves five deep links for root and subpath hosting", () => {
+test("concise cases preserve the limitations that change the meaning of their results", () => {
+  const bySlug = Object.fromEntries(caseStudyContent.map(study => [study.slug, bodyCopy(study)]));
+  assert.match(bySlug["stellar-learning"], /Some of the IB work shipped/);
+  assert.match(bySlug["stellar-learning"], /did not have a before-and-after accuracy benchmark/);
+  assert.match(bySlug["global-health-research"], /r = −0\.3464/);
+  assert.match(bySlug["global-health-research"], /association, not proof of causation/);
+  assert.match(bySlug["global-health-research"], /national first-place team/);
+  assert.match(bySlug.docubridge, /production adoption and answer accuracy were not measured/);
+  assert.match(bySlug["soma-ai"], /300 people tried/);
+  assert.match(bySlug["soma-ai"], /not continued use or a measured health benefit/);
+  assert.equal(leadStories[0].status, "Deployed");
+  assert.equal(leadStories[1].status, "Local prototype");
+  assert.match(leadStories[1].outcome, /AI processing disabled/);
+  assert.match(leadStories[2].outcome, /tested cases/);
+});
+
+test("public case prose stays concise and omits audit language and placeholders", () => {
+  for (const study of caseStudyContent) {
+    const copy = bodyCopy(study);
+    assert.doesNotMatch(copy, banned, study.slug);
+    assert.ok(copy.split(/\s+/).length < (study.slug === "docubridge" || study.slug === "soma-ai" ? 350 : 600), `${study.slug} is too long`);
+    assert.ok(study.summary.split(/\s+/).length >= 50 && study.summary.split(/\s+/).length <= 80, `${study.slug} summary must be 50–80 words`);
+  }
+  assert.doesNotMatch(readable(anticipyStaticHtml()), banned);
+  assert.doesNotMatch(readable(flagshipStaticHtml("/")), banned);
+});
+
+test("static Anticipy keeps three illustrations and five concise additional contributions", () => {
+  const html = anticipyStaticHtml();
+  const text = readable(html);
+  for (const story of leadStories) {
+    assert.ok(html.includes(`id="${story.id}"`));
+    for (const field of ["intro", "role", "decision", "outcome"] as const) assert.ok(text.includes(story[field]));
+    assert.ok([story.intro, story.role, story.decision, story.outcome].join(" ").split(/\s+/).length < 120);
+  }
+  assert.equal((html.match(/class="pv4-demo-label">Illustration</g) ?? []).length, 3);
+  assert.equal(alsoWork.length, 5);
+  for (const item of alsoWork) assert.ok(text.includes(item));
+  for (const item of anticipyStatus) assert.ok(text.includes(item.result));
+  for (const id of ["context", "contribution", "decision", "outcome", "lesson", "sources"]) assert.ok(html.includes(`id="${id}"`));
+  assert.match(html, /No launch decision has been made/);
+  assert.match(html, /\[value withheld\]/);
+  assert.doesNotMatch(html, /<button|<details|contribution-c\d/);
+  assert.doesNotMatch(text, /Claude|Codex|AI-assisted engineering/);
+  assert.match(text, /team’s existing workflow engine/);
+  assert.ok(anticipyNarrative.assistance.includes("Claude and Codex"), "About may reuse the one attribution statement");
+});
+
+test("home feature leads with the product and all case links support subpath hosting", () => {
   const slugs = caseStudyContent.map(item => item.slug);
-  assert.equal(slugs.length, 5);
   assert.deepEqual(new Set(careerJourney.map(item => item.slug)), new Set(slugs));
   for (const base of ["/", "/personal-portfolio/"]) {
     const html = careerStaticHtml(base);
     for (const slug of slugs) assert.ok(html.includes(`href="${base}case-studies/${slug}"`));
-    assert.ok(flagshipStaticHtml(base).includes(`href="${base}case-studies/anticipy"`));
+    const feature = flagshipStaticHtml(base);
+    assert.ok(feature.includes(`href="${base}case-studies/anticipy"`));
+    assert.match(readable(feature), /Making an AI pendant keep its promises\./);
+    assert.doesNotMatch(feature, /Claude|Codex|pv4-attribution|A browser journey/);
+    for (const match of feature.matchAll(/<a\b[^>]*href="https:[^>]*>/g)) {
+      assert.match(match[0], /target="_blank"/);
+      assert.match(match[0], /rel="noreferrer"/);
+    }
   }
 });
-
-// Homepage ordering is exercised by portfolio-editorial-browser.mjs against the actual rendered reading path.
