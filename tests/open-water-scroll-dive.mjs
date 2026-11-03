@@ -29,7 +29,7 @@ const film = page => page.locator("#descent video");
 // for the capture itself so changing text cannot impersonate decoded film pixels.
 const isolatedFilm = page => film(page).screenshot({ style: ".sd-stories,.sd-masthead,.sd-depth,.sd-bottom,.sd-shade,.sd-grain{visibility:hidden!important}" });
 const storyIds = ["surface", "connections", "fieldwork", "depth"];
-const headings = ["There's more beneath the surface.", "Interfaces connect. Systems deliver.", "Follow the curiosity. Check the evidence.", "The depth is in the details."];
+const headings = ["There's more beneath the surface.", "Interfaces connect. Systems deliver.", "Follow the curiosity. See what happened.", "The depth is in the details."];
 
 async function instrument(page) {
   await page.addInitScript(() => {
@@ -353,8 +353,10 @@ try {
       await boot(page); await page.locator("#take-helm").click(); await page.locator("#yacht-controls").focus(); await page.keyboard.down("w"); await delay(800);
       const moving = await boatState(); assert.ok(moving.speed > 0);
       await wheelTo(page, .4); await page.keyboard.up("w"); const reading = await boatState(); await delay(700); assert.deepEqual(await boatState(), reading);
+      assert.ok(reading.speed > 0, "Pausing the voyage preserves its coasting velocity");
       await page.locator(".sd-expedition-mark").click(); await page.waitForFunction(() => location.hash === "#voyage"); await delay(700);
       const returned = await boatState(); assert.equal(returned.vessel, reading.vessel); assert.equal(returned.mode, reading.mode);
+      assert.ok(returned.speed > 0, "Releasing control must not abruptly zero the vessel's momentum");
       assert.ok(returned.speed < reading.speed, "Released throttle should coast down instead of inheriting the held acceleration");
       assert.ok(Math.hypot(returned.x - reading.x, returned.z - reading.z) < Math.max(1, reading.speed), "Return moved farther than the saved coasting velocity permits");
       await page.locator("#yacht-controls").focus(); await page.keyboard.down("w"); await delay(600); await page.keyboard.up("w"); const resumed = await boatState();

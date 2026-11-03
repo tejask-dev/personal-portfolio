@@ -217,6 +217,8 @@ export default function OpenWaterExperience({ presentationPaused = false, boardi
       : undefined;
   const releaseKeys = useCallback(() => {
     input.current = {};
+    // Releasing control idles the engine; the existing speed still coasts.
+    boat.current.throttle = 0;
     reefInput.current = {};
     games.current.fishingInput = {};
     setCruise(false);
@@ -245,6 +247,9 @@ export default function OpenWaterExperience({ presentationPaused = false, boardi
     stopped();
     reef.current.target = null;
     reef.current.current = false;
+    // Commit the live pose with the pause, not the scene's older 100ms sample.
+    refreshBoat();
+    setReefTelemetry({ ...reef.current });
   };
   const freezeBoat = (clearCourse = false) => {
     boat.current.speed = 0;
