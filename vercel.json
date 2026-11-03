@@ -4,6 +4,14 @@
   "installCommand": "npm install",
   "framework": "vite",
   "cleanUrls": true,
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "tejass-kaushik.vercel.app" }],
+      "destination": "https://tejasskaushik.com/:path*",
+      "permanent": true
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",
