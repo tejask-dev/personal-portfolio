@@ -88,7 +88,8 @@ try {
     const response = await broken.goto(base + '#' + hash); assert.equal(response?.status(), 200);
     await broken.waitForFunction(() => document.activeElement?.id === 'ocean-load-error');
     const fallback = await broken.locator('#ocean-load-error').boundingBox();
-    assert.ok(fallback.y >= 0 && fallback.y < 720, 'Direct ocean hash reaches the visible failure message');
+    const viewportHeight = await broken.evaluate(() => innerHeight);
+    assert.ok(fallback.y >= 0 && fallback.y + fallback.height <= viewportHeight, 'Direct ocean hash reaches the fully visible failure message');
   }
   await failure.close();
   console.log('PASS reading return and Tab order, anchor focus, lazy ocean entry, world-origin return, explicit reading override, close/reopen, direct descent, failed-world return and direct failure hashes');

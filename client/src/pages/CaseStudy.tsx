@@ -5,6 +5,7 @@ import { caseStudies, getCaseStudy } from "@/data/projects";
 import { voyage } from "@/features/open-water/voyage";
 import { profile } from "@/data/profile";
 import { useSeo } from "@/lib/seo";
+import { isInteractiveReturnFocus } from "@/lib/portfolioReturn";
 import { socialMetadata } from "@/lib/socialMetadata";
 import "./portfolio-v3.css";
 import DocuBridgeWorkbench from "@/components/editorial/DocuBridgeWorkbench";
@@ -49,8 +50,8 @@ export default function CaseStudy() {
       </main>
     );
 
-  const cameFromWorld = voyage.returnPending && ["yacht-controls", "open-work-index"].includes(voyage.returnFocus);
-  const imageDimensions: Record<string, [number, number]> = { stellar: [1440, 1000], docubridge: [1791, 917], soma: [1230, 564], research: [1200, 800] };
+  const cameFromWorld = voyage.returnPending && isInteractiveReturnFocus(voyage.returnFocus);
+  const imageDimensions: Record<string, [number, number]> = { stellar: [1440, 1000], docubridge: [1791, 805], soma: [1230, 564], research: [1200, 800] };
   const numericMetrics = study.metrics.filter(metric => /\d/.test(metric.value));
   const next =
     caseStudies[(caseStudies.indexOf(study) + 1) % caseStudies.length];
@@ -66,7 +67,7 @@ export default function CaseStudy() {
         Skip to case study
       </a>
       <nav className="pv-case-nav" aria-label="Case study navigation">
-        <Link className="pv-wordmark" href="/">
+        <Link className="pv-wordmark" href="/" onClick={() => { voyage.returnPending = false; }}>
           Tejass Kaushik
         </Link>
         <div>

@@ -1,23 +1,26 @@
 import { Component, Suspense, lazy, useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { Link } from "wouter";
-import { profile } from "@/data/profile";
+import { profile, moleculeProject } from "@/data/profile";
 import { selectedWork } from "@/data/selectedWork";
 import { voyage } from "@/features/open-water/voyage";
 import { useSeo } from "@/lib/seo";
+import { isInteractiveReturnFocus } from "@/lib/portfolioReturn";
 import { AnticipyFeature } from "@/components/portfolio-v4/Flagship";
 import EngineeringNotes from "@/components/editorial/EngineeringNotes";
-import PathwayEntry, { hasEnteredPortfolio, rememberEntry, type Pathway, type BoardingStatus } from "@/components/entry/PathwayEntry";
 import "./portfolio-v3.css";
 import "./editorial-home.css";
-import portrait from "@/assets/Professional photo shoot seteve jobs kinda photo must use.jpeg";
+import portrait from "@/assets/portrait-tejass.jpeg";
 
 const OpenWaterExperience = lazy(
   () => import("@/features/open-water/OpenWaterExperience"),
 );
 const ScrollDive = lazy(() => import("@/features/scroll-dive/ScrollDive"));
 
-/** Remember the visitor’s choice across routes; the scene itself unmounts on exit. */
-let worldWasOpened = false;
+const featuredWork = [
+  selectedWork.find(project => project.slug === "stellar-learning")!,
+  moleculeProject,
+  selectedWork.find(project => project.slug === "global-health-research")!,
+];
 
 function Arrow() {
   return (
@@ -41,14 +44,13 @@ function Sailmark() {
 }
 
 class WorldErrorBoundary extends Component<
-  { children: ReactNode; onReady: () => void; onFailure: () => void },
+  { children: ReactNode; onReady: () => void },
   { failed: boolean }
 > {
   state = { failed: false };
   static getDerivedStateFromError() {
     return { failed: true };
   }
-  componentDidCatch() { this.props.onFailure(); }
   render() {
     if (this.state.failed)
       return (
@@ -64,35 +66,6 @@ class WorldErrorBoundary extends Component<
   }
 }
 
-function ProjectImage({ src }: { src: string }) {
-  const image = useRef<HTMLImageElement>(null);
-  const [near, setNear] = useState(false);
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setNear(true);
-          observer.disconnect();
-        }
-      },
-      { rootMargin: "200px" },
-    );
-    if (image.current) observer.observe(image.current);
-    return () => observer.disconnect();
-  }, []);
-  return (
-    <img
-      ref={image}
-      src={near ? src : undefined}
-      alt=""
-      loading="lazy"
-      decoding="async"
-      width="900"
-      height="580"
-    />
-  );
-}
-
 const oceanHashes = ["voyage", "descent"];
 const needsOcean = (hash: string) => oceanHashes.includes(hash) || hash.startsWith("dive-");
 
@@ -104,33 +77,17 @@ function WorldReady({ onReady }: { onReady: () => void }) {
 
 export default function Home() {
   useSeo({ path: "/" });
-  const [entry, setEntry] = useState<"intro" | "choice" | null>(() =>
-    (!window.location.hash || window.location.hash === "#top") && window.scrollY === 0 && !voyage.returnPending && !hasEnteredPortfolio() ? "intro" : null,
-  );
-  const [arrived, setArrived] = useState(false);
-  const [boarding, setBoarding] = useState(false);
-  const [boardingStatus, setBoardingStatus] = useState<BoardingStatus>("loading");
-  const [worldFailed, setWorldFailed] = useState(false);
-  const boardingReady = useCallback((fallback: boolean) => setBoardingStatus(fallback ? "fallback" : "ready"), []);
-  const boardingFailed = useCallback(() => { setWorldFailed(true); setBoardingStatus("fallback"); }, []);
-  const dismissedChoice = useRef(false);
   const [copyStatus, setCopyStatus] = useState("");
   const [descentOwnsScene, setDescentOwnsScene] = useState(false);
   const [worldOpen, setWorldOpen] = useState(() => {
     const hash = window.location.hash.slice(1);
-    return (
-      worldWasOpened ||
-      oceanHashes.includes(hash) ||
-      hash.startsWith("dive-")
-    );
+    return voyage.returnPending
+      ? isInteractiveReturnFocus(voyage.returnFocus)
+      : needsOcean(hash);
   });
   const [worldReady, setWorldReady] = useState(false);
   const [navigation, setNavigation] = useState(0);
   const opened = useCallback(() => setWorldReady(true), []);
-  useEffect(() => {
-    const world = document.getElementById("voyage");
-    if (boarding && worldReady && world) window.scrollTo({ top: scrollY + world.getBoundingClientRect().top, behavior: "instant" });
-  }, [boarding, worldReady]);
   const openButton = useRef<HTMLButtonElement>(null);
   const restoreOpenFocus = useRef(false);
   const copyEmail = async () => {
@@ -142,9 +99,6 @@ export default function Home() {
     }
   };
   useEffect(() => {
-    if (worldOpen) worldWasOpened = true;
-  }, [worldOpen]);
-  useEffect(() => {
     const onHashChange = () => {
       if (needsOcean(window.location.hash.slice(1))) setWorldOpen(true);
       setNavigation(value => value + 1);
@@ -153,10 +107,8 @@ export default function Home() {
     return () => window.removeEventListener("hashchange", onHashChange);
   }, []);
   useEffect(() => {
-    if (entry) return;
-    if (dismissedChoice.current) { dismissedChoice.current = false; return; }
     const target = window.location.hash.slice(1);
-    if ((needsOcean(target) || (worldOpen && voyage.returnPending)) && !worldReady) return;
+    if (worldOpen && !worldReady) return;
     const frame = requestAnimationFrame(() => {
       if (restoreOpenFocus.current) {
         restoreOpenFocus.current = false;
@@ -174,7 +126,7 @@ export default function Home() {
         const fallback = needsOcean(target) ? document.getElementById("ocean-load-error") : null;
         const section = document.getElementById(target) ?? fallback;
         section?.scrollIntoView({ behavior: "instant" });
-        if (target === "voyage" && section) window.scrollTo({ top: scrollY + section.getBoundingClientRect().top, behavior: "instant" });
+        if (target === "voyage" && section?.id === "voyage") window.scrollTo({ top: scrollY + section.getBoundingClientRect().top, behavior: "instant" });
         const heading = fallback ?? (target === "top" ? document.getElementById("hero-title") : target === "voyage"
           ? document.getElementById(voyage.sailing || voyage.expedition.mode !== "surface" ? "yacht-controls" : "take-helm")
           : document.getElementById(`${target}-title`) ?? section);
@@ -183,54 +135,30 @@ export default function Home() {
       } else window.scrollTo({ top: 0, behavior: "instant" });
     });
     return () => cancelAnimationFrame(frame);
-  }, [worldOpen, worldReady, navigation, entry]);
+  }, [worldOpen, worldReady, navigation]);
   const closeWorld = () => {
-    worldWasOpened = false;
     restoreOpenFocus.current = true;
     voyage.paused = true;
     voyage.expedition.userPaused = true;
     setWorldReady(false);
-    setWorldFailed(false);
     setDescentOwnsScene(false);
     setWorldOpen(false);
-    if (needsOcean(window.location.hash.slice(1))) history.replaceState(null, "", "#ocean-title");
+    if (needsOcean(window.location.hash.slice(1))) history.replaceState(null, "", "#ocean");
   };
-  const beginBoarding = () => {
-    setBoardingStatus(worldFailed ? "fallback" : "loading");
-    setBoarding(true);
+  const openWorld = () => {
     setWorldOpen(true);
-  };
-  const choosePathway = useCallback((pathway: Pathway) => {
-    rememberEntry();
-    setEntry(null);
-    setBoarding(false);
-    voyage.returnPending = false;
-    restoreOpenFocus.current = false;
-    if (pathway === "interactive") {
-      setWorldOpen(true);
-      history.replaceState(null, "", "#voyage");
-    } else {
-      worldWasOpened = false;
-      voyage.paused = true;
-      voyage.expedition.userPaused = true;
-      setWorldOpen(false);
-      setWorldReady(false);
-      setWorldFailed(false);
-      setDescentOwnsScene(false);
-      setArrived(true);
-      history.replaceState(null, "", "#top");
-    }
+    history.replaceState(null, "", "#voyage");
     setNavigation(value => value + 1);
-  }, []);
+  };
   return (
     <div
-      className={`open-water-page${arrived ? " entry-reading-arrival" : ""}`}
+      className="open-water-page"
       id="top"
       onClickCapture={(event) => {
         const link = (event.target as HTMLElement).closest<HTMLAnchorElement>(
           'a[href*="/case-studies/"]',
         );
-        if (link && !event.metaKey && !event.ctrlKey && !event.shiftKey) {
+        if (link && !link.closest("#voyage") && !event.metaKey && !event.ctrlKey && !event.shiftKey) {
           voyage.returnPending = true;
           voyage.returnScroll = window.scrollY;
           voyage.returnFocus =
@@ -246,34 +174,30 @@ export default function Home() {
           <Sailmark />
           Tejass Kaushik
         </a>
-        <button className="eh-pathway-button" type="button" onClick={() => setEntry("choice")}>
-          <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="8" stroke="currentColor"/><path d="m13 6-2 6-4 2 2-6 4-2Z" stroke="currentColor"/></svg>
-          Choose interactions
-        </button>
         <nav aria-label="Primary">
-          <a href="#work">Selected work</a>
-          <Link id="nav-anticipy" href="/case-studies/anticipy">Anticipy</Link>
+          <a href="#work">Work</a>
           <a href="#about">About</a>
+          <a href="#ocean">Open Water</a>
+          <a href={`${import.meta.env.BASE_URL}resume`}>Resume</a>
           <a href="#contact">Contact</a>
         </nav>
       </header>
       <main id="main">
         <section className="portfolio-v3 eh-hero pv-shell" aria-labelledby="hero-title">
-          <p className="pv-eyebrow">Tejass Kaushik / Software engineer</p>
+          <p className="pv-eyebrow">Tejass Kaushik / Software engineer / {profile.location}</p>
           <h1 id="hero-title" tabIndex={-1}>{profile.headline}</h1>
           <p className="eh-hero-role">{profile.intro}</p>
-          <p className="eh-hero-proof">
-            At Anticipy, I required the connection test to reach the provider’s
-            sign-in screen in the actual browser.
-          </p>
           <div className="eh-hero-actions">
             <a className="pv-button" href="#work">
-              View selected work <Arrow />
+              See the work ↓
             </a>
-            <a className="pv-text-link" href="#contact">
-              Contact <Arrow />
+            <a className="pv-text-link" href={`mailto:${profile.email}`}>
+              Email me <Arrow />
             </a>
           </div>
+          <dl className="pv-context-facts eh-proof" aria-label="A few things I’ve been part of">
+            {profile.proof.map(item => <div key={item.value}><dt>{item.label}</dt><dd>{item.value}</dd></div>)}
+          </dl>
         </section>
         <div className="portfolio-v3">
           <AnticipyFeature />
@@ -290,121 +214,26 @@ export default function Home() {
                 <br />
                 <em>in context.</em>
               </h2>
-              <p>
-                Product engineering, platform leadership, and questions worth
-                investigating. My role and the evidence behind each.
-              </p>
+              <p>Three things I’m proudest of, then everything else.</p>
             </header>
             <div className="pv-work-grid">
-              {selectedWork
-                .filter((project) => project.slug !== "anticipy")
-                .map((project, index) => {
-                  const compact = project.slug === "soma-ai";
-                  return (
-                    <article
-                      className={`pv-project${compact ? " eh-project-compact" : ""}`}
-                      key={project.slug}
-                    >
-                      {!compact && <Link
-                        className={`pv-project-image pv-project-image--${project.treatment}`}
-                        href={`/case-studies/${project.slug}`}
-                        aria-label={`Read the ${project.title} case study · ${project.artifactLabel}`}
-                      >
-                        <ProjectImage src={project.image} />
-                        <span>{project.artifactLabel}</span>
-                      </Link>}
-                      <div className="pv-project-heading">
-                        <span className="pv-project-number" aria-hidden="true">
-                          {String(index + 1).padStart(2, "0")}
-                        </span>
-                        <h3>
-                          <Link
-                            id={`read-${project.slug}`}
-                            href={`/case-studies/${project.slug}`}
-                          >
-                            {project.title}
-                            <Arrow />
-                          </Link>
-                        </h3>
-                      </div>
-                      <p className="pv-project-description">
-                        {project.description}
-                      </p>
-                      {!compact && (
-                        <dl className="pv-project-meta">
-                          <div>
-                            <dt>My role</dt>
-                            <dd>{project.role}</dd>
-                          </div>
-                          <div>
-                            <dt>Stage</dt>
-                            <dd>{project.status}</dd>
-                          </div>
-                          <div>
-                            <dt>Period</dt>
-                            <dd>{project.period}</dd>
-                          </div>
-                        </dl>
-                      )}
-                      <p className="pv-project-proof">{project.proof}</p>
-                      {project.sourceHref && !compact && (
-                        <p className="pv-project-proof">
-                          <a
-                            className="pv-text-link"
-                            href={project.sourceHref}
-                            target="_blank"
-                            rel="noreferrer"
-                          >
-                            {project.sourceLabel} <Arrow />
-                          </a>
-                        </p>
-                      )}
-                    </article>
-                  );
-                })}
+              {featuredWork.map((project, index) => {
+                const href = "href" in project ? project.href : `/case-studies/${project.slug}`;
+                const external = href.startsWith("https:");
+                const image = <><img src={project.image.startsWith("/portfolio/") ? `${import.meta.env.BASE_URL}${project.image.slice(1)}` : project.image} alt={project.imageAlt} loading="lazy" decoding="async" width="900" height="580"/><span>{project.artifactLabel}</span></>;
+                return <article className="pv-project" key={project.slug}>
+                  {external ? <a className={`pv-project-image pv-project-image--${project.treatment}`} href={href} target="_blank" rel="noreferrer" aria-label={`Visit ${project.title}`}>{image}</a> : <Link className={`pv-project-image pv-project-image--${project.treatment}`} href={href} aria-label={`Read the ${project.title} case study`}>{image}</Link>}
+                  <div className="pv-project-heading"><span className="pv-project-number" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span><h3>
+                    {external ? <a id={`read-${project.slug}`} href={href} target="_blank" rel="noreferrer">{project.title}<Arrow/></a> : <Link id={`read-${project.slug}`} href={href}>{project.title}<Arrow/></Link>}
+                  </h3></div>
+                  <p className="pv-project-description">{project.description}</p>
+                  <dl className="pv-project-meta"><div><dt>My role</dt><dd>{project.role}</dd></div><div><dt>Stage</dt><dd>{project.status}</dd></div><div><dt>Period</dt><dd>{project.period}</dd></div></dl>
+                  <p className="pv-project-proof">{project.proof}</p>
+                  {project.sourceHref && <p className="pv-project-proof"><a className="pv-text-link" href={project.sourceHref} target="_blank" rel="noreferrer">{project.sourceLabel}<Arrow/></a></p>}
+                </article>;
+              })}
             </div>
-          </section>
-          <section
-            className="eh-ocean"
-            aria-labelledby="ocean-title"
-          >
-            <div className="pv-shell eh-ocean-intro">
-            <p className="pv-eyebrow">Optional / A different kind of portfolio</p>
-            <h2 id="ocean-title">Open Water.</h2>
-            <p>
-              An interactive world and a scrolling dive, built to carry the
-              same work differently. Sail the yacht, meet Dakota, or follow
-              a cinematic descent through the portfolio.
-            </p>
-            </div>
-            {!worldOpen ? (
-              <button
-                type="button"
-                id="open-ocean"
-                ref={openButton}
-                className="pv-button eh-open-ocean"
-                onClick={() => { setWorldOpen(true); history.replaceState(null, "", "#voyage"); }}
-              >
-                Explore Open Water <Arrow />
-              </button>
-            ) : (
-              <WorldErrorBoundary onReady={opened} onFailure={boardingFailed}>
-                <Suspense fallback={<p role="status">Loading Open Water…</p>}>
-                  <div className="eh-ocean-mounted">
-                    <button
-                      type="button"
-                      className="pv-text-link eh-ocean-close"
-                      onClick={closeWorld}
-                    >
-                      Close Open Water
-                    </button>
-                    <WorldReady onReady={opened} />
-                    <OpenWaterExperience presentationPaused={descentOwnsScene || entry !== null} boarding={boarding} onBoardingReady={boardingReady} />
-                    <ScrollDive onSceneActive={setDescentOwnsScene} />
-                  </div>
-                </Suspense>
-              </WorldErrorBoundary>
-            )}
+            <EngineeringNotes />
           </section>
           <section
             id="about"
@@ -429,31 +258,17 @@ export default function Home() {
                   <br />
                   <em>put to work.</em>
                 </h2>
-                <p className="pv-lead">
-                  I’m Tejass, a Founding Software Engineer at Anticipation
-                  Labs, building Anticipy. Previously, I was CTO at Stellar
-                  Learning.
-                </p>
-                <p>
-                  I study Computer Science at Western University and hold
-                  Ivey AEO status.
-                </p>
-                <p>
-                  I use AI tools to help build software. I set the problem and
-                  acceptance criteria, review the changes, and test them in
-                  the browser or on a phone and prototype pendant.
-                </p>
-                <p>I love boats and yachts, so I wanted an ocean in my portfolio.</p>
+                {profile.about.map((paragraph, index) => <p key={paragraph} className={index === 0 ? "pv-lead" : undefined}>{paragraph}</p>)}
                 <p className="eh-about-links">
-                  <a className="pv-text-link" href={`${import.meta.env.BASE_URL}resume.html`}>
-                    View my resume <Arrow />
+                  <a className="pv-text-link" href={`${import.meta.env.BASE_URL}resume`}>
+                    Resume <Arrow />
                   </a>
                   <a
                     className="pv-text-link"
                     href={`${import.meta.env.BASE_URL}Tejass-Kaushik-Resume.pdf`}
                     download
                   >
-                    Download resume <Arrow />
+                    Download PDF <Arrow />
                   </a>
                   <a
                     className="pv-text-link"
@@ -461,13 +276,37 @@ export default function Home() {
                     target="_blank"
                     rel="noreferrer"
                   >
-                    More on LinkedIn <Arrow />
+                    LinkedIn <Arrow />
                   </a>
+                  <a className="pv-text-link" href={profile.socials.github} target="_blank" rel="noreferrer">GitHub <Arrow/></a>
                 </p>
               </div>
             </div>
           </section>
-          <EngineeringNotes />
+          <section id="ocean" className="eh-ocean" aria-labelledby="ocean-title">
+            <div className="pv-shell eh-ocean-intro">
+              <p className="pv-eyebrow">Optional / Something I built for fun</p>
+              <h2 id="ocean-title" tabIndex={-1}>Open Water.</h2>
+              <p>{profile.ocean}</p>
+              {!worldOpen && <>
+                <button className="eh-ocean-poster" type="button" onClick={openWorld} aria-label="Explore the Open Water ocean">
+                  <img src={`${import.meta.env.BASE_URL}portfolio/open-water-poster.webp`} alt="A white superyacht on turquoise water, with islands and a lighthouse on the horizon." loading="lazy" decoding="async" width="1600" height="900"/>
+                  <span>Take a different route <Arrow/></span>
+                </button>
+                <button type="button" id="open-ocean" ref={openButton} className="pv-button" onClick={openWorld}>Explore Open Water <Arrow/></button>
+              </>}
+            </div>
+            {worldOpen && <div className="eh-ocean-mounted">
+              <button type="button" className="pv-text-link eh-ocean-close" onClick={closeWorld}>Close Open Water</button>
+              <WorldErrorBoundary onReady={opened}>
+                <Suspense fallback={<p className="pv-shell eh-ocean-loading" role="status">Loading Open Water…</p>}>
+                  <WorldReady onReady={opened}/>
+                  <OpenWaterExperience presentationPaused={descentOwnsScene}/>
+                  <ScrollDive onSceneActive={setDescentOwnsScene}/>
+                </Suspense>
+              </WorldErrorBoundary>
+            </div>}
+          </section>
           <section
             id="contact"
             className="pv-contact pv-shell"
@@ -481,13 +320,10 @@ export default function Home() {
                 <em>you building?</em>
               </h2>
               <div className="pv-contact-copy">
-                <p>
-                  Open to engineering opportunities and collaborations. I’d
-                  like to hear what you’re building and where I could
-                  contribute.
-                </p>
+                <p>{profile.contact}</p>
+                <p className="eh-location">{profile.location}</p>
                 <a className="pv-button" href={`mailto:${profile.email}`}>
-                  Contact about opportunities <Arrow />
+                  Email me <Arrow />
                 </a>
                 <a className="pv-email" href={`mailto:${profile.email}`}>
                   {profile.email}
@@ -524,7 +360,7 @@ export default function Home() {
           <Sailmark />
           Tejass Kaushik
         </span>
-        <p>Open Water / An independent portfolio</p>
+        <p>Built with React, Three.js and curiosity.</p>
         <a href="#top">Back to top ↑</a>
       </footer>
       <details className="portfolio-v3 pv-world-credits">
@@ -578,10 +414,6 @@ export default function Home() {
           </p>
         </details>
       </details>
-      {entry && <PathwayEntry animate={entry === "intro"} onChoose={choosePathway} onBoard={beginBoarding} boardingStatus={boardingStatus} onDismiss={() => {
-        if (boarding || entry === "intro") choosePathway("reading");
-        else { dismissedChoice.current = true; setEntry(null); }
-      }} />}
     </div>
   );
 }
