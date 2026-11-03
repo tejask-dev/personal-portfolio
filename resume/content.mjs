@@ -2,7 +2,7 @@
 export const resume = {
   name: "Tejass Kaushik",
   location: "Ontario, Canada",
-  description: "Tejass Kaushik, COO at Anticipation Labs, former CTO of Stellar Learning, and a Western University Computer Science student with Ivey AEO.",
+  description: "Tejass Kaushik, COO at Anticipation Labs working on Elda, former CTO of Stellar Learning, and a Western University Computer Science student with Ivey AEO.",
   contacts: [
     { label: "tejas.kaushik@outlook.com", href: "mailto:tejas.kaushik@outlook.com" },
     { label: "tejasskaushik.com", href: "https://tejasskaushik.com/" },
@@ -16,15 +16,15 @@ export const resume = {
   },
   experience: [
     {
-      title: "Anticipation Labs / Anticipy",
-      href: "https://anticipy.ai/",
+      title: "Anticipation Labs",
+      href: "https://www.anticipationlabs.com/",
       dates: "Aug. 2026 to present",
       detail: "COO (current); previously Founding Software Engineer",
       bullets: [
-        "Led connected-app repairs, private AI workflows and device testing for Anticipy, an AI pendant and companion apps.",
-        "Scoped a consent-page redirect repair and tested the full browser journey, restoring access to provider sign-in.",
-        "Defined consent, citations, spending limits and deletion for a locally tested private AI prototype.",
-        "Tested native releases on phones and prototype wearable installation and recovery; audio readiness is still in progress.",
+        "Lead customer discovery, product testing and recruiting for Elda, a screenless bracelet in development for older adults.",
+        "Visited care homes and spoke with older adults and caregivers to guide product decisions.",
+        "For Anticipy, directed AI-assisted connected-app repairs and private AI workflows; tested phone and wearable prototypes.",
+        "Scoped and tested a consent-page redirect repair for Anticipy, restoring the browser journey to provider sign-in.",
       ],
     },
     {

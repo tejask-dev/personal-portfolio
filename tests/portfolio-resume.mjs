@@ -26,8 +26,12 @@ test("resume retains confirmed ownership, contacts and result limits", () => {
   assert.ok(text.includes("tejas.kaushik@outlook.com"));
   assert.ok(text.includes("40,000+ learners, 80+ courses and 130+ volunteers"));
   assert.ok(text.includes("school campaign that collected 27,000+ cans"));
-  assert.ok(text.includes("locally tested private AI prototype"));
-  assert.ok(text.includes("audio readiness is still in progress"));
+  assert.equal(resume.experience[0].title, "Anticipation Labs");
+  assert.equal(resume.experience[0].href, "https://www.anticipationlabs.com/");
+  assert.equal(resume.experience[0].dates, "Aug. 2026 to present");
+  assert.match(resume.experience[0].bullets[0], /Elda, a screenless bracelet in development/);
+  assert.ok(text.includes("Visited care homes and spoke with older adults and caregivers"));
+  assert.ok(text.includes("For Anticipy, directed AI-assisted connected-app repairs"));
   assert.ok(text.includes("national first-place team study"));
   assert.doesNotMatch(text, /\[CONFIRM|—|1,000\+|200\+|14,000|built solo|Deputy CTO|Expected 2030|Windsor|I required|my account|harness|qualification|partly shipped|remained unfinished/i);
 });
